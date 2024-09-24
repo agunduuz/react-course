@@ -4,7 +4,7 @@ import { HoverEffect } from '@/components/ui/card-hover-effect';
 import { FlipWords } from '@/components/ui/flip-words';
 import { motion } from 'framer-motion';
 
-export const projects = [
+const projects = [
   {
     title: 'React 1',
     description: 'İçerik açıklaması buraya gelecek.',
