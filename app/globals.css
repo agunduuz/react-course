@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: 'Jost', sans-serif;
+}
+
+.mdx-content h1 {
+  color: #f1f1f1;
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.mdx-content h2 {
+  color: #eaeaea;
+  font-size: 1.8rem;
+  margin: 15px 0;
+}
+
+.mdx-content p {
+  line-height: 1.6;
+  margin: 15px 0;
+  color: #cccccc;
+}
+
+.mdx-content pre {
+  background-color: #111;
+  padding: 10px 30px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  margin: 10px 0;
+}
+
+.mdx-content code {
+  text-wrap: wrap;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.mdx-content ul {
+  list-style: auto;
+  padding: 20px;
+  color: #82cd47;
+}
+
+.mdx-content blockquote {
+  padding: 20px 40px;
+  border: 10px solid #444;
+  color: #999;
+  border-radius: 50px 0 50px 0;
+  margin: 20px 0;
+}
+.mdx-content blockquote p {
+  color: #9a9a9a;
+}
+
+.mdx-content p code {
+  padding: 5px 7px;
+  background-color: #333;
+  border-radius: 5px;
+}
+
+.mdx-content h6 {
+  color: #ccc;
+  font-size: 18px;
+}
+
+@media screen and (max-width: 780px) {
+  .mdx-content h1 {
+    font-size: 1.5rem;
+    margin-top: 15px;
+  }
+  .mdx-content pre {
+    padding: 10px 20px;
+  }
+  .mdx-content code {
+    font-size: 12px;
+    line-height: 1;
+  }
+  .mdx-content h2 {
+    font-size: 1.3rem;
+  }
+  .mdx-content blockquote {
+    padding: 5px 20px;
+  }
+}

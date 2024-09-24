@@ -1,0 +1,178 @@
+# React ile “Merhaba Dünya”
+
+Basit bir “Merhaba Dünya” uygulamasıyla React’e başlayalım. Bu örnekte saf JavaScript kullanacağız:
+
+###### **index.js**
+
+```
+// 1. Gerekli kütüphaneleri içe aktar
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+
+// 2. Bir React öğesi oluştur
+    const element = React.createElement(
+    'p', // Bir paragraf elemanı oluşturuyoruz
+    { id: 'hello' }, // Bu paragrafa 'hello' id'sini veriyoruz
+    'Merhaba Dünya!' // Paragrafın içeriği
+    );
+
+// 3. Uygulamayı sayfaya yerleştir
+    const container = document.querySelector('#root'); // HTML'deki #root elemanını seçiyoruz
+    const root = createRoot(container); // React'in kök elemanını oluşturuyoruz
+    root.render(element); // Elemanımızı sayfada görüntülüyoruz
+```
+
+###### **index.html**
+
+```
+index.html
+<html>
+<body>
+    <div id='root'></div>
+</body>
+</html>
+```
+
+İki dosyayla başlıyoruz: Biri basit bir HTML belgesi olan index.html dosyası, diğeri ise minimal bir React uygulaması içeren index.js dosyası.
+
+Bu kodu çalıştırdığımızda, sayfada “Merhaba Dünya!” yazan bir paragraf görüyoruz.
+
+Bu örnekte anlamamız gereken birkaç önemli kısım var. Şimdi bunları adım adım açıklayacağım.
+
+## Gerekli kütüphaneleri içe aktarmak
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+```
+
+Dosyanın en üstünde, JavaScript’in modül sistemi ile iki kütüphane içe aktarıyoruz. Biri React’in temel özelliklerini barındıran react kütüphanesi, diğeri ise react-dom kütüphanesinden gelen createRoot fonksiyonu.
+
+Peki neden iki farklı paket kullanıyoruz? Bunun nedeni, React’in “platform bağımsız” olmasıdır. Yani React sadece web siteleri için değil, başka platformlar için de kullanılabilir.
+
+- Web için react-dom
+- Mobil (iOS/Android) veya masaüstü uygulamaları için react-native
+- 3D siteler oluşturmak için react-three-fiber (WebGL ve Three.js kullanır)
+
+Her platformun kendi "primitif" yani temel yapı taşları vardır. Web'de, bu primitifler HTML elemanlarıdır, örneğin `<div>`, `<p>`, `<button>`. Ancak React Native'de bu elemanlar yoktur. Orada Text, View ve Pressable gibi elemanlar vardır. react-three-fiber ile işler daha da ilginç hale gelir, çünkü orada primitifler ışıklar, geometriler, materyaller ve kameralar gibi şeylerdir.
+
+Tüm bu platformlar aynı React yapısını kullanır, yani react paketini. Ama iş mantığımızı bir kullanıcı arayüzüne dönüştürmeye geldiğinde, o platforma uygun olan bağlayıcıları kullanmamız gerekir.
+
+Bu aslında harika bir şey, çünkü React öğrenirken kazandığın yetenekler, mobil uygulamalar ya da 3D arayüzler yapmak için de kullanılabilir. Bu, ilgi alanına veya kariyerine bağlı olarak sana yeni kapılar açabilir!
+
+> ## DOM nedir, ne işe yarar?
+>
+> DOM, canlı bir web sitesi ya da web uygulamasını oluşturan canlı ve dinamik yapıdır. Bir web sitesini ziyaret ettiğimizde, tarayıcı statik HTML'yi alır ve bunu DOM'a dönüştürür.
+>
+> Bunu şöyle bir benzetmeyle anlatabiliriz: HTML, bir arabanın çizim planı (mimari projesi) gibidir, DOM ise o arabanın gerçekte yapılmış ve şehirde dolaşan halidir.
+>
+> Başka bir açıdan bakarsak:
+>
+> - Bir siteye sağ tıklayıp "Kaynağı görüntüle" dediğinde, HTML dosyasını, yani sitenin statik bir belgesini görürsün. Bu, sitenin nasıl inşa edileceğini tarif eder.
+> - Aynı siteye Sağ tıklayıp "Öğeyi incele" dediğinde ise tarayıcıdaki DOM ile etkileşim kurarsın. Burada özellikleri değiştirebilir ve değişikliklerin anında nasıl ekrana yansıdığını görebilirsin.
+> - React gibi bir araç kullandığımızda, JavaScript aracılığıyla DOM ile etkileşime geçeriz. Gerektiğinde DOM öğeleri oluşturur, günceller veya siler.
+>
+> Eğer merak ediyorsan, DOM'un açılımı "Document Object Model" yani "Belge Nesne Modeli"dir.
+
+## React Elemanı Oluşturma
+
+Mini uygulamamızın bir sonraki adımında şu kodu görüyoruz:
+
+```
+const element = React.createElement(
+  'p',
+  { id: 'hello' },
+  'Merhaba Dünya!'
+);
+```
+
+`React.createElement` fonksiyonu 3 veya daha fazla argüman alır:
+
+- Oluşturmak istediğimiz elemanın tipi (örneğin 'p' bir paragraf elemanıdır).
+- Bu elemanın sahip olmasını istediğimiz özellikler (bu örnekte id: 'hello').
+- Elemanın içeriği (bu örnekte 'Merhaba Dünya!'). Eğer elemanın içi boş olacaksa, bu kısmı atlayabiliriz.
+
+Bu fonksiyon, “React elemanı” denen bir şey döndürür. React elemanları aslında basit JavaScript objeleridir. Eğer bu elemanı `console.log(element)` ile inceleyecek olursak, aşağıdakine benzer bir şey görürüz:
+
+```
+{
+  type: "p",
+  key: null,
+  ref: null,
+  props: {
+    id: 'hello',
+    children: 'Merhaba Dünya!',
+  },
+  _owner: null,
+  _store: { validated: false }
+}
+```
+
+Bu JavaScript objesi, tarayıcıda görebileceğimiz gerçek bir paragrafın tanımıdır. 'hello' id'sine sahip ve içinde "Merhaba Dünya!" yazan bir paragrafın nasıl oluşturulacağını tarif eder. Bu bilgi, tarayıcıda göreceğimiz gerçek paragrafı oluşturmak için kullanılır.
+
+> ## Dom Hiyerarşisi
+>
+> DOM, bir ağaç yapısında organize edilir. Aile ağacı gibi, her bir öğenin ebeveynleri, büyük ebeveynleri, kardeşleri ve çocukları olabilir.
+>
+> Örneğin, aşağıdaki belgeyi düşünelim:
+>
+> ```html
+> <html>
+>   <body>
+>     <main>
+>       <p>
+>         <strong>Uyarı:</strong>
+>         aynadaki nesneler göründüğünden daha yakındır.
+>       </p>
+>     </main>
+>     <footer>© 2022 Acme Inc.</footer>
+>   </body>
+> </html>
+> ```
+>
+> Bu yapıdaki `<main>` elemanının hiyerarşideki yeri şu şekildedir:
+>
+> - Ebeveyni `<body>` elementidir.
+> - Bir tane çocuğu vardır: `<p>` elemanı.
+> - Bir tane kardeşi vardır: `<footer>` elemanı.
+>
+> Bu hiyerarşi web dünyasında çok önemlidir. Örneğin CSS yazarken, bu hiyerarşiyi seçicilerle kullanırız. Örnek:,
+>
+> ```css
+> p:first-child {
+>   /* Eğer paragraf, ebeveyninin ilk çocuğuysa, bu stil uygulanır. */
+> }
+> ```
+>
+> React de bu modeli benimser. Daha önce gördüğümüz gibi, React elemanları “children” (çocuklar) tanımlayabilir. React elemanları da tıpkı DOM elemanları gibi bir hiyerarşi oluşturur. Bu yüzden aynı dili kullanırız.
+
+## Uygulamayı Görüntüleme (Render Etme)
+
+Şimdi kodumuzun son birkaç satırına geldik:
+
+```
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(element);
+```
+
+`document.querySelector`, mevcut bir DOM elemanına referans yakalamamıza olanak sağlayan kullanışlı bir fonksiyondur. Eğer `document.getElementById` fonksiyonunu biliyorsan, bu onun modern versiyonudur.
+Bu fonksiyonun burada çalışmasının sebebi, `index.html` dosyamızda şu elemanın yer almasıdır:
+
+```
+<div id="root"></div>
+```
+
+Bu eleman, uygulamamızın konteyneri (kabı) olacaktır. React uygulamamızı render (görüntüleme) ettiğimizde, yeni DOM elemanlarını bu konteynere oluşturup ekleyecektir.
+
+`react-dom`'dan gelen `createRoot` fonksiyonu ile, bu elemanın uygulamamızın kökü (root) olduğunu belirtiyoruz. Son olarak, `root.render(element)` ile uygulamayı render ediyoruz.
+
+Render fonksiyonunu, React elemanlarını DOM düğümlerine (nodes) çeviren bir makine gibi düşünebilirsin. Bu durumda, React elemanımız bir paragrafı, bir ID'yi ve içinde bir metni tanımlıyor. `render` fonksiyonu bu tanımı alıp şu DOM yapısına dönüştürecektir:
+
+```
+<p id="hello">
+  Merhaba Dünya!
+</p>
+```
+
+Bu DOM elemanı oluşturulduktan sonra, belirlenen köke yani sayfaya eklenir. Temelde bu kod, JavaScript ile tanımlanan HTML yapısını alıp gerçek dünya DOM düğümleri oluşturur.
