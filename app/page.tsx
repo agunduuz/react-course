@@ -7,7 +7,8 @@ import { motion } from 'framer-motion';
 const projects = [
   {
     title: 'React 1',
-    description: 'İçerik açıklaması buraya gelecek.',
+    description:
+      "React'in temellerini öğrenin: Bileşenler, JSX, Uygulama Yapısı, Döngüler, Koşullu Render ve Stillendirme. Modern web geliştirmenin temel taşlarını keşfedin.",
     link: '/module-1',
   },
   // {
