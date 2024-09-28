@@ -6,10 +6,18 @@ import Link from 'next/link';
 export default function Module1Page() {
   const blogPosts = [
     {
+      id: '1',
       title: 'React ile "Merhaba Dünya"',
       description:
         "React'e giriş yapın: Basit bir 'Merhaba Dünya' uygulaması oluşturarak React'in temel kavramlarını, DOM manipülasyonunu ve render işlemini öğrenin.",
       href: '/module-1/merhaba-dunya',
+    },
+    {
+      id: '2',
+      title: 'JSX Anlamaya Giriş',
+      description:
+        "JSX'in ne olduğunu, neden kullanıldığını ve JavaScript'e nasıl derlendiğini öğrenin. React elemanlarını oluşturmanın kolay yolunu keşfedin.",
+      href: '/module-1/jsx-anlamak-giris',
     },
   ];
 
@@ -30,7 +38,7 @@ export default function Module1Page() {
           </div>
           <ul className='flex items-center flex-col'>
             {blogPosts.map((post) => (
-              <li key={post.title} className='w-full mt-4'>
+              <li key={post.id} className='w-full mt-4'>
                 <Link
                   href={post.href}
                   className='group flex items-start flex-col py-6 px-4 bg-[#00000083] rounded-lg border border-[#333] hover:border-[#82CD47]'

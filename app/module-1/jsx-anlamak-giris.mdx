@@ -1,0 +1,193 @@
+# JSX Anlamaya Giriş
+
+React içerisinde JSX adı verilen özel bir sözdizimi kullanmak yaygındır. Bir örneği, JavaScript yerine JSX kullanarak yapalım:
+
+```jsx
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+// Eski yöntem:
+// const element = React.createElement(
+//   'p',
+//   {
+//     id: 'hello',
+//   },
+//   'Merhaba Dünya!'
+// );
+
+// Yeni yöntem:
+const element = <p id='hello'>Merhaba Dünya!</p>;
+
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(element);
+```
+
+`React.createElement` yazmak yerine, HTML'ye benzer bir sözdizimi kullanarak React elemanlarını oluşturuyoruz. Peki neden JSX kullanıyoruz? Bu küçük örnekte pek fark edilmese de, kodumuz büyüdükçe JSX'in okunmasının çok daha kolay olduğunu görebiliyoruz.
+
+React elemanlarının tıpkı HTML elemanları gibi bir ağaç yapısı oluşturabilir. Bu, bir React elemanının “children” parametresine başka bir React elemanı koyduğumuzda meydana gelir. Pratikte, React kodlarımızda oldukça karmaşık ağaç yapılarıyla karşılaşabiliriz. İşte, düz JavaScript ile yapılmış bir örnek:
+
+```
+const element = React.createElement(
+  "nav",
+  { id: "main-nav" },
+  React.createElement(
+    "ul",
+    null,
+    React.createElement(
+      "li",
+      null,
+      React.createElement(
+        "a",
+        { href: "/" },
+        "Home"
+      )
+    ),
+    React.createElement(
+      "li",
+      null,
+      React.createElement(
+        "a",
+        { href: "/archives" },
+        "Archives"
+      )
+    )
+  )
+);
+```
+
+Okuması oldukça zor, değil mi? İşte aynı örnek JSX'te:
+
+```
+const element = (
+  <nav id="main-nav">
+    <ul>
+      <li>
+        <a href="/">
+          Home
+        </a>
+      </li>
+      <li>
+        <a href="/archives">
+          Archives
+        </a>
+      </li>
+    </ul>
+  </nav>
+);
+```
+
+Her ne sebeple olursa olsun, HTML benzeri bir sözdizimi beyinlerimiz için daha kolay işlenebilir. Hem okumak hem de yazmak daha keyiflidir.
+
+> ## Parantezlerin Amacı Nedir?
+>
+> Yukarıdaki örnekte, JSX'i parantezler içinde sarıyoruz, şöyle:
+>
+> ```jsx
+> const element = (
+>   <nav id='main-nav'>
+>     <ul>(Liste elemanları, kısalık amacıyla kaldırıldı)</ul>
+>   </nav>
+> );
+> ```
+>
+> Bu tamamen biçimlendirme amaçlıdır. JSX'in bir sonraki satıra geçmesine olanak tanır. Eğer istersek, parantezleri atlayıp "inline" olarak da yazabiliriz, şöyle:
+>
+> ```
+> const element = <nav id="main-nav">
+>  <ul>
+>   (Liste elemanları, kısalık amacıyla kaldırıldı)
+> </ul>
+> </nav>
+> ```
+
+Bu tamamen geçerlidir, ancak okunması biraz daha zordur; elemanlar düzgün hizalanmamış gibi durur. Bu nedenle, React'te yaygın bir kullanım olarak JSX'i kendi satırına taşıyıp parantez kullanarak düzgün çalışmasını sağlıyoruz.
+
+> ```jsx
+> const friendlyGreeting = (
+>   'Biçimlendirmek için tamamen geçerli bir yol!';
+> )
+> ```
+
+## JSX'in JavaScript'e Derlenmesi
+
+Bu JSX kodunu tarayıcıda çalıştırmaya çalışırsak, hata alırız. JavaScript motorları JSX'i anlamaz, yalnızca JavaScript'i anlar. Bu nedenle, kodumuzu basit JS'ye "derlememiz" gerekir.
+Bu işlem genellikle bir yapı aşamasında, Babel gibi bir araç kullanılarak yapılır.
+
+Burada anlaşılması gereken önemli nokta şu: Yazdığımız JSX, `React.createElement`'e dönüştürülür. Kodumuz kullanıcının tarayıcısında çalıştığında, tüm JSX dönüştürülmüş olur ve elimizde iç içe `React.createElement` çağrılarıyla dolu bir JS dosyası kalır.
+
+## React İmport Etmeden Kullanmak Mümkün mü?
+
+Bu kod parçasına tekrar bakalım:
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+const element = (
+  <p id="hello">
+    Merhaba Dünya!
+  </p>
+);
+
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(element);
+```
+
+İlk satırda React'i import ediyoruz, ancak kodda görünürde hiçbir yerde kullanmıyoruz... Peki, gerçekten kullanmıyor muyuz? Bu kısmı çıkartabilir miyiz? Aslında React importunu kullanıyoruz! Şimdi bunun altında yatan durumu inceleyelim.
+
+JSX'i derledikten sonra elimizde şu kod kalıyor:
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+const element = React.createElement(
+  'p',
+  { id: 'hello' },
+  'Merhaba Dünya!'
+);
+
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(element);
+```
+
+JSX basit JavaScript'e dönüştürüldüğünde, React bağımlılığı kendini gösteriyor. `<p>` etiketi, aslında React.createElement çağrısına dönüşüyor! Bu bağımlılık, JSX tarafından saklanıyor.
+
+React'in önceki sürümlerinde, React'i import etmeyi unutursanız şu hatayı alırdınız:
+
+`Error: React is not defined`
+
+Bu hata mesajı, özellikle yeni başlayanlar için kafa karıştırıcıydı. Çoğu öğretici, JSX'in aslında nasıl çalıştığını ayrıntılı olarak ele almaz. Dolayısıyla, `<p>` elemanının `React.createElement('p')` haline geldiğini anlamazsanız, bu hatanın ne olduğunu veya nasıl düzelteceğinizi de bilemezsiniz.
+
+React 17 ile birlikte, React ekibi Babel ve diğer derleyiciler tarafından kullanılan yeni bir "JSX dönüştürücü" tanıttı. Bu dönüştürücü, derleme sürecinde React importunu otomatik olarak ekliyor.
+
+Örneğin, şu kodumuz olduğunu düşünelim:
+
+```
+const element = (
+  <p id="hello">
+    Merhaba Dünya!
+  </p>
+);
+```
+
+Modern JSX dönüştürücü kullanılarak bu kod şu şekilde derlenecektir:
+
+```
+import { jsx as _jsx } from 'react/jsx-runtime';
+
+const element = _jsx(
+  'p',
+  { id: 'hello' },
+  'Merhaba Dünya!'
+);
+```
+
+Dikkat ederseniz, orijinal kodumuzda herhangi bir `import` ifadesi yoktu. Derleyici bu kısmı otomatik olarak ekledi.
+
+`\_jsx`, `React.createElement`'in gelişmiş ve optimize edilmiş bir versiyonudur. Fragments ya da Portals gibi bazı React özelliklerini kullanırken bazı kısayollar sağlar. Bunun dışında, `React.createElement` ile aynı işi yapar: Bir React elemanı oluşturur.
+
+Bu yüzden, artık React import etmeye gerek kalmıyor. JSX derleyicisi bu sorunu bizim için çözüyor.
