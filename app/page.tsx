@@ -11,11 +11,12 @@ const projects = [
       "React'in temellerini öğrenin: Bileşenler, JSX, Uygulama Yapısı, Döngüler, Koşullu Render ve Stillendirme. Modern web geliştirmenin temel taşlarını keşfedin.",
     link: '/module-1',
   },
-  // {
-  //   title: 'React 2',
-  //   description: 'İçerik açıklaması buraya gelecek.',
-  //   link: '/module-2',
-  // },
+  {
+    title: 'JavaScript Temelleri',
+    description:
+      'Bu bonus modülde, React geliştiricileri için gerekli olan modern JavaScript özelliklerini ve bu özelliklerin React içerisindeki kullanımını öğreneceksiniz.',
+    link: '/js-temelleri',
+  },
   // {
   //   title: 'Word Project',
   //   description: 'İçerik açıklaması buraya gelecek.',

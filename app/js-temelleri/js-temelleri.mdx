@@ -1,0 +1,123 @@
+# Deyimler vs. İfadeler
+
+React ile çalışırken, JSX içinde ifadeler kullanmamıza izin verilir, ancak deyimler kullanmamıza izin verilmez. Bu nedenle, bu ikisi arasındaki farkı anlamak oldukça önemlidir!
+
+## İfadeler (Expressions)
+
+Bir ifadenin temeli, bir **değer üreten** JavaScript kodu olmasıdır.
+Örneğin, aşağıdakilerin hepsi birer ifadedir:
+
+- `1` → 1 değeri üretir
+- `"merhaba"` → "merhaba" değerini üretir
+- `5 \* 10` → 50 değerini üretir
+- `num > 100` → `true` veya `false` değerini üretir
+- `isHappy ? "🙂" : "🙁"` → Bir emoji üretir
+- `[1, 2, 3].pop()` → 3 sayısını üretir
+
+İfadeler başka ifadeler içerebilir. Örneğin, bu JS kodu parçasında kaç ifade olduğunu sayabilir misiniz? Bir tahminde bulunun:
+
+```
+let hi = 5;
+```
+
+```
+if (hi > 10) {
+  // Daha fazla deyim burada olacak
+}
+```
+
+```
+throw new Error('Bir şey patladı!');
+```
+
+Bu konuyu şöyle düşünüyorum: Deyimler, programımızı bir arada tutan katı yapıdır, ifadeler ise detayları doldurur.
+Deyimlerin genellikle ifadeler için "yuvaları" vardır. Bu yuvalara istediğimiz herhangi bir ifadeyi yerleştirebiliriz.
+Örneğin, bir değişken tanımlarken bir ifade yuvası bulunur:
+
+```javascript
+let hi = /* bir ifade */;
+```
+
+Daha önce gördüğümüz ifadelerden herhangi birini bu yuvada kullanabiliriz:
+
+```
+let hi = 1;
+let hi = "merhaba";
+let hi = 5 * 10;
+let hi = num > 100;
+let hi = isHappy ? "🙂" : "🙁";
+let hi = [1, 2, 3].pop();
+```
+
+Geçerli sözdizimi açısından ifadeler değiştirilebilir. Bir deyimde bir ifade yuvası varsa, oraya **herhangi bir ifadeyi** koyabiliriz ve kod çalışır. Sözdizimi hatası almayız.
+
+Bununla birlikte, yine de başka sorunlarla karşılaşabiliriz. Örneğin, aşağıdaki kod sözdizimi olarak geçerlidir, ancak çalıştırmaya çalışırsak tarayıcı sekmesini çökertecektir, çünkü bu kod sonsuz bir döngüye neden olur:
+
+```
+while ("merhaba") {
+  // Çünkü "merhaba" ifadesi asla değişmiyor, bu döngü
+  // sürekli çalışacaktır ve script çökecektir.
+  // Sözdizimi olarak geçerli, ancak yine de sorunlu.
+}
+```
+
+Deyimler genellikle noktalı virgülle biter, bu da deyimin sonunu işaret eder. Eğer noktalı virgül unutulursa, tarayıcı bu noktalı virgülleri otomatik olarak ekler ve ardından kodu çalıştırır. Ancak **if** deyimleri, **while** döngüleri ve fonksiyon tanımlamaları gibi bazı deyimler için noktalı virgül gerekli değildir.
+
+## Kullanışlı Bir İpucu
+
+Bir JavaScript kod parçasının ifade mi yoksa deyim mi olduğunu öğrenmek mi istiyorsunuz? Onu konsola yazdırmayı deneyin!
+
+```
+console.log(/* Buraya bir JS kod parçası */);
+```
+
+Eğer çalışıyorsa, bu kod bir **ifadedir**. Eğer hata alıyorsanız, bu bir **deyimdir** (veya geçersiz bir JS kodu olabilir).
+
+Bonus olarak, ifadenin neye çözüldüğünü de görebiliriz, çünkü tarayıcı konsolunda yazdırılacaktır!
+
+Bu yöntem işe yarar çünkü tüm fonksiyon argümanları **ifade** olmak zorundadır. İfadeler bir **değer üretir** ve bu değer fonksiyona aktarılır. Deyimler ise bir değer üretmez, bu yüzden fonksiyon argümanı olarak kullanılamazlar.
+
+## İfadelerin Deyim Olarak Kullanılması
+
+İşte bir ifade: `1 + 2 + 3`.
+
+Peki bu ifadeyi içeren bir JS dosyası oluştursak ne olur? Örneğin, aşağıdaki içeriği `test.js` olarak kaydettiğimizi varsayalım:
+
+```
+1 + 2 + 3
+```
+
+Bu dosyada kaç deyim var? Sıfır mı yoksa bir mi?
+
+Durum şu: ifadeler tek başlarına var olamaz. Onlar her zaman bir deyimin parçasıdır. Bu nedenle, burada şöyle bir deyimimiz var:
+
+```
+/* ifade yuvası */;
+```
+
+Her deyim belirli bir talimattır. Bu durumda, bu deyim bilgisayara "Bu ifade yuvasındaki ifadeyi çalıştır" demektedir.
+
+Bu kodu çalıştırdığımızda, `1 + 2 + 3` ifadesi bu yuvayı doldurur ve bilgisayar programı çalıştırarak ifadeyi çalıştırır ve `6` sayısını üretir.
+
+Bu noktayı pekiştirmek adına, her biri farklı bir amaç taşıyan birkaç **deyim örneği**:
+
+```
+// Deyim 1: Bir değişken oluştur
+let hi = /* ifade yuvası */;
+
+// Deyim 2: Bir fonksiyonda değer döndür
+return /* ifade yuvası */;
+
+// Deyim 3: Verilen ifade false olana kadar döngü çalıştır
+while (/* ifade yuvası */) { }
+
+// Deyim 4: Verilen ifadeyi çalıştır
+/* ifade yuvası */;
+```
+
+İfadeler ve deyimler farklı şeylerdir. Ancak bir deyim, bir ifadeyi herhangi bir ek karakter olmadan sarabilir, tıpkı bir sandviçi şeffaf streç filme sarmak gibi.
+
+Önemli olan şu noktadır:
+
+- **İfadeler bir değer üretir**. Bu değerleri konsola yazdırabilir, değişkenlere atayabilir veya fonksiyonlara argüman olarak verebiliriz. İfade yuvası gördüğümüz her yerde ifadeleri kullanabiliriz.
+- **Deyimler**, belirli bir şeyi yapma talimatıdır, örneğin bir değişken tanımlamak veya bir döngü çalıştırmak gibi. Deyimleri sadece belirli yerlerde kullanabiliriz.
