@@ -19,6 +19,13 @@ export default function Module1Page() {
         "JSX'in ne olduğunu, neden kullanıldığını ve JavaScript'e nasıl derlendiğini öğrenin. React elemanlarını oluşturmanın kolay yolunu keşfedin.",
       href: '/module-1/jsx-anlamak-giris',
     },
+    {
+      id: '3',
+      title: 'İfade Slotları',
+      description:
+        'JSX içinde ifade slotlarını kullanmayı öğrenin. Dinamik değerler, öznitelikler ve yorumlar için süslü parantezlerin gücünü keşfedin.',
+      href: '/module-1/ifade-slotlari',
+    },
   ];
 
   return (

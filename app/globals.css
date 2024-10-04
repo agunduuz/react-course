@@ -25,6 +25,11 @@ html {
   color: #cccccc;
 }
 
+.mdx-content p a {
+  font-weight: 700;
+  color: #fff;
+}
+
 .mdx-content pre {
   background-color: #111;
   padding: 10px 30px;
