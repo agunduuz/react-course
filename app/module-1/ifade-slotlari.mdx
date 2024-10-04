@@ -138,33 +138,33 @@ Benzer şekilde, sayısal öznitelikler için hem sayı hem de string değerler 
 <input type="range" min={1} max={20} />
 ```
 
-## Boolean Öznitelikler
-
-HTML'de bir özniteliği `true` olarak ayarlamak için sadece öznitelik adını belirtmek yeterlidir:
-
-```html
-<input required />
-```
-
-JSX'te de bu aynı şekilde uygulanabilir; aşağıdaki iki element birbirine denktir:
-
-```javascript
-<input required />
-<input required={true} />
-```
-
-Çoğu yazılımcı daha açık olmayı tercih ediyor ve required={true} olarak yazmaktadır.
-
-Bunun nedenini anlamak için, JavaScript'te yalnızca anahtar sağlandığında bunun ne anlama geldiğini düşünmeye değer.
-
-```
-const isim = 'Karabas';
-const kopek = { isim };
-
-console.log(kopek);
-// → { isim: 'Karabas' }
-```
-
-JavaScript nesnelerinde `{ isim }`, `{ isim: isim }` ifadesine eşittir, `{ isim: true }` değil.
-
-JSX, HTML ve JS arasında biraz hibrit bir yapıya sahip olduğu için bu durum yeni geliştiriciler için kafa karıştırıcı olabiliyor. JSX'e HTML perspektifinden bakarsanız değerin `true` olmasını beklersiniz, ancak JavaScript açısından bakarsanız değerin anahtara eşit olmasını beklersiniz.
+> ## Boolean Öznitelikler
+>
+> HTML'de bir özniteliği `true` olarak ayarlamak için sadece öznitelik adını belirtmek yeterlidir:
+>
+> ```html
+> <input required />
+> ```
+>
+> JSX'te de bu aynı şekilde uygulanabilir; aşağıdaki iki element birbirine denktir:
+>
+> ```javascript
+> <input required />
+> <input required={true} />
+> ```
+>
+> Çoğu yazılımcı daha açık olmayı tercih ediyor ve required={true} olarak yazmaktadır.
+>
+> Bunun nedenini anlamak için, JavaScript'te yalnızca anahtar sağlandığında bunun ne anlama geldiğini düşünmeye değer.
+>
+> ```
+> const isim = 'Karabas';
+> const kopek = { isim };
+>
+> console.log(kopek);
+> // → { isim: 'Karabas' }
+> ```
+>
+> JavaScript nesnelerinde `{ isim }`, `{ isim: isim }` ifadesine eşittir, `{ isim: true }` değil.
+>
+> JSX, HTML ve JS arasında biraz hibrit bir yapıya sahip olduğu için bu durum yeni geliştiriciler için kafa karıştırıcı olabiliyor. JSX'e HTML perspektifinden bakarsanız değerin `true` olmasını beklersiniz, ancak JavaScript açısından bakarsanız değerin anahtara eşit olmasını beklersiniz.
