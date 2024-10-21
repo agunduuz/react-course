@@ -1,0 +1,339 @@
+# HTML'den Farklılıklar
+
+JSX, HTML'ye benzese de bazı temel farklılıklar vardır. Bu yazıda, bu farklılıklara daha yakından bakacağız.
+
+**Not: Bu kuralların hepsini hemen ezberlemeye çalışmayın! React bu hataları yaptığımızda bizi doğru yöne yönlendirme konusunda oldukça iyi. Geliştirici konsoluna göz kulak olduğunuz sürece, bu kuralları ezberlemenize gerek yok.**
+
+## Rezerve Kelimeler
+
+JavaScript'te birkaç düzine **"rezerve kelime"** vardır. Rezerve kelimeler, yerleşik işlevselliğe sahip anahtar kelimelerdir. Zaten belirli bir işlev yaptıkları için bu kelimeleri JSX'te kullanamayız.
+
+Örneğin:
+
+```
+const while = 10;
+```
+
+Bu kodu çalıştırmaya kalkarsak bir sözdizimi hatası alırız, çünkü while bir rezerve kelimedir ve "while döngüleri" için kullanılır:
+
+```
+let sayac = 5;
+
+while (sayac > 0) {
+  console.log('Geri sayım:', sayac);
+  sayac -= 1;
+}
+```
+
+JSX, JS'e dönüştüğü için JSX'te hiçbir rezerve kelimeyi kullanamayız. Bu da bir soruna yol açar, çünkü HTML öznitelikleri bazen JavaScript rezerve kelimeleriyle çakışabilir.
+
+Şu JSX örneğini düşünelim:
+
+```
+const element = (
+  <div>
+    <label for="isim">
+      İsim:
+    </label>
+    <input
+      id="isim"
+      class="eglenceli-input"
+    />
+  </div>
+);
+```
+
+Bu kodu JavaScript'e derlersek, iki rezerve kelime kullandığımızı fark ederiz:
+
+- `for`
+- `class`
+
+Bu çakışmanın üstesinden gelmek için React bu iki terimi biraz farklılaştırarak kullanır:
+
+```
+const element = (
+  <div>
+    <label htmlFor="isim">
+      İsim:
+    </label>
+    <input
+      id="isim"
+      className="eglenceli-input"
+    />
+  </div>
+);
+```
+
+Özellikle:
+
+- `for`, `htmlFor` olarak değiştirilir.
+- `class`, `className` olarak değiştirilir.
+
+Bu zihinsel dönüşümü yapmamız gerekmesi biraz can sıkıcı olabilir, ama alışması çok uzun sürmüyor!
+
+> ## Çalışıyor gibi görünüyor, ama…
+>
+> Eğer JSX'te for ve class kullanmayı denerseniz, React framework'ünden arkadaşça bir uyarı alırsınız, ancak herhangi bir hata almazsınız. Aslında her şey gayet iyi çalışıyor gibi görünebilir!
+>
+> Gerçek şu ki, bu spesifik durumda rezerve kelimelerle ilgili bir çakışma yoktur. Ancak başka durumlarda büyük sorunlarla karşılaşabilirsiniz. Güvende kalmak için JSX'te `for` veya `class` kullanmamalısınız.
+>
+> Biraz daha spesifik olmak gerekirse: for ve class, yerel HTML elementlerinde kullanıldığında gayet iyi çalışır, ancak özel bileşenlerde kullanmaya çalışırsak sorun yaşarız.
+>
+> Özel bileşenler veya props hakkında henüz konuşmadık, bu yüzden burada ne olduğunu anlamıyorsanız endişelenmeyin. Eğer for ve class kelimelerinin neden sorun yaratabileceği konusunda gerçekten meraklıysanız, bu yazıyı yer imlerine ekleyip **React 1** bitirdikten sonra geri dönün. O zaman umarım daha anlamlı gelecektir!
+
+## Kendiliğinden Kapanan Etiketler
+
+HTML oldukça esnek bir dildir. Örneğin, aşağıdaki HTML tamamen geçerlidir:
+
+```
+<div>
+  <p>Bu paragraf açıldı... ama hiç kapanmadı.
+  <p>Kapanış etiketlerini atlıyoruz!
+</div>
+```
+
+Paragraf etiketleri iç içe olamaz. Tarayıcı, ikinci paragraf başlamadan önce ilk paragrafın sona ermesi gerektiğini anlayacak kadar akıllıdır ve eksik olan `</p>` etiketini otomatik olarak ekler. Bu, JavaScript motorunun eksik noktalı virgülleri eklemesine benzer.
+
+JSX ise bu konuda oldukça katıdır. Açtığımız her etiketi kapatmamız gerekir:
+
+```
+const element = (
+  <div>
+    <p>Bu paragraflar geçerlidir.</p>
+    <p>Kapanış etiketleri içerirler.</p>
+  </div>
+);
+```
+
+HTML5'te bazı elementlerin kapanış etiketleri yoktur. Örneğin, `img` etiketi çocuk elementlere sahip olamaz, bu yüzden kapanmasına gerek yoktur:
+
+```
+<img
+  alt="Dost canlısı bir kedi"
+  src="/images/kedi.jpg"
+>
+```
+
+(Bu kendiliğinden kapanan `<img />` sözdizimi, HTML'nin eski sürümlerinden gelir. Modern HTML'de gerekli değildir, ancak hala geçerlidir ve birçok geliştirici alışkanlık olarak kullanmaya devam eder.)
+
+## Büyük-Küçük Harf Duyarlı Etiketler
+
+HTML, büyük-küçük harfe duyarsız bir dildir. Hatta yıllar önce HTML'nin tamamen büyük harflerle yazılması yaygındı:
+
+```
+<MAIN>
+  <HEADER>
+    <H1>Merhaba Dünya!</H1>
+  </HEADER>
+  <P>
+    Bu HTML çok gürültülü!
+  </P>
+</MAIN>
+```
+
+Buna karşılık, JSX büyük-küçük harfe duyarlıdır. Etiketlerimizin hepsinin küçük harfle yazılması gerekir:
+
+```
+const element = (
+  <main>
+    <header>
+      <h1>Merhaba Dünya!</h1>
+    </header>
+    <p>
+      Bu HTML çok gürültülü!
+    </p>
+  </main>
+);
+```
+
+Bu kısıtlama rastgele gibi görünebilir, ancak bunun çok iyi bir nedeni var: JSX derleyicisi, etiketin büyük-küçük harfine bakarak bunun bir "primitif" (DOM'un bir parçası) mi yoksa özel bir bileşen mi olduğunu anlar.
+
+## Büyük-Küçük Harf Duyarlı Nitelikler
+
+JSX'te niteliklerimizi "camelCase" (Boşlukların kaldırıldığı ve boşluklardan sonraki kelimelerin baş harfinin büyük yazıldığı bir format. Örneğin "Merhaba dünya" ifadesi "merhabaDünya" olarak yazılır) şeklinde kullanmamız gerekiyor.
+
+Örneğin, aşağıdaki HTML geçerlidir:
+
+```
+<video
+  src="/videos/kedi-kaykay.mp4"
+  autoplay="true"
+>
+```
+
+JSX'te, "autoplay" içindeki "p" harfini büyük yapmamız gerekir, çünkü "auto" ve "play" ayrı kelimelerdir:
+
+```
+const element = (
+  <video
+    src="/videos/kedi-kaykay.mp4"
+    autoPlay={true}
+    //  ^ Büyük "P"
+  />
+);
+```
+
+(Ayrıca, true değerini bir ifade slotu {} içinde kullandım, bu React'te biraz daha yaygın bir yazım şeklidir, ancak her iki seçenek de çalışacaktır.)
+
+Bir nitelikte birden fazla kelime olup olmadığını anlamak zor olabilir, özellikle de ana diliniz İngilizce değilse! Neyse ki, hata yaptığınızda geliştirici araçlarında faydalı bir uyarı alırsınız.
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+const element = (
+  <video
+    src="https://sandpack-bundler.vercel.app/videos/kedi-kaykay.mp4"
+    autoplay={true}
+  />
+);
+
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(element);
+```
+
+#### Konsol Uyarısı:
+
+"Geçersiz DOM özelliği `autoplay`. `autoPlay` mi demek istediniz?"
+
+Büyük harf ile yazılması gereken diğer nitelikler şunlardır:
+
+- `onclick` -> `onClick`
+- `tabindex` -> `tabIndex`
+- `stroke-dasharray` -> `strokeDasharray` (bu SVG'lere özeldir)
+
+> ## Data ve ARIA Nitelikleri Kendi Tirelerini Korur
+>
+> Niteliklerin "camelCase" olmasıyla ilgili iki istisna vardır: `data` nitelikleri ve `ARIA` nitelikleri. Örneğin, aşağıdaki JSX geçerlidir:
+>
+> ```jsx
+> const element = (
+>   <button
+>     data-test-id='kapat-diyalog-buton'
+>     aria-label='Diyaloğu kapat'
+>   >
+>     <img alt='' src='/icons/x.svg' />
+>   </button>
+> );
+> ```
+>
+> `data` nitelikleri React'te çok sık kullanılmaz, ancak otomatik testler için elementleri etiketlemek adına yardımcı olabilir. ARIA nitelikleri ise ekran okuyucular gibi yardımcı teknolojiler tarafından kullanılarak uygulamalarımızın erişilebilirliğini artırır.
+
+## Satır İçi Stiller
+
+HTML'de `style` niteliği, belirli bir elemente satır içi stil eklememizi sağlar:
+
+```
+<h1 style="font-size: 2rem;">
+  Merhaba Dünya!
+</h1>
+```
+
+JSX'te ise `style` niteliği bir nesne alır:
+
+```
+const element = (
+  <h1 style={{ fontSize: '2rem' }}>
+    Merhaba Dünya!
+  </h1>
+);
+```
+
+> ## Çift süslü parantezler??
+>
+> İki set süslü paranteze ihtiyacımız olması garip gelebilir. Neden bu şekilde yazamıyoruz?
+>
+> ```jsx
+> const element = (
+>  <h1 style={ fontSize: '2rem' }>
+>    Merhaba Dünya!
+>  </h1>
+> );
+> ```
+>
+> [Önceki dersten](https://react-course-kappa.vercel.app/module-1/ifade-slotlari) hatırlayacağınız gibi, süslü parantezleri JSX'e JavaScript ifadeleri eklemek için kullanıyoruz. Örneğin, şu şekilde kullanabiliriz:
+>
+> ```
+> const avatarSrc = '/images/avatar.png';
+>
+> const element = (
+>  <img
+>    alt="kullanıcı avatarı"
+>    src={avatarSrc}
+>  />
+> );
+> ```
+>
+> `style` için ise, ayarlamak istediğimiz CSS özelliklerini ve değerlerini içeren bir nesne iletmek istiyoruz:
+>
+> ```jsx
+> const customStyles = {
+>   fontSize: '2rem',
+>   fontWeight: 'bold',
+> };
+>
+> const element = <h1 style={customStyles}>Merhaba Dünya!</h1>;
+> ```
+>
+> Bu stilleri tutmak için bir değişken oluşturmak yerine, çoğu zaman nesnenin kendisini doğrudan JSX ifadesine yerleştiririz:
+>
+> ```jsx
+> const element = (
+>   <h1
+>     style={{
+>       fontSize: '2rem',
+>       fontWeight: 'bold',
+>     }}
+>   >
+>     Merhaba Dünya!
+>   </h1>
+> );
+> ```
+>
+> İki set süslü paranteze ihtiyacımız var:
+>
+> - Dıştaki set, JSX'te bir "ifade alanı" oluşturur ve bu alana bir JavaScript ifadesi yerleştirilir.
+> - İçteki set, CSS tanımlamalarını tutacak bir JavaScript nesnesi oluşturur.
+
+#### CSS Özelliklerinin "camelCase" Olarak Yazılması
+
+Tüm CSS özellikleri "camelCase" olarak yazılır. Her çizgi (-) kaldırılır ve sonraki kelimenin ilk harfi büyük yapılır:
+
+- `background-position` -> `backgroundPosition`
+- `border-bottom-color` -> `borderBottomColor`
+
+Vendor ön ekleri (tarayıcı ön ekleri) için, örneğin `-webkit-font-smoothing`, ilk harf de büyük yapılır: `WebkitFontSmoothing`.
+
+Ayrıca, React bazı CSS özelliklerine otomatik olarak `px` birimi ekler. Örneğin:
+
+```
+<div
+  style={{
+    width: 200, // `width: 200px` ile aynı
+    paddingTop: 8, // `padding-top: 8px` ile aynı
+  }}
+>
+```
+
+#### Birimsiz Değer Kullanan Özelliklere Dikkat Edin
+
+Bazı özellikler varsayılan olarak birimsiz değer alır, örneğin `flex` veya `lineHeight`.
+
+```jsx
+<p style={{
+    lineHeight: 20, // `line-height: 20` ile aynı
+  }}
+>
+```
+
+React'te mümkün olduğunca birimsiz değer kullanmak yaygın bir alışkanlık olsa da, tam birimleri tercih ediyorsanız kesinlikle kullanabilirsiniz:
+
+```jsx
+<p
+  style={{
+    width: '200px',
+    paddingTop: '8px',
+  }}
+>
+```

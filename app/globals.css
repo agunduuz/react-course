@@ -49,6 +49,20 @@ html {
   padding: 20px;
   color: #82cd47;
 }
+.mdx-content h4 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.mdx-content ul li {
+  margin-bottom: 5px;
+}
+
+.mdx-content ul li code {
+  padding: 5px 7px;
+  background-color: #333;
+  border-radius: 5px;
+}
 
 .mdx-content blockquote {
   padding: 20px 40px;

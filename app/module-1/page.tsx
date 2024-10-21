@@ -26,6 +26,13 @@ export default function Module1Page() {
         'JSX içinde ifade slotlarını kullanmayı öğrenin. Dinamik değerler, öznitelikler ve yorumlar için süslü parantezlerin gücünü keşfedin.',
       href: '/module-1/ifade-slotlari',
     },
+    {
+      id: '4',
+      title: 'HTML Farklılıkları',
+      description:
+        'JSX ve HTML arasındaki temel farklılıkları öğrenin: rezerve kelimeler, kendiliğinden kapanan etiketler, büyük-küçük harf duyarlılığı ve satır içi stillerin kullanımı.',
+      href: '/module-1/react-ile-html-farkliliklari',
+    },
   ];
 
   return (
