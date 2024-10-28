@@ -62,11 +62,12 @@ const projects = [
   //   description: 'İçerik açıklaması buraya gelecek.',
   //   link: '/bonus-module-2',
   // },
-  // {
-  //   title: 'Reference',
-  //   description: 'İçerik açıklaması buraya gelecek.',
-  //   link: '/reference',
-  // },
+  {
+    title: 'Kullanım Araçları',
+    description:
+      "Modern web geliştirme için gerekli temel araçları keşfedin: Terminal, IDE, Node.js, NPM, kod formatlayıcılar ve bundler'lar. Verimli geliştirme ortamınızı oluşturun.",
+    link: '/tools-user',
+  },
   // {
   //   title: 'Reference 2',
   //   description: 'İçerik açıklaması buraya gelecek.',

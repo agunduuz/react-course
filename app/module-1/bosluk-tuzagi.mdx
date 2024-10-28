@@ -1,0 +1,92 @@
+# Boşluk Tuzağı
+
+JSX ile ilgili en yaygın "tuzağa" düşülen durumlardan biri hakkında konuşalım.
+
+```jsx
+import { createRoot } from 'react-dom/client';
+
+const daysUntilSantaReturns = 123;
+
+const element = (
+  <div>
+    <strong>Noel Baba'nın dönüşüne kalan günler:</strong>
+    {daysUntilSantaReturns}
+  </div>
+);
+
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(element);
+// Noel Baba'nın dönüşüne kalan günler:123
+```
+
+Kalın metin ile sayı arasında boşluk olmadığını fark ettiniz mi? "returns: 123" yerine "returns:123" şeklinde gösteriliyor.
+
+Bunun neden olduğunu anlamak için, bu JSX'in JavaScript'e nasıl dönüştüğüne bir bakalım:
+
+```jsx
+const element = React.createElement(
+  'div',
+  {},
+  React.createElement(
+    'strong',
+    {},
+    "Noel Baba'nın dönüşüne kalan günler:"
+  ),
+  daysUntilSantaReturns
+);
+```
+
+Bizim `<div>` öğemizin iki çocuğu var: `<strong>` etiketi ve `daysUntilSantaReturns` değişkeni.
+
+Unutmayın, JSX HTML'ye değil, JavaScript'e derlenir. Bu JavaScript çalıştırıldığında, sadece iki HTML düğümü oluşturulur ve eklenir:
+
+- İçinde metin olan bir `<strong>` etiketi.
+- 123 sayısı için bir metin düğümü.
+
+Peki bunu nasıl düzeltebiliriz? En yaygın çözüm, süslü parantezler içinde tek bir boşluk karakteri eklemektir:
+
+```
+const element = (
+  <div>
+    <strong>Noel Baba'nın dönüşüne kalan günler:</strong>
+    {' '}
+    {daysUntilSantaReturns}
+  </div>
+);
+```
+
+Bu şekilde metin ve sayı arasında istediğiniz boşluk gösterilir.
+
+Bu şekilde derlenir:
+
+```
+const element = React.createElement(
+  'div',
+  {},
+  React.createElement(
+    'strong',
+    {},
+    'Noel Baba’nın dönüşüne kalan günler:'
+  ),
+  ' ',
+  daysUntilSantaReturns
+);
+```
+
+İtiraf etmeliyim ki, bu numarayı ilk öğrendiğimde, gerçekten çözüm bu mu diye sorgulamıştım. React ekibinin bu hatayı düzeltmesini ve beyaz boşlukları HTML'deki gibi işlemesini dilemiştim.
+
+Ancak fark ettim ki, bu davranış aslında bir hatadan çok bir özellik.
+
+> Web'de beyaz boşlukların iki farklı işlevi vardır:
+>
+> - Cümlelerdeki kelimeler arasında dilbilgisel boşluklar oluşturur.
+> - Geliştiriciler için kod okunabilirliğini artırmak amacıyla girinti olarak kullanılır.
+>
+> HTML veya JSX işleyen herhangi bir araç, her bir beyaz boşluk karakterinin nasıl yorumlanacağını çözmek zorundadır. Bu bir boşluk mu olmalı, yoksa girinti mi? HTML'de her beyaz boşluk karakteri (satır sonu karakterleri de dahil olmak üzere!) tek bir görünür boşluk üretir. Bazı durumlarda bu avantajımıza çalışır, ancak diğer durumlarda engel olabilir.
+
+> ## Prettier ile Formatlama
+>
+> - Son birkaç yılda, JavaScript topluluğunda büyük yankı uyandıran bir formatlama aracı olan **Prettier** ortaya çıktı. Prettier, kodumuzu otomatik olarak formatlayan bir araçtır. Belirli kuralları takip eder ve çoğu JavaScript geliştiricisinin kullandığı standartlara uyar.
+> - Güzel haber şu ki: Prettier, bu beyaz boşluk meselesini biliyor ve gerektiğinde {' '} karakterini otomatik olarak ekliyor.
+> - Bu kursun ilerleyen bölümlerinde Prettier'i projelerimize nasıl entegre edeceğimizi öğreneceğiz. [Şimdiden merak ediyorsanız, göz atabilirsiniz! 👀](/tools-user/prettier)

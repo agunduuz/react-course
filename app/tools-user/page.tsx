@@ -3,42 +3,14 @@ import { AuroraBackground } from '@/components/ui/aurora-background';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-export default function Module1Page() {
+export default function Tools() {
   const blogPosts = [
     {
       id: '1',
-      title: 'React ile "Merhaba Dünya"',
+      title: 'Prettier',
       description:
-        "React'e giriş yapın: Basit bir 'Merhaba Dünya' uygulaması oluşturarak React'in temel kavramlarını, DOM manipülasyonunu ve render işlemini öğrenin.",
-      href: '/module-1/merhaba-dunya',
-    },
-    {
-      id: '2',
-      title: 'JSX Anlamaya Giriş',
-      description:
-        "JSX'in ne olduğunu, neden kullanıldığını ve JavaScript'e nasıl derlendiğini öğrenin. React elemanlarını oluşturmanın kolay yolunu keşfedin.",
-      href: '/module-1/jsx-anlamak-giris',
-    },
-    {
-      id: '3',
-      title: 'İfade Slotları',
-      description:
-        'JSX içinde ifade slotlarını kullanmayı öğrenin. Dinamik değerler, öznitelikler ve yorumlar için süslü parantezlerin gücünü keşfedin.',
-      href: '/module-1/ifade-slotlari',
-    },
-    {
-      id: '4',
-      title: 'HTML Farklılıkları',
-      description:
-        'JSX ve HTML arasındaki temel farklılıkları öğrenin: rezerve kelimeler, kendiliğinden kapanan etiketler, büyük-küçük harf duyarlılığı ve satır içi stillerin kullanımı.',
-      href: '/module-1/react-ile-html-farkliliklari',
-    },
-    {
-      id: '5',
-      title: 'Boşluk Tuzağı',
-      description:
-        "JSX'te boşluk karakterlerinin nasıl işlendiğini ve yaygın boşluk tuzaklarından nasıl kaçınabileceğinizi öğrenin. Prettier ile format çözümlerini keşfedin.",
-      href: '/module-1/bosluk-tuzagi',
+        'Standartları belirleyen bir kod biçimlendirme aracı. Kodumuzu, topluluk standartlarına uygun hale gelecek şekilde yeniden düzenler.',
+      href: '/tools-user/prettier',
     },
   ];
 
@@ -48,7 +20,7 @@ export default function Module1Page() {
         <div className='h-lvh md:w-[768px] sm:w-full px-2'>
           <div className='flex items-center justify-between'>
             <h1 className='text-[#f1f1f1] mt-4 text-xl	font-semibold	text-center'>
-              React 1
+              Kullanım Araçları
             </h1>
             <Link
               href='/'

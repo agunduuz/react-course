@@ -1,0 +1,114 @@
+# Prettier
+
+Prettier, 'standartları belirleyen' bir kod biçimlendirme aracıdır. Kodumuzu, topluluk standartlarına uygun hale gelecek şekilde yeniden düzenler.
+
+Örneğin, aşağıdaki gibi bir kod yazdığınızı varsayalım:
+
+```
+function myFunction( theFirstParameter, theSecondParameter, theThirdParameter )
+{
+  return {hi: 5}
+}
+```
+
+Bu kod geçerli olsa da, alışılmadık bir şekilde biçimlendirilmiştir. Prettier kullanıldığında ise şu çıktıyı elde ederiz:
+
+```
+function myFunction(
+  theFirstParameter,
+  theSecondParameter,
+  theThirdParameter
+) {
+  return { hi: 5 };
+}
+```
+
+Prettier, React ekosisteminde ve daha geniş kod dünyasında yaygın olarak kullanılmaktadır. Çoğu ekip Prettier kullanır ve internette göreceğiniz kodların çoğu Prettier ile formatlanmıştır.
+
+Çoğu geliştirici, Prettier'in formatlama tercihleriyle ilgili bazı eleştiriler sunsa da, Prettier’in bu kadar popüler hale gelmesinin basit bir nedeni var: tutarlı biçimlendirme, kişisel tercihlerinizle tamamen örtüşmese bile harikadır.
+
+## Kurulum ve Ayarlama
+
+Prettier, son derece esnek bir araçtır. NPM script’i olarak çalıştırmak dahil olmak üzere birçok kullanım yolu vardır. Ya da editör seviyesinde çalıştırarak, kaydederken otomatik olarak formatlamayı sağlamaktır.
+
+VS Code kullandığınızı varsayarsak, VS Code kullandığınızı varsayarsak, ilk adım [resmi VS Code uzantısını](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) kurmaktır. Bunu yapmak için “Extensions” sekmesini (`⌘` + `Shift` + `X`) açarak "Prettier" araması yapabilirsiniz.
+
+Sonrasında, Prettier’i varsayılan biçimlendirici olarak ayarlamamız gerekiyor. “Settings” (Ayarlar) sekmesini açın, Preferences -> Settings (Tercihler -> Ayarlar) seçeneğini tıklayın ve “formatter” (biçimlendirici) araması yapın. Açılır menüden Prettier’i seçin:
+
+<Image
+  src='/images/tools-images/prettier-default-formatter.png'
+  width={800}
+  height={450}
+  alt="VS Code'da Prettier'ı varsayılan biçimlendirici olarak ayarlama"
+/>
+
+Formatlayıcıyı istediğiniz zaman “format” komutunu çalıştırarak kullanabilirsiniz. Bu işlemin kısayolu macOS’te Shift + Option + F, Windows’ta ise Shift + Alt + F tuşlarıdır.
+
+Ancak, daha kolay bir seçenek de mevcut. “Format” işlemini her seferinde elle çalıştırmak yerine, VS Code’a belgeyi kaydettiğinizde otomatik olarak formatlamasını söyleyebilirsiniz.
+
+Bu işlemi aktif hale getirmek için etkinleştirmeniz gereken ayar şudur:
+
+<Image
+  src='/images/tools-images/prettier-format-on-save.png'
+  width={800}
+  height={450}
+  alt='Belge kaydedildiğinde Format çalıştırılsın.'
+/>
+
+## Prettier Yapılandırma
+
+Genel olarak, Prettier kendi belirlediği standartları takip eder ve bu konuda yapabileceğiniz fazla bir şey yoktur. Ancak, bazı istisnalar vardır.
+
+Prettier ile aşağıdaki ayarları yapabilirsiniz:
+
+- Tek tırnak (') veya çift tırnak (") kullanımını ayarlamak.
+- Satır sonlarına noktalı virgül eklenip eklenmeyeceğini belirlemek.
+- Parantez içlerinde boşluk bırakıp bırakmamayı seçmek (`{ hi: 5 }` veya `{hi: 5}` gibi).
+
+Tüm yapılandırma seçeneklerinin listesini [Prettier dokümantasyonunda](https://prettier.io/docs/en/options.html) bulabilirsiniz. Bu seçenekleri VS Code ayarlarında düzenleyebilirsiniz; ilgili tüm ayarları görmek için "prettier" araması yapmanız yeterlidir.
+
+## Prettier'i Devre Dışı Bırakma
+
+Çoğu zaman Prettier, tutarlı bir stil dayatarak okunabilirliği artırır. Ancak bazen, Prettier kodun okunmasını zorlaştırabilir.
+
+Örneğin, iç içe geçmiş ternary ifadelerini şu şekilde formatlamayı tercih edilebilirsiniz:
+
+```
+const result = someVal < 0
+  ? 'negative'
+  : someVal > 100
+    ? 'big'
+    : 'normal';
+```
+
+Prettier, satır sığacaksa hepsini tek satırda toplar:
+
+```
+const result =
+  someVal < 0 ? 'negative' : someVal > 100 ? 'big' : 'normal';
+```
+
+Neyse ki, Prettier'i satır bazında devre dışı bırakmak için özel bir yorum satırı kullanabiliriz:
+
+```
+// prettier-ignore
+const result = someVal < 0
+  ? 'negative'
+  : someVal > 100
+    ? 'big'
+    : 'normal';
+```
+
+`// prettier-ignore` yorum satırı, Prettier'e bir sonraki satırın (ve aynı ifadenin bir parçası olan diğer satırların) formatını değiştirmemesini söyler.
+
+## Prettier ile Sorunları Belirleme
+
+Kod yazarken, kodu biçimlendirmek için sürekli "Kaydet" kısayoluna basıyorum.
+
+Ancak bazen kod, kaydetmeme rağmen biçimlenmiyor. "Kaydet" kısayolunun etkisiz kaldığını fark ediyorum.
+
+**Bu genellikle bir sözdizimi hatası olduğu anlamına gelir. Eğer Prettier kodu biçimlendiremiyorsa, bu kodun geçerli bir JavaScript olmadığını gösterir.**
+
+Bu durum sayesinde hatalar daha hızlı keşfedilir; çünkü Prettier devreye girmediğinde, hata fark ediliyor. Eğer her 60 saniyede bir "Kaydet" kısayoluna basarsanız, hatayı bir dakika içinde yaptığınızı anlayabilirsiniz.
+
+Prettier, sorunu bulmanıza da yardımcı olabilir. Genellikle, önce büyük bir kod parçasını silip biçimlendirmeyi denerim. Eğer çalışırsa, sorun silinen kısımda demektir. Çalışmazsa, başka bir parçayı silip tekrar denerim.

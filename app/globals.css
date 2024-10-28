@@ -64,6 +64,11 @@ html {
   border-radius: 5px;
 }
 
+.mdx-content ul li a {
+  font-weight: 800;
+  color: #f1f1f1;
+}
+
 .mdx-content blockquote {
   padding: 20px 40px;
   border: 10px solid #444;
