@@ -15,10 +15,10 @@ export const AuroraBackground = ({
   ...props
 }: AuroraBackgroundProps) => {
   return (
-    <main>
+    <main className='min-h-screen'>
       <div
         className={cn(
-          'relative flex md:h-[100vh] h-lvh justify-center bg-[#000] dark:bg-zinc-900  text-slate-950 transition-bg',
+          'relative flex md:h-[100vh] h-full justify-center bg-[#000] dark:bg-zinc-900  text-slate-950 transition-bg min-h-screen',
           className
         )}
         {...props}

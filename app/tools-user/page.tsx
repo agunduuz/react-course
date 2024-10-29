@@ -17,7 +17,7 @@ export default function Tools() {
   return (
     <AuroraBackground>
       <motion.div className='z-10 inset-0'>
-        <div className='h-lvh md:w-[768px] sm:w-full px-2'>
+        <div className='h-full md:w-[768px] sm:w-full px-2 min-h-screen'>
           <div className='flex items-center justify-between'>
             <h1 className='text-[#f1f1f1] mt-4 text-xl	font-semibold	text-center'>
               Kullanım Araçları
