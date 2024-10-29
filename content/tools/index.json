@@ -1,0 +1,10 @@
+{
+  "chapters": [
+    {
+      "id": "01",
+      "slug": "prettier",
+      "title": "Prettier",
+      "description": "Standartları belirleyen bir kod biçimlendirme aracı. Kodumuzu, yeniden düzenler."
+    }
+  ]
+}

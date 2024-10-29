@@ -1,0 +1,19 @@
+{
+  "modules": [
+    {
+      "title": "React Temelleri",
+      "description": "React'in temellerini öğrenin: Bileşenler, JSX, Uygulama Yapısı, Döngüler, Koşullu Render ve Stillendirme. Modern web geliştirmenin temel taşlarını keşfedin.",
+      "link": "/react-basics"
+    },
+    {
+      "title": "JavaScript Temelleri",
+      "description": "Bu bonus modülde, React geliştiricileri için gerekli olan modern JavaScript özelliklerini ve bu özelliklerin React içerisindeki kullanımını öğreneceksiniz.",
+      "link": "/js-basics"
+    },
+    {
+      "title": "Kullanım Araçları",
+      "description": "Modern web geliştirme için gerekli temel araçları keşfedin: Terminal, IDE, Node.js, NPM, kod formatlayıcılar ve bundler'lar. Verimli geliştirme ortamınızı oluşturun.",
+      "link": "/tools"
+    }
+  ]
+}

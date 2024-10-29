@@ -1,6 +1,8 @@
 import Image, { ImageProps } from 'next/image';
 
-type CustomImageProps = Omit<ImageProps, 'alt'> & { alt?: string };
+export type CustomImageProps = Omit<ImageProps, 'alt'> & {
+  alt?: string;
+};
 
 export default function CustomImage(props: CustomImageProps) {
   return (
@@ -8,7 +10,7 @@ export default function CustomImage(props: CustomImageProps) {
       <Image
         {...props}
         alt={props.alt || ''}
-        className='w-full md:w-[75%] rounded-xl  shadow-md shadow-white'
+        className='w-full md:w-[75%] rounded-xl shadow-md shadow-white'
       />
     </div>
   );

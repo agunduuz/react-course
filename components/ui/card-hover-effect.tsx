@@ -3,17 +3,21 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
 
+interface Module {
+  title: string;
+  description: string;
+  link: string;
+}
+
+interface HoverEffectProps {
+  items: Module[];
+  className?: string;
+}
+
 export const HoverEffect = ({
   items,
   className,
-}: {
-  items: {
-    title: string;
-    description: string;
-    link: string;
-  }[];
-  className?: string;
-}) => {
+}: HoverEffectProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(
     null
   );
@@ -27,8 +31,8 @@ export const HoverEffect = ({
     >
       {items.map((item, idx) => (
         <Link
-          href={item?.link}
-          key={item?.link}
+          href={item.link}
+          key={item.link}
           className='relative group  block p-2 h-full w-full'
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
@@ -60,6 +64,7 @@ export const HoverEffect = ({
   );
 };
 
+// Card bileşenleri aynı kalabilir...
 export const Card = ({
   className,
   children,

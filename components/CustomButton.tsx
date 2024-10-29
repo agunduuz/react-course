@@ -1,25 +1,19 @@
-'use client';
+import { ReactNode } from 'react';
 
-import React from 'react';
-
-interface CustomButtonProps {
-  children: React.ReactNode;
-  onClick: string;
+// Export interface tipini
+export interface CustomButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
 }
 
-const CustomButton = ({ children, onClick }: CustomButtonProps) => {
-  const handleClick = () => {
-    new Function(onClick)();
-  };
-
+// Export default bileşeni
+export default function CustomButton({
+  children,
+  onClick,
+}: CustomButtonProps) {
   return (
-    <button
-      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-      onClick={handleClick}
-    >
+    <button onClick={onClick} className='your-button-styles'>
       {children}
     </button>
   );
-};
-
-export default CustomButton;
+}

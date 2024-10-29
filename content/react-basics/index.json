@@ -1,0 +1,34 @@
+{
+  "chapters": [
+    {
+      "id": "01",
+      "slug": "hello-world",
+      "title": "React ile 'Merhaba Dünya'",
+      "description": "React'e giriş yapın: Basit bir 'Merhaba Dünya' uygulaması oluşturarak React'in temel kavramlarını öğrenin."
+    },
+    {
+      "id": "02",
+      "slug": "jsx-intro",
+      "title": "JSX Anlamaya Giriş",
+      "description": "JSX'in ne olduğunu ve nasıl çalıştığını öğrenin."
+    },
+    {
+      "id": "03",
+      "slug": "expression-slots",
+      "title": "İfade Slotları",
+      "description": "JSX içinde değişken ve ifadelerin nasıl kullanılacağını öğrenin."
+    },
+    {
+      "id": "04",
+      "slug": "html-differences",
+      "title": "HTML'den Farklılıklar",
+      "description": "JSX ve HTML arasındaki temel farklılıkları ve bunların nedenlerini keşfedin."
+    },
+    {
+      "id": "05",
+      "slug": "whitespace-trap",
+      "title": "Boşluk Tuzağı",
+      "description": "JSX'te boşlukların nasıl işlendiğini ve yaygın tuzakları öğrenin."
+    }
+  ]
+}
