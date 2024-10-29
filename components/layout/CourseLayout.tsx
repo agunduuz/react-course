@@ -15,8 +15,6 @@ const CustomButton = dynamic<CustomButtonProps>(
 type MDXComponents = {
   CustomButton: ComponentType<CustomButtonProps>;
   Image: ComponentType<CustomImageProps>;
-} & {
-  [key: string]: ComponentType<any>;
 };
 
 interface CourseLayoutProps {
