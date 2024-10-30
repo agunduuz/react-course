@@ -29,6 +29,12 @@
       "slug": "whitespace-trap",
       "title": "Boşluk Tuzağı",
       "description": "JSX'te boşlukların nasıl işlendiğini ve yaygın tuzakları öğrenin."
+    },
+    {
+      "id": "06",
+      "slug": "jsx-vs-templates",
+      "title": "JSX ve Şablonlar Arasındaki Fark",
+      "description": "JSX ve şablon dilleri arasındaki temel farkları, avantajları ve JavaScript entegrasyonunu keşfedin."
     }
   ]
 }

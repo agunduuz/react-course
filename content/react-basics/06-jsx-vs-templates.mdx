@@ -1,0 +1,74 @@
+# JSX ve Şablonlar Arasındaki Fark
+
+JSX genellikle şablon dillerine, örneğin Handlebars, EJS veya Pug’a benzetilir. Ancak JSX ile şablon dilleri arasında önemli bir fark vardır. Bu yazıda, JSX'in aslında bu şablon dillerinden biraz farklı bir yapıda olduğunu göreceğiz.
+
+Bu yazı, daha önce Handlebars veya Pug (eski adıyla Jade) gibi şablon dilleriyle çalışmış geliştiriciler için hazırlandı. Bu tür dillere aşinaysanız, JSX'in ne olduğunu ve nasıl farklı olduğunu anlamanıza yardımcı olabilir.
+
+## JSX'i Şablon Dilleriyle Karşılaştırma
+
+Örnek olarak, Handlebars adlı şablon diliyle yazılmış bir kodu ele alalım:
+
+```
+<div>
+  {{#if user}}
+    <h1>{{user.name}}</h1>
+  {{/if}}
+</div>
+```
+
+Burada Handlebars, şablon içinde JavaScript verilerini kullanarak bir HTML çıktısı oluşturur. `user` isminde bir kullanıcı varsa, onun `name` (ad) bilgisi `<h1>` başlığında görünür. Örneğin, `user.name` "Anıl" ise, çıktı şöyle olur: `"<div><h1>Anıl</h1></div>"`.
+
+## Şablon Dilleri Nedir?
+
+Şablon dilleri genellikle özel bir görev için oluşturulmuş dil kurallarına, yani bir **DSL** (Domain-Specific Language, Alan-Specific Dil) yapısına sahiptir. Bu dillerde özel semboller ve anahtar kelimeler kullanılır. Örneğin, yukarıdaki örnekte `#if`, belirli bir koşula göre içeriği göstermek için kullanılan özel bir semboldür. `#each` gibi başka yardımcı ifadeler de vardır ve bu da diziler üzerinde gezinerek içeriği oluşturur.
+
+## JSX Neden Farklı?
+
+JSX, HTML'ye benzeyen bir sözdizimi sunar, ancak aslında JavaScript'in bir parçasıdır. Bu nedenle, JavaScript ifadelerini doğrudan JSX içinde kullanabilirsiniz.
+
+## Önemli Nokta: Şablon Dilleri ve JSX Arasındaki Dinamik İşleme Farkı
+
+Şablon dillerinde, dinamik içerik ya da özel işlemler, şablonun derlenme sürecinde gerçekleşir. Şablon dilini çalıştırdığınızda, bu koşullu veya döngüsel ifadeler çözümlenip HTML çıktısı oluşturulur. Ancak React ile JSX yazarken, JSX aslında JavaScript'e derlenir ve bu aşamada henüz hiçbir dinamik işlem çözülmez.
+
+Örneğin, aynı kullanıcı kontrolünü JSX ile nasıl yapacağımıza bakalım:
+
+```
+<div>
+  {user && <h1>{user.name}</h1>}
+</div>
+```
+
+Bu JSX, JavaScript'e derlendiğinde şu şekilde bir yapıya dönüşür:
+
+```
+React.createElement(
+  'div',
+  {},
+  user && React.createElement(
+    'h1',
+    {},
+    user.name
+  )
+);
+```
+
+Burada dikkat etmemiz gereken önemli bir detay var: `user` ile ilgili koşul henüz çözülmüş değil; `user`ın var olup olmadığı derleme sürecinde değil, çalıştırma sürecinde kontrol edilecek.
+
+## Şablon Dillerinin Özel Sembolleri
+
+Şablon dilleri, genellikle `{{#if}}` gibi özel sembollerle birlikte kullanılır ve bu sembollerle koşullar veya döngüler yapılır. Ancak bu diller, JavaScript'ten tamamen farklı kendi kurallarına sahip özel dillerdir. Bu yüzden, bu tür dilleri kullanmak için JavaScript'in dışında tamamen ayrı bir dil öğrenmeniz gerekir.
+
+## JSX ve JavaScript: İnce Bir Katman
+
+JSX ise aslında çok basit bir soyutlama katmanıdır. JSX kendi başına yeni bir dil değil, aksine JavaScript ile doğrudan etkileşim kurabileceğiniz bir yapıdır. Bu yüzden, JSX kullanarak koşullar ya da döngüler yapmak için JavaScript bilgisi yeterlidir. Yani, tek bir dil olan JavaScript'i öğrenerek JSX'i verimli bir şekilde kullanabilirsiniz.
+
+Başka bir şekilde anlatmam gerekirse:
+
+- **Şablon dilleri:** Yazdığınız işaretlemeyi (HTML benzeri kodları) gerçek HTML'e çevirirler. Dinamik işlemler için ise HTML'de doğal olarak bulunmayan özellikleri sunmak zorunda kalırlar. Bu yüzden, dinamik içerik eklemek için özel bir mini dil yaratırlar (örneğin `{{#if}}` gibi).
+- **JSX:** Yazdığınız işaretlemeyi JavaScript'e çevirir. Bu da, işaretleme içinde kullandığınız tüm mantıksal işlemleri “ileriye taşır” ve çözümlenmiş bir HTML değil, çalışmaya hazır JavaScript oluşturur.
+
+## JavaScript’in Tam Gücü Elimizde!
+
+Bu yaklaşımın başka bir avantajı daha var: JSX ile yazarken, JavaScript'in tüm gücünden yararlanabiliriz! Şablon dilleri ise genellikle sınırlı bir yapı sunar. Örneğin, bir diziden yalnızca belirli öğeleri seçmek için `.filter`, `.slice` veya `.reduce` gibi JavaScript metodlarını kullanamayabilirsiniz. Şablon dillerinde, genellikle sınırlı sayıda yardımcı fonksiyon (mesela `{{#each}}`) bulunur.
+
+Özetle, JSX ile sadece JavaScript'i bilerek çok daha güçlü ve esnek bir yapı oluşturabilirsiniz.
