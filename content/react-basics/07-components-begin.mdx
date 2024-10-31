@@ -1,0 +1,54 @@
+# Bileşenler
+
+Bileşenler, React'in temel yapı taşlarıdır. React hakkında tek bir şey biliyorsanız, muhtemelen onun bileşen tabanlı bir yapı sunduğunu biliyorsunuzdur.
+
+## Bileşen Nedir?
+
+Bileşen, kullanıcı arayüzündeki belirli bir bölümü tamamen kontrol eden bir paket gibidir; içeriğinde işaretleme (HTML benzeri yapı), stiller (CSS) ve mantıksal işlemler (JS) bulunur. Yani bileşen, UI’ın bir parçasını şekillendiren tüm parçaları bir araya getirir.
+
+Bu, kodu organize etme konusunda farklı bir düşünce yapısı gerektirir. Geleneksel olarak, uygulamanın yapısını işaretleme (HTML), stiller (CSS) ve mantık (JavaScript) şeklinde ayırırken, React’te tüm bu parçaları bir bileşen altında toplarız.
+
+Örneğin, bir “buton” bileşeni; hem butonun HTML yapısını, hem CSS ile nasıl göründüğünü, hem de tıklandığında yapılacak işlemleri içerir.
+
+Bu yapı, uygulamayı bileşenlere bölerek yönetmeyi kolaylaştırır.
+
+<Image
+  src='/images/react-basics-images/components.jpg'
+  width={800}
+  height={450}
+  alt='Bileşen Örnekleme'
+/>
+
+## Yeniden Kullanım Mekanizmaları
+
+Geleneksel HTML, işaretleme (markup) parçalarını doğrudan yeniden kullanmanın bir yolunu sunmaz. Birçok dilde, bu amaçla “partial” adı verilen küçük HTML parçaları kullanılır. Partial’lar, bir HTML belgesine dahil edilebilen önceden tanımlı küçük parçalardır.
+
+CSS'te yeniden kullanımı sağlamak için en sık kullanılan mekanizma ise sınıflardır (class). Örneğin, standart bir “buton” tasarımı oluşturmak için `.btn` sınıfı tanımlayabiliriz:
+
+```
+.btn {
+  padding: 8px 32px;
+  background: blue;
+  border: none;
+  font-size: 1rem;
+}
+```
+
+Bu sınıfı oluşturduktan sonra, `.btn` sınıfını bir HTML öğesine ekleyerek bu stilleri her seferinde yeniden uygulayabiliriz.
+
+JavaScript'te ise yeniden kullanımın en yaygın yolu fonksiyonlardır. Örneğin, bir cümleyi büyük harflerle ve ünlemlerle dönüştüren bir fonksiyonumuz olabilir:
+
+```
+function shout(sentence) {
+  return sentence.toUpperCase() + '!!';
+}
+
+shout("we're off to see the wizard")
+// -> "WE'RE OFF TO SEE THE WIZARD!!"
+```
+
+Bu fonksiyonu her çağırdığımızda, aynı dönüşümü elde ederiz.
+
+React’te, **bileşenler (components)** yeniden kullanımın ana mekanizmasıdır. Yani, HTML için partials, CSS için sınıflar veya JavaScript için fonksiyonlar kullanmak yerine, işaretlemeyi (markup), stilleri ve işleyişi tek bir bileşende toplarız. Bu sayede, yüksek seviyede yeniden kullanılabilir kullanıcı arayüzü elemanlarından oluşan bir kütüphane oluşturabiliriz.
+
+Bu fikir gerçekten çok güçlüdür. Başlangıçta “bileşenlerle düşünmeye” alışmak biraz zaman alabilir, ancak bu bakış açısını benimsediğinizde, bileşensiz bir proje yapmak istemezsiniz!

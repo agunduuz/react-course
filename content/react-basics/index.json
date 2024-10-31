@@ -35,6 +35,12 @@
       "slug": "jsx-vs-templates",
       "title": "JSX ve Şablonlar Arasındaki Fark",
       "description": "JSX ve şablon dilleri arasındaki temel farkları, avantajları ve JavaScript entegrasyonunu keşfedin."
+    },
+    {
+      "id": "07",
+      "slug": "components-begin",
+      "title": "Bileşenlere Giriş",
+      "description": "React bileşenlerinin temel kavramlarını ve yeniden kullanılabilir UI parçaları oluşturmanın önemini öğrenin."
     }
   ]
 }
