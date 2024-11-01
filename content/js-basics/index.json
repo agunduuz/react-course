@@ -5,6 +5,12 @@
       "slug": "statements-expressions",
       "title": "Deyimler vs. İfadeler",
       "description": "JavaScript'te deyimler ve ifadeler arasındaki farkı öğrenin. React geliştirmede bu ayrımın önemi."
+    },
+    {
+      "id": "02",
+      "slug": "arrow-functions",
+      "title": "Arrow Fonksiyonlar",
+      "description": "HAZIRLANIYOR..."
     }
   ]
 }

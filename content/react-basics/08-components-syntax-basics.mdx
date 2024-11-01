@@ -1,0 +1,100 @@
+# React'te Bileşenlerin Temel Söz Dizimi ve Kullanımı
+
+React'te bileşenler, JavaScript fonksiyonlarıyla oluşturulur. Bileşenler ayrıca class anahtar kelimesiyle de tanımlanabilir, ancak bu eski bir yöntemdir ve artık modern React projelerinde pek önerilmez.
+
+Bileşenler, temel olarak bir veya daha fazla React elemanını geri döndürür. Bir bileşen oluşturmak, o bileşenin nasıl görünmesi gerektiğini ve hangi içeriği göstereceğini tanımlamaktır.
+
+Aşağıdaki örnekte, FriendlyGreeting adlı bileşen, bir paragraf elemanı `<p>` oluşturur. Bu paragraf, belirli stillere sahip bir mesaj içerir. Stiller, bileşenin içinde doğrudan tanımlanmıştır (satır içi stil olarak), bu da küçük projeler veya hızlı denemeler için kullanışlıdır.
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+function FriendlyGreeting() {
+  return (
+    <p
+      style={{
+        fontSize: '1.25rem',
+        textAlign: 'center',
+        color: 'sienna',
+      }}
+    >
+      Yol yorgunu gezgin, selamlar!
+    </p>
+  );
+}
+
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(<FriendlyGreeting />);
+```
+
+**FriendlyGreeting** bileşenini kullanarak, React'e bu paragrafı oluşturmasını söyleriz. HTML'deki gibi `<div>` veya `<h1>` kullanmak yerine, özel bir bileşen olan `<FriendlyGreeting />` kullanırız. Bu da bileşenleri tekrar tekrar çağırarak istediğimiz gibi yeniden kullanmamızı sağlar.
+
+> ## Arrow Fonksiyonlar ve Geleneksel Fonksiyonlar
+>
+> Modern JavaScript, fonksiyon yazmak için iki farklı söz dizimi sunar. Geleneksel yöntem olan `function` anahtar kelimesinin yanı sıra, “arrow fonksiyonları” adı verilen daha modern bir yöntemi de kullanabilirsiniz. Eğer arrow fonksiyonlarına aşina değilseniz, JavaScript dersinde yer alan [Arrow Fonksiyonlar](/js-basics/arrow-functions) başlığına göz atabilirsiniz 👀.
+>
+> Peki React bileşenlerini tanımlarken hangi tür fonksiyonu kullanmalıyız? Kısa cevap: Fark etmez! Her iki yöntem de aynı şekilde çalışır.
+>
+> Karşılaştırma yapabilmek için, daha önce yazdığımız `FriendlyGreeting` bileşenini bu sefer arrow fonksiyonu ile yazalım:
+>
+> ```
+> const FriendlyGreeting = () => (
+>  <p
+>    style={{
+>      fontSize: '1.25rem',
+>      textAlign: 'center',
+>      color: 'sienna',
+>    }}
+>  >
+>    Merhaba, yolcu!
+>  </p>
+> );
+> ```
+>
+> Arrow fonksiyonlarının bazı sınırlamaları vardır; örneğin, kendi `this` değerlerine sahip olmazlar ve constructor (yapılandırıcı) olarak kullanılamazlar. Ancak, React bileşenleri söz konusu olduğunda bu sınırlamalar önemli değildir. Arrow fonksiyonları, geleneksel fonksiyonlar kadar başarılı bir şekilde çalışır.
+
+## Bileşenlerde Büyük Harfle Başlama Kuralı
+
+React bileşenleri için çok fazla kural yok, ancak **altın bir kural var:** React bileşenlerinin adı büyük harfle başlamalıdır. Bu, JSX derleyicisinin bir HTML etiketini mi yoksa özel bir React bileşenini mi render etmek istediğimizi anlamasını sağlar.
+
+Örneğin, iki JSX öğesi tanımlayalım:
+
+```
+const heading = <h1>Merhaba!</h1>
+const greeting = <FriendlyGreeting />
+```
+
+Ve bu öğelerin JavaScript’e derlenmiş hallerine bakalım:
+
+```
+const heading = React.createElement('h1', null, 'Merhaba!');
+const greeting = React.createElement(FriendlyGreeting, null);
+```
+
+React elementleri, oluşturmak istediğimiz öğelerin bir tanımıdır. Bazı durumlarda, bir DOM düğümü (örneğin `<h1>` veya `<p>`) oluşturmak isteriz. Diğer durumlarda ise bir bileşen örneği yaratmak isteriz.
+
+`React.createElement fonksiyonuna geçilen ilk argüman, oluşturmak istediğimiz öğenin "türü"dür. İlk örnekte bu bir string olarak "h1" iken, ikinci örnekte bir fonksiyondur! Burada "FriendlyGreeting" değil, doğrudan `FriendlyGreeting` fonksiyonudur.
+
+React bileşen adları için genel kural, tüm kelimelerin büyük harfle başladığı PascalCase formatını kullanmaktır (örneğin "hello world" ifadesi "HelloWorld" olur). Teknik olarak sadece ilk harfin büyük olması yeterlidir; bileşeni `Friendlygreeting` olarak da adlandırabilirsiniz ancak genel olarak `FriendlyGreeting` gibi PascalCase tercih edilir.
+
+> ## Peki, Neden Büyük-Küçük Harf Kuralı Var?
+>
+> İlk bakışta, bileşen isimlerinde büyük harf kullanma zorunluluğu gereksiz gibi görünebilir. React, HTML etiketi mi yoksa bileşen mi render edeceğini ayırt edemiyor mu? Sonuçta yerleşik HTML etiketlerinin sayısı belli, değil mi?
+>
+> Ancak, işler göründüğünden biraz daha karmaşık...
+>
+> Diyelim ki “Büyük Harfle Başlama” kuralı yok ve aşağıdaki JSX örneğini yazıyoruz:
+>
+> ```
+> const element = <button />;
+> ```
+>
+> Bu `button`, yerleşik `<button>` HTML etiketi mi olmalı, yoksa kullanıcının oluşturduğu bir `button` bileşeni mi? Birçok bileşen kütüphanesinde "button" adında bir bileşen bulunuyor!
+>
+> Peki, yeni bir kural belirlesek: “Bileşenler, HTML etiketleri ile aynı isme sahip olamaz” gibi. React, yerleşik tüm HTML etiketlerinin bir listesini tutar ve bunları “rezerve kelimeler” olarak kabul eder.
+>
+> Bu kulağa mantıklı gelebilir; ancak HTML etiket listesi sabit değil. Arada bir yeni HTML etiketleri ekleniyor! Örneğin, W3C (World Wide Web Consortium - HTML standartlarını belirleyen kuruluş) gelecek yıl yeni bir `<carousel>` etiketi eklemeye karar verirse, ne kadar çok React uygulamasının bozulabileceğini bir düşünün...
+>
+> Sonuç olarak, büyük-küçük harf kuralı oldukça mantıklı. Bu sayede bir öğenin yerleşik bir HTML etiketi mi yoksa özel bir bileşen mi olduğunu hızla anlayabiliyoruz.

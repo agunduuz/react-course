@@ -34,7 +34,7 @@ export function CourseLayout({
   },
 }: CourseLayoutProps) {
   return (
-    <article className='bg-[#111] h-full flex flex-col items-center'>
+    <article className='bg-[#111] min-h-screen h-full flex flex-col items-center'>
       <div className='md:w-[1024px] sm:w-full w-full h-full bg-[#161616] text-[#f1f1f1] md:px-20 px-2 py-5 mdx-content'>
         <div className='flex items-center justify-between'>
           <Link

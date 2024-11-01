@@ -41,6 +41,12 @@
       "slug": "components-begin",
       "title": "Bileşenlere Giriş",
       "description": "React bileşenlerinin temel kavramlarını ve yeniden kullanılabilir UI parçaları oluşturmanın önemini öğrenin."
+    },
+    {
+      "id": "08",
+      "slug": "components-syntax-basics",
+      "title": "React'te Bileşenlerin Temel Söz Dizimi ve Kullanımı",
+      "description": "React bileşenlerinin nasıl oluşturulduğunu, söz dizimi kurallarını ve modern yaklaşımları keşfedin."
     }
   ]
 }
