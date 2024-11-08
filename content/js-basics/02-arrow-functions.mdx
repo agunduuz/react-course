@@ -1,3 +1,264 @@
-# Arrow Fonksiyonlar
+# Ok Fonksiyonları
 
-## HAZIRLANIYOR
+Geçmişte, JavaScript'te fonksiyonlar `function` anahtar kelimesi ile yazılırdı:
+
+```
+function exclaim(string) {
+  return string + '!';
+}
+```
+
+2015 yılında, JavaScript'te fonksiyon oluşturmak için yeni bir alternatif sözdizimi eklendi: **ok fonksiyonları (arrow functions)**. Ok fonksiyonları şu şekilde görünür:
+
+```
+const exclaim = string => string + '!';
+```
+
+Ok fonksiyonları, diğer fonksiyonel programlama dillerindeki lambda fonksiyonlarından ilham alınarak geliştirilmiştir. Bu fonksiyonların en büyük avantajı, daha kısa ve daha temiz bir sözdizimine sahip olmalarıdır. `function` kelimesinin olmaması küçük bir detay gibi görünse de, özellikle **anonim fonksiyonlarda** (isim verilmemiş fonksiyonlar) kodun okunabilirliğini artırabilir. Örneğin:
+
+```
+const arr = ['hey', 'ho', 'let\'s go'];
+
+// Bu:
+arr
+  .map(function(string) {
+    return string + '!'
+  })
+  .join(' ');
+
+// …Buna dönüşüyor:
+arr
+  .map(string => string + '!')
+  .join(' ');
+```
+
+Ok fonksiyonları, kısa ve basit yapısıyla, JavaScript’te anonim fonksiyonların daha anlaşılır ve temiz bir şekilde yazılmasını sağlıyor.
+
+## Ok Fonksiyonlarının Kuralları
+
+Ok fonksiyonları ilk bakışta basit gibi görünse de, dikkat edilmesi gereken bazı püf noktaları vardır. Bu kuralları gözden kaçırmak yaygındır ve sık sık kod hatalarına yol açabilir.
+
+### Kısa ve Uzun Form
+
+Ok fonksiyonlarının iki farklı kullanım şekli vardır: kısa form ve uzun form.
+
+**Kısa form** şu şekildedir:
+
+```
+const add1 = n => n + 1;
+```
+
+**Uzun form** ise şöyledir:
+
+```
+const add1 = n => {
+return n + 1;
+};
+```
+
+Uzun forma geçmek için fonksiyon gövdesini `{ }` süslü parantezlerle sarmalarız.
+
+Bu iki form arasındaki temel fark şudur:
+
+Kısa Form Fonksiyonlar, Kısa form ok fonksiyonlarında gövde **tek bir ifadeden** oluşmalıdır ve bu ifade otomatik olarak döndürülür. Başka bir deyişle, kısa formda return anahtar kelimesi olmadan sonuç geri döner, bu duruma "örtük dönüş" denir.
+Uzun Form Fonksiyonlar, Uzun form ok fonksiyonlarında ise gövde, `{ }` süslü parantezlerle çevrili bir blok halindedir ve burada birden fazla işlem yapabiliriz. Ancak hangi sonucun döneceğini açıkça belirtmemiz gerekir; yani return anahtar kelimesini yazmalıyız.
+
+Örneklerle açıklayalım:
+
+**Kısa Form** (tek ifade, otomatik dönüş):
+
+```
+const add1 = n => n + 1;
+```
+
+**Uzun Form** (birden fazla işlem, açık dönüş):
+
+```
+const add1 = n => {
+  return n + 1;
+};
+```
+
+Eğer kısa formda return yazmaya çalışırsanız, bir sözdizimi hatası alırsınız:
+
+```
+const add1 = n => return n + 1;
+// Hata: SyntaxError: Beklenmeyen 'return' ifadesi
+```
+
+> ## Kısa Formda Parantez Kullanımı
+>
+> Kısa form ok fonksiyonlarında, işlemi daha okunabilir hale getirmek için `()` parantezleri kullanabiliriz. Bu şekilde, dönüş yapılacak ifadeyi bir alt satıra alarak daha temiz bir görünüm elde ederiz. Örneğin:
+>
+> ```
+> const shoutWithParens = sentence => (
+>   sentence.toUpperCase()
+> );
+> ```
+>
+> Bu iki yazım arasında işleyiş olarak bir fark yoktur:
+>
+> ```
+> const shoutWithParens = sentence => (
+>  sentence.toUpperCase()
+> );
+>
+> const shoutWithoutParens = sentence => sentence.toUpperCase();
+> ```
+
+Her iki fonksiyon da aynı sonucu döndürür, ancak `()` parantezleri kodunuzu daha okunaklı hale getirmek için bir tercih olabilir.
+
+## Opsiyonel Parametre Parantezleri
+
+Eğer ok fonksiyonuna yalnızca tek bir **parametre** gönderiyorsak, parantezler opsiyonel hale gelir, yani kullanmak zorunda değiliz.
+
+```
+// Parantezsiz kullanım (Geçerli):
+const logUser = user => {
+  console.log(user);
+}
+
+// Parantezli kullanım (Geçerli):
+const logUser = (user) => {
+  console.log(user);
+}
+```
+
+**Birden fazla parametre** olduğunda ise, parantez kullanımı zorunludur:
+
+```
+const updateUser = (user, properties, isAdmin) => {
+  if (!isAdmin) {
+    throw new Error('Yetkili değilsiniz');
+  }
+
+  user.setProperties(properties);
+}
+```
+
+Eğer **hiç parametre** yoksa, yine parantez kullanmak zorundayız:
+
+```
+const sayHello = () => console.log('Merhaba!')
+```
+
+Bu kurallar, ok fonksiyonlarını daha okunabilir ve düzenli hale getirir, fonksiyonun kaç parametre aldığını hızlıca anlamamıza yardımcı olur.
+
+## Şekersiz Fonksiyonlar
+
+JavaScript’te geleneksel (normal) fonksiyonların bazı ekstra özellikleri vardır.
+
+Örneğin, geleneksel fonksiyonlar **constructor** (yapıcı) olarak kullanılabilir. Bu, nesne oluşturan bir yapı kurmamıza olanak tanır:
+
+```
+function Car(make, model) {
+  this.make = make;
+  this.model = model;
+
+  return this;
+}
+
+new Car('honda', 'civic');
+// Yeni bir `Car` (Araba) örneği oluşturur:
+//   Car {make: 'honda', model: 'civic'}
+```
+
+**Ok Fonksiyonları** ise hafif, sade ve "şekersiz" bir yapıdadır. Ok fonksiyonlarını **constructor** olarak kullanamayız ve kendi prototiplerine sahip değillerdir.
+
+Ama güzel haber şu: Modern React projelerinde bu detaylarla uğraşmanıza gerek kalmıyor. React geliştirmede bu özellikler pek önemli olmadığından, burada derinlemesine incelemeye gerek yok.
+
+Bu nedenle, ok fonksiyonlarını özellikle basit işlevlerde ve React bileşenlerinde tercih edebiliriz.
+
+## Nesneleri Dolaylı Yoldan Döndürme
+
+Bir nesne döndüren bir fonksiyon yazdığımızı düşünelim:
+
+```
+function makeObject() {
+  return {
+    hi: 5,
+  };
+}
+```
+
+Bu fonksiyonu kısa biçimli bir ok fonksiyonuna dönüştürmeye çalıştığımızda ilginç bir durum ortaya çıkar:
+
+```
+const makeObject = () => { hi: 5 };
+```
+
+Bu kod iki farklı şekilde yorumlanabilir:
+
+- Bir nesne döndüren kısa biçimli ok fonksiyonu, yani `{ hi: 5 }`
+- Tek satırlık bir ifadeye sahip uzun biçimli bir ok fonksiyonu, yani `hi: 5`
+
+Bu karışıklığın sebebi, JavaScript'te süslü parantezlerin (`{}`) iki farklı işlevinin olmasıdır: Nesne tanımlamak için kullanılır, aynı zamanda `if` gibi koşul ifadelerinde **blok** tanımlamak için de kullanılır.
+
+Eğer `=>` ifadesinden sonra süslü parantezler gelirse, JavaScript motoru bunun bir blok olduğunu varsayar. Bu durumda, `hi: 5` geçerli bir JavaScript ifadesi olmadığı için **sözdizim hatası** oluşur.
+
+Nesneyi dolaylı olarak döndürmek istiyorsak, süslü parantezleri parantez içine almalıyız:
+
+```
+const makeObject = () => ({ hi: 5 });
+```
+
+JavaScript’te herhangi bir ifadenin etrafına parantez ekleyerek değerlendirme sırasını değiştirebiliriz. Burada amacımız değerlendirme sırasını değiştirmek değil; sadece bir nesne döndürmek istediğimizi açık hale getirmektir.
+
+Ayrıca, kısa biçimli bir ifadenin tek satıra sığmadığı durumlarda da parantez kullanmak yaygındır:
+
+```
+const matchedItem = items.find(item => (
+  item.color === 'red' && item.size === 'large'
+));
+```
+
+Bir **ifadeyi** parantez içine alabiliriz, ancak bir bloğu parantez içine alamayız. Bu yüzden süslü parantezleri parantez içine aldığımızda, JavaScript motoru bir blok değil, bir nesne oluşturduğumuzu anlar.
+
+Ama güzel haber şu: Modern React projelerinde bu detaylarla uğraşmanıza gerek kalmıyor. React geliştirmede bu özellikler pek önemli olmadığından, burada derinlemesine incelemeye gerek yok.
+
+Bu nedenle, ok fonksiyonlarını özellikle basit işlevlerde ve React bileşenlerinde tercih edebiliriz.
+
+## Nesneleri Dolaylı Yoldan Döndürme
+
+Bir nesne döndüren bir fonksiyon yazdığımızı düşünelim:
+
+```
+function makeObject() {
+  return {
+    hi: 5,
+  };
+}
+```
+
+Bu fonksiyonu kısa biçimli bir ok fonksiyonuna dönüştürmeye çalıştığımızda ilginç bir durum ortaya çıkar:
+
+```
+const makeObject = () => { hi: 5 };
+```
+
+Bu kod iki farklı şekilde yorumlanabilir:
+
+- Bir nesne döndüren kısa biçimli ok fonksiyonu, yani `{ hi: 5 }`
+- Tek satırlık bir ifadeye sahip uzun biçimli bir ok fonksiyonu, yani `hi: 5`
+
+Bu karışıklığın sebebi, JavaScript'te süslü parantezlerin (`{}`) iki farklı işlevinin olmasıdır: Nesne tanımlamak için kullanılır, aynı zamanda `if` gibi koşul ifadelerinde blok tanımlamak için de kullanılır.
+
+Eğer `=>` ifadesinden sonra süslü parantezler gelirse, JavaScript motoru bunun bir blok olduğunu varsayar. Bu durumda, `hi: 5` geçerli bir JavaScript ifadesi olmadığı için **sözdizim hatası** oluşur.
+
+Nesneyi dolaylı olarak döndürmek istiyorsak, süslü parantezleri parantez içine almalıyız:
+
+```
+const makeObject = () => ({ hi: 5 });
+```
+
+JavaScript’te herhangi bir ifadenin etrafına parantez ekleyerek değerlendirme sırasını değiştirebiliriz. Burada amacımız değerlendirme sırasını değiştirmek değil; sadece bir nesne döndürmek istediğimizi açık hale getirmektir.
+
+Ayrıca, kısa biçimli bir ifadenin tek satıra sığmadığı durumlarda da parantez kullanmak yaygındır:
+
+```
+const matchedItem = items.find(item => (
+  item.color === 'red' && item.size === 'large'
+));
+```
+
+Bir **ifadeyi** parantez içine alabiliriz, ancak bir **bloğu** parantez içine alamayız. Bu yüzden süslü parantezleri parantez içine aldığımızda, JavaScript motoru bir blok değil, bir nesne oluşturduğumuzu anlar.
