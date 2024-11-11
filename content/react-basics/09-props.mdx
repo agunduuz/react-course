@@ -1,0 +1,149 @@
+# Props (Özellikler)
+
+Şu ana kadar, `FriendlyGreeting` adlı bileşenimiz hoş görünse de pek kullanışlı değil. `<FriendlyGreeting />` her render edildiğinde aynı sonucu alıyoruz. Yani, hiç esnek değil!
+
+Neyse ki, bileşenlerde **props** adı verilen bir özellik var. Props, bileşenlere veri geçişi yapmamızı sağlar, tıpkı bir fonksiyona argüman geçmek gibi. Bu sayede bileşenler, kendilerine gelen verilere göre özelleştirmeler yapabilir.
+
+Şimdi, selamlaşma bileşenimizi kişiselleştirmek istediğimizi düşünelim. Amacımız, bir kişiye ismiyle hitap etmek:
+
+- `Greetings, {name}` yazısını ekranda gösterebiliriz, fakat **name** değerini nasıl elde edeceğiz?
+- React, HTML'in elemanlara veri geçirme modelini temel alır. Örneğin, bir elemana ID eklemek istiyorsak `<div id="some-div">` deriz. Aynı şekilde, React bileşenlerimize de veri geçebiliriz: `<FriendlyGreeting name="Josh" />`.
+- React bu bileşeni render ederken tüm özellikleri (props) bir **props nesnesi** içinde toplar. Böylece, JSX içinde `{props.name}` diyerek `name` değerine erişebiliriz.
+- React topluluğunda genelde **destructuring assignment** (yapı çözme) kullanmak yaygındır. Bu sayede `props` ifadesini parçalayarak daha sade bir yazım elde ederiz.
+- Bir bileşene prop eklediğimizde, bu verinin fonksiyona nasıl ulaştığını düşünmeyiz bile. Ancak, bu sürecin arkasında neler olduğunu anlamak önemlidir. Bu işlem nasıl gerçekleşir ve render içinde yazdığımız veriler **bileşene** (component) nasıl aktarılır?
+
+React bileşenlerinde props kullanarak bileşenlerimizi dinamik hale getirebiliriz ve kodumuz daha esnek olur.
+
+## Destructuring Kullanımı ile Props Çekme
+
+Bu örnekte, props değerini fonksiyon parametresinden almak için **destructuring** kullanıyoruz. Eğer bu sözdizimi size yabancı geliyorsa, biraz garip görünebilir. JavaScript'in [**Object Destructuring**](/js-basics/object-destructuring) yazısında bu konuyu detaylı öğrenebilirsiniz.
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+function FriendlyGreeting({name: Name}= {}) {
+  return (
+    <p
+      style={{
+        fontSize: '1.25rem',
+        textAlign: 'center',
+        color: 'sienna',
+      }}
+    >
+      Greetings, {Name}!
+    </p>
+  );
+}
+
+const root = createRoot(document.querySelector('#root'));
+
+root.render(
+  <div>
+    <FriendlyGreeting name="Anıl" />
+    <FriendlyGreeting name="Gündüz" />
+    <FriendlyGreeting />
+  </div>
+);
+```
+
+## Varsayılan Değerler
+
+`FriendlyGreeting` bileşenini geliştirdiğimizi düşünelim. Kullanıcıya isimle hitap etmek istiyoruz, fakat herkesin ismini bilemeyebiliriz. Böyle durumlar için "yedek" bir değer kullanmak işimizi kolaylaştırır.
+
+**İstenen Çıktı Şu Şekilde:**
+Eğer isim biliniyorsa:
+
+```
+Hey Josh!
+```
+
+Eğer isim bilinmiyorsa:
+
+```
+Hey there!
+```
+
+React’te bu yedek değeri `||` operatörü ile kullanabiliriz:
+
+```
+function FriendlyGreeting({ name }) {
+  return (
+    <p>
+      Hey {name || 'there'}!
+    </p>
+  );
+}
+```
+
+Bu yapıda `name` değeri varsa o kullanılır; eğer yoksa otomatik olarak "there" ifadesi ekrana gelir.
+
+## Daha İyi Bir Yöntem: Varsayılan Değer Tanımlama
+
+Bu yöntemin işe yaradığı doğru, ancak React'te varsayılan değerler için daha temiz bir çözümümüz var. Her bir prop için varsayılan değerler belirleyebiliriz:
+
+```
+function FriendlyGreeting({ name = 'there' }) {
+ return (
+   <p>
+      Hey {name}
+   </p>
+ );
+}
+```
+
+Bu yöntemin sağladığı bazı avantajlar:
+
+- **Düzenli Görünüm:** Eğer birden fazla prop için varsayılan değer kullanıyorsak, bu değerlerin tamamını aynı yerde görmüş oluruz. Böylece, değerlerin bileşenin içinde dağılmasını önleriz.
+- **Yedek Değer Kolaylığı:** Yedek değerler doğrudan tanımlandığından, bileşende `name` değerine her başvurduğumuzda ek kontrol yapmamız gerekmez.
+- `||` **Operatöründen Kaçınma:** `||` operatörü beklemediğimiz durumlarda yedek değeri gösterebilir. Örneğin, verilen değer _falsy_ (yani `null`, `undefined`, `0`, `''` gibi) olduğunda yedek değeri kullanır.
+
+Bu yüzden, prop objesi içinde varsayılan değerleri tanımlamak, React projelerinde sıkça tercih edilen bir yöntem haline gelmiştir.
+
+**Başka Bir Örnek: Dekoratif “HorizontalRule” Bileşeni**
+
+Örneğin, bir bölümler arası çizgi oluşturmak için kullanabileceğimiz bir `HorizontalRule` bileşenimiz olduğunu düşünelim. Bu bileşen, 100px genişliğinde varsayılan bir çizgi oluşturur, fakat istediğimizde bu değeri değiştirebiliriz:
+
+```
+function HorizontalRule({ width = '100px' }) {
+  return (
+    <hr style={{ width }} />
+  );
+}
+```
+
+Bu sayede `HorizontalRule` bileşeni her seferinde 100px genişliğinde bir çizgi çizer, ancak istediğimizde bu genişliği özelleştirebiliriz.
+
+```
+function HorizontalRule({ size = '100px' }) {
+  return (
+    <div style={{ width: size }}>
+        {/* Çizgi çizme işlemleri burada */}
+    </div>
+  );
+}
+
+<HorizontalRule size="250px" /> // "250px" olacaktır.
+<HorizontalRule />              // "100px" olacaktır.
+```
+
+> ## Fallback (Yedek) Değerler İçin Nullish Coalescing Operatörü Kullanma
+>
+> Bir bileşen için varsayılan değer atamanın bir başka yöntemi de **Nullish Coalescing operatörü (??)** kullanmaktır:
+>
+> ```
+> function FriendlyGreeting({ name }) {
+>  return (
+>    <p>
+>      Hey {name ?? 'there'}!
+>    </p>
+>  );
+> }
+> ```
+>
+> Bu operatörü daha önce görmediyseniz, `||` operatörüne oldukça benzediğini bilmelisiniz, ancak sadece `null` ve `undefined` gibi _nullish_ değerlere karşı çalışır. Bu sayede, `0` gibi beklenmedik falsy değerlerde bile yedek değerin gösterilmesini engeller.
+>
+> **Kullanım Örnekleri**
+>
+> - Eğer `name` değeri verilmişse (`null` veya `undefinedæ değilse), bu değer doğrudan kullanılır.
+> - Eğer `name` değeri `null` veya `undefined` ise, yedek değer olan `'there'` kullanılır.

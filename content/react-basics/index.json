@@ -47,6 +47,12 @@
       "slug": "components-syntax-basics",
       "title": "React'te Bileşenlerin Temel Söz Dizimi ve Kullanımı",
       "description": "React bileşenlerinin nasıl oluşturulduğunu, söz dizimi kurallarını ve modern yaklaşımları keşfedin."
+    },
+    {
+      "id": "09",
+      "slug": "props",
+      "title": "Özellikler",
+      "description": "React bileşenlerinde props kullanarak dinamik içerik oluşturmayı ve varsayılan değerlerin nasıl tanımlanacağını öğrenin. Bu bölümde, bileşenlerin esnekliğini artırmak için destructuring ve nullish coalescing operatörlerinin nasıl kullanılacağını keşfedeceksiniz."
     }
   ]
 }

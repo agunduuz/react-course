@@ -9,7 +9,13 @@
     {
       "id": "02",
       "slug": "arrow-functions",
-      "title": "Arrow Fonksiyonlar",
+      "title": "Ok Fonksiyonları",
+      "description": "JavaScript'te ok fonksiyonlarının nasıl kullanıldığını ve avantajlarını öğrenin. Kısa ve uzun form arasındaki farkları keşfedin."
+    },
+    {
+      "id": "03",
+      "slug": "object-destructuring",
+      "title": "Nesne Ayrıştırma",
       "description": "HAZIRLANIYOR..."
     }
   ]
