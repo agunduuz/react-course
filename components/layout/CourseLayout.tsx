@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import dynamic from 'next/dynamic';
-import type { ComponentType, useEffect } from 'react';
+import type { ComponentType } from 'react';
 import type { CustomButtonProps } from '@/components/CustomButton';
-import ScrollToTopButton from '../ScrollToTopButton';
 import CustomImage, {
   type CustomImageProps,
 } from '@/components/Images';
+import ScrollToTopButton from '../ScrollToTopButton';
 
 const CustomButton = dynamic<CustomButtonProps>(
   () => import('@/components/CustomButton'),
@@ -34,12 +34,6 @@ export function CourseLayout({
     Image: CustomImage,
   },
 }: CourseLayoutProps) {
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
   return (
     <article className='bg-[#111] min-h-screen h-full flex flex-col items-center'>
       <div className='md:w-[1024px] sm:w-full w-full h-full bg-[#161616] text-[#f1f1f1] md:px-20 px-2 py-5 mdx-content'>
