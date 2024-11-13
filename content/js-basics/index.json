@@ -15,8 +15,8 @@
     {
       "id": "03",
       "slug": "object-destructuring",
-      "title": "Nesne Ayrıştırma",
-      "description": "HAZIRLANIYOR..."
+      "title": "Nesne Yapısını Çözme",
+      "description": "JavaScript'te nesne ayrıştırma ile bir nesneden bazı özellikleri hızlıca alıp kullanabilirsiniz. Bu yöntem, kodu daha kısa ve anlaşılır hale getirir."
     }
   ]
 }

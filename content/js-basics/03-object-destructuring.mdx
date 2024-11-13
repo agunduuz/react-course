@@ -1,1 +1,292 @@
-## HAZIRLANIYOR...
+# Object Destructuring (Nesne Yapısını Çözme)
+
+JavaScript'te object destructuring (nesne yapısını çözme) ile bir nesneden bazı özellikleri hızlıca alıp kullanabilirsiniz. Bu yöntem, kodu daha kısa ve anlaşılır hale getirir.
+
+Aşağıda bir örnek ile gösterelim:
+
+```
+const user = {
+  name: 'François Bouchard',
+  city: 'Saint-Louis-du-Ha! Ha!',
+  province: 'Québec',
+  country: 'Canada',
+  postalCode: 'A1B 2C3',
+};
+
+const { name, country } = user;
+
+console.log(name);    // Çıktı: ‘François Bouchard’
+console.log(country); // Çıktı: ‘Canada’
+```
+
+Bu işlem aslında şunu yapmaya eşdeğer:
+
+```
+const name = user.name;
+const country = user.country;
+```
+
+Object destructuring ile, ihtiyacınız olan değerleri doğrudan nesneden çekip alabilirsiniz. Bu sayede yalnızca istediğiniz kadar değeri alarak kodu daha temiz tutabilirsiniz.
+
+## Çözümdeki Değerleri Yeniden İsimlendirme
+
+Bazı durumlarda nesne çözümlemesi sırasında aldığınız değeri başka bir isimle kullanmak isteyebilirsiniz. Bu özellikle, zaten aynı isimde bir değişken varsa faydalıdır. Aşağıdaki örnekte bu durumu inceleyelim:
+
+```
+const name = 'Merhaba!';
+
+const user = { name: 'Marie-Hélene Pelletier' };
+
+const { name } = user;
+// Hata: SyntaxError
+// 'name' değişkeni zaten tanımlandığı için hata alıyoruz.
+```
+
+`name` adında zaten bir değişkenimiz olduğu için yukarıdaki kodda hata alıyoruz. Ancak çözümlemede aldığımız değeri yeni bir isimle tanımlayarak bu sorunu çözebiliriz:
+
+```
+const name = 'Merhaba!';
+
+const user = { name: 'Marie-Hélene Pelletier' };
+
+const { name: kullaniciAdi } = user;
+
+console.log(name);         // Çıktı: ‘Merhaba!’
+console.log(kullaniciAdi); // Çıktı: ‘Marie-Hélene Pelletier’
+```
+
+Bu örnekte, `name` özelliğini çözümleyip `kullaniciAdi` olarak yeniden adlandırdık. Böylece hem `name` değişkeni olduğu gibi kaldı hem de nesneden aldığımız `name` özelliğini yeni bir isimle kullanabildik.
+
+## Varsayılan Değerler
+
+Bir nesneden tanımlı olmayan bir anahtarı çözümlemeye çalışırsak ne olur? Aşağıdaki örneğe bakalım:
+
+```
+const user = { name: 'Marie-Hélene Pelletier' };
+
+const { status } = user;
+
+console.log(status); // ???
+```
+
+Bu durumda `user.status` nesnesinde tanımlı değil, bu yüzden `status` değişkeni `undefined` olarak atanır.
+
+Ancak, eğer `status` için bir varsayılan değer belirlemek istersek, bunu `=` operatörü ile yapabiliriz:
+
+```
+const { status = 'boşta' } = user;
+```
+
+Burada eğer `user` nesnesinde `status` değeri varsa, bu değer `status` değişkenine atanır. Eğer yoksa, `status` otomatik olarak `'boşta'` (idle) değerini alır.
+
+Bu yöntem, klasik olarak şu yapı ile elde edilen sonucu modern bir şekilde ifade eder:
+
+```
+const status = typeof user.status === 'undefined'
+  ? 'boşta'
+  : user.status;
+```
+
+Bu sayede, nesnede tanımlı olmayan özellikler için kodda kontrol yazmadan, varsayılan bir değer atayarak daha temiz ve anlaşılır bir yapı elde edebiliriz.
+
+## Fonksiyon Parametrelerini Parçalayarak Kullanma (Destructuring)
+
+Diyelim ki, ilk parametresi bir nesne olan bir fonksiyon yazıyoruz:
+
+```
+function validateUser(user) {
+  if (typeof user.name !== 'string') {
+    return false;
+  }
+
+  if (user.password.length < 12) {
+    return false;
+  }
+
+  return true;
+}
+```
+
+Burada, `user` nesnesinin `name` ve `password` özelliklerini doğrudan kullanıyoruz. Eğer istersek, fonksiyonun başında bu özellikleri parçalayarak da (`destructure`) çıkarabiliriz:
+
+```
+function validateUser(user) {
+  const { name, password } = user;
+
+  if (typeof name !== 'string') {
+    return false;
+  }
+
+  if (password.length < 12) {
+    return false;
+  }
+
+  return true;
+}
+```
+
+Ancak, JavaScript'te parametrelerde doğrudan parçalama (`parameter destructuring`) yaparak bu adımı bir adım öteye taşıyabiliriz:
+
+```
+function validateUser({ name, password }) {
+  if (typeof name !== 'string') {
+    return false;
+  }
+
+  if (password.length < 12) {
+    return false;
+  }
+
+  return true;
+}
+```
+
+Bu üç örnekte de aynı sonuca ulaşırız. Ancak birçok geliştirici, özellikle React projelerinde, parametre parçalama yöntemini tercih eder. Bu yöntem, özellikle bileşenlerimizin `props` değerlerini parçalayarak kullanmamıza olanak tanıyarak, kodu daha okunabilir hale getirir ve fazla satır yazmayı önler.
+
+> ## İsimlendirilmiş Argümanlar
+>
+> Bazı programlama dillerinde "isimlendirilmiş argümanlar" bulunur. Bu özellik sayesinde, geliştiriciler bir fonksiyona gönderdikleri argümanlara isim verebilir ve her bir argümanın ne işe yaradığını daha kolay anlayabilirler. Fakat JavaScript'te böyle bir özellik yok, bu yüzden farklı argümanların ne amaçla kullanıldığını anlamak bazen zor olabilir.
+>
+> Örneğin, aşağıdaki koda bir göz atalım:
+>
+> ```
+> trackSession(user.id, 5, null);
+> ```
+>
+> Bu kodda `5` ve `null` argümanlarının ne işe yaradığını anlamak güç. Hangi rolü üstlendikleri gizemli kalıyor. Bu işlevi çözmek için, fonksiyonun tanımlandığı dosyayı bulmamız ve orada incelememiz gerekiyor.
+>
+> Şimdi, `trackSession` fonksiyonunun yalnızca tek bir nesne argümanı aldığını düşünelim. Kod şu şekilde görünebilir:
+>
+> ```
+> trackSession({
+>  userId: user.id,
+>  version: 5,
+>  additionalMetadata: null,
+> });
+> ```
+>
+> Bu yöntemle, her değeri etiketlemek zorunda kalıyoruz! Bu da, birçok dildeki "isimlendirilmiş argümanlar" gibi çalışıyor. Hangi bilginin hangi amaçla kullanıldığını görsel olarak daha anlaşılır hale getiriyor.
+>
+> Genellikle bir fonksiyon yazarken, doğrudan tek bir nesne argümanı alacak şekilde tasarlamayı öneriririm. Bunun sebebi, bu nesnenin parçalanarak kullanılması (destructuring) yoluyla verilerin daha anlaşılır hale gelmesidir.
+
+## Fonksiyon Parametrelerini Yeniden İsimlendirmek
+
+Daha önceki bölümlerde, destructuring (parçalama) kullanarak yeni oluşturulan değişkenleri nasıl yeniden adlandırabileceğimizi görmüştük. Örneğin:
+
+```
+const name = 'Hello!';
+
+const user = { name: 'Marie-Hélene Pelletier' };
+
+// `name` özelliğini alıp, fakat değişkeni `userName` olarak tanımlıyoruz:
+const { name: userName } = user;
+
+console.log(name); // ‘Hello!’
+console.log(userName); // ‘Marie-Hélene Pelletier’
+```
+
+Burada dikkat çeken bir şey, aynı şeyi fonksiyon parametreleriyle de yapabilmemiz. Bunu en iyi şekilde bir örnekle gösterebiliriz:
+
+```
+function validateName({name: userName,}) {
+  return userName.length > 0;
+}
+
+validateName({
+  name: 'Joyce',
+});
+```
+
+Burada `validateName` fonksiyonuna `{ name: 'Joyce' }` nesnesini gönderiyoruz. Bu nesnede `name` özelliğini alıp, onu `userName` olarak yeniden adlandırıyoruz. `validateName` fonksiyonunun içinde, `name` tanımlanmadı, fakat `userName` değişkeni "Joyce" olarak atanmış oldu.
+
+Bu yöntem biraz daha spesifik bir durum, ama faydalı olabilir. Özellikle React’te, bileşen isimlerinin büyük harf ile başlaması gerektiğinden, küçük harfli prop'ları büyük harfe çevirmek için bu yöntemi kullanabiliriz. Örneğin:
+
+```
+// `icon` prop'unu alıp, bileşende `Icon` olarak kullanılmasını sağlıyoruz:
+function IconButton({ icon: Icon }) {
+  console.log(Icon); // “ArrowRight” bileşeni
+}
+
+// Kullanımda şöyle olacak:
+<IconButton icon={ArrowRight} />
+```
+
+Bu şekilde, parametrelerinizi adlandırırken veya prop’ları yeniden isimlendirirken daha düzenli ve anlaşılır bir yapı oluşturabilirsiniz.
+
+## Varsayılan Parametre Değerleri
+
+Tipik object destructuring (nesne parçalama) işleminde olduğu gibi, fonksiyon parametreleri için de varsayılan değerler atayabiliriz. İşte basit bir örnek:
+
+```
+function sendApiRequest({ method = 'GET', numOfRetries }) {
+  // İşlemler
+}
+```
+
+Bu fonksiyonu çağırırken, `method` parametresi için kendi değerimi verebilirim:
+
+```
+sendApiRequest({ method: 'PUT', numOfRetries: 4 });
+```
+
+Veya, `method` parametresini atlayıp, varsayılan olarak "GET" olmasını sağlayabilirim:
+
+```
+sendApiRequest({ numOfRetries: 4 });
+```
+
+Burada, eğer `method` değeri verilmezse, fonksiyon otomatik olarak 'GET' değerini kullanacaktır. Bu, parametrelerde varsayılan değerler kullanmanın basit ve etkili bir yoludur.
+
+> ## Dikkat: Argüman Sağlanmalı
+>
+> Farz edelim ki, fonksiyonumuzda her iki özellik için de varsayılan değerler ekledik:
+>
+> ```
+> function sendApiRequest({ method = 'GET', numOfRetries = 5 }) {
+>  // İşlemler
+> }
+> ```
+>
+> Bu fonksiyonu, varsayılan değerleri kullanmak için herhangi bir argüman sağlamadan çağırdığımızda:
+>
+> ```
+> sendApiRequest();
+> ```
+>
+> Hata alırız:
+>
+> ```
+> Uncaught TypeError: Cannot read properties of undefined (reading 'method')
+> ```
+>
+> Sorun şu: `method` ve `numOfRetries` özelliklerini bir nesneden çıkarırken, `sendApiRequest` fonksiyonunu çağırdığımızda nesne sağlamıyoruz. Yani, fonksiyon içinde nesneden değer almak istediğimizde, aslında hiç nesne olmadığı için hata alırız.
+>
+> Aynı problemi daha net gösterecek bir örnek:
+>
+> ```
+> function sendApiRequest(properties) {
+>  // `properties` tanımlanmadığı için bu hatayı alırız
+>  const {
+>    method = 'GET',
+>    numOfRetries = 5
+>  } = properties;
+> }
+>
+> sendApiRequest();
+> ```
+>
+> Bu durumu çözmek için, ilk parametre olan nesneye varsayılan bir değer atayabiliriz:
+>
+> ```
+> function sendApiRequest(
+>  { method = 'GET', numOfRetries = 5 } = {}
+> ) {
+>  // İşlemler
+> }
+>
+> sendApiRequest(); // ✅ Sorun yok!
+> ```
+>
+> Burada, `sendApiRequest` fonksiyonunu argüman sağlamadan çağırdığımızda, ilk parametre otomatik olarak boş bir nesne olarak başlatılır. Sonra, `method` ve `numOfRetries` özellikleri, bu boş nesnede tanımlı olmadıkları için varsayılan değerleriyle başlatılır.
+>
+> Bu konu biraz karmaşık olabilir. Bu modern yazım biçimlerini kullanmak zorunda değilsiniz. Ancak, bu tür bir soruyla karşılaşabileceğinizi bilmenizi istedim.
