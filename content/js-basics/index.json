@@ -16,7 +16,13 @@
       "id": "03",
       "slug": "object-destructuring",
       "title": "Nesne Yapısını Çözme",
-      "description": "JavaScript'te nesne ayrıştırma ile bir nesneden bazı özellikleri hızlıca alıp kullanabilirsiniz. Bu yöntem, kodu daha kısa ve anlaşılır hale getirir."
+      "description": "JavaScript'te nesne yapısını çözme ile bir nesneden bazı özellikleri hızlıca alıp kullanabilirsiniz. Bu yöntem, kodu daha kısa ve anlaşılır hale getirir."
+    },
+    {
+      "id": "04",
+      "slug": "truthy-and-falsy",
+      "title": "Truthy ve Falsy",
+      "description": "JavaScript'te truthy ve falsy değerlerin ne olduğunu öğrenin. Bu değerler, koşul ifadelerinde nasıl kullanılır ve hangi durumlarda geçerli kabul edilir?"
     }
   ]
 }

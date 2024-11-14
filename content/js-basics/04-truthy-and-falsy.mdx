@@ -1,0 +1,92 @@
+# Truthy ve Falsy
+
+Aşağıdaki JavaScript ifadesini düşünelim:
+
+```
+const user = {
+  name: 'J. Script',
+};
+
+if (user.name) {
+  console.log('Bu kullanıcının bir adı var!');
+}
+```
+
+Burada `user` adlı bir nesnemiz var ve bir koşula bağlı olarak `console.log` çalıştırmak istiyoruz. Koşul ise `user.name` ifadesi.
+
+İlginç bir şekilde, `user.name` boolean (true veya false) bir değer değil. Kullanıcının adı aslında ne `true` ne de `false`. Pek çok programlama dilinde bu tür bir işlem geçersiz olurdu. Peki dil, rastgele bir string ifadesinin yeterli olup olmadığını nasıl bilebilir?
+
+JavaScript'te çoğu değer **truthy** olarak kabul edilir. **Falsy** olan değerleri listelemek daha hızlıdır:
+
+- `false`
+- `null`
+- `undefined`
+- `''` (boş string)
+- `0` (ve ilgili değerler, örneğin `0.0` ve `-0`)
+- `NaN` (Not a Number)
+
+Yukarıdaki kodda, `user.name` truthy bir değerdir çünkü en az bir karakter içeren bir stringdir. Boş string (`''`) dışında kalan her string truthy olarak kabul edilir.
+
+Biraz şaşırtıcı bir şekilde, `[]` (boş dizi) ve `{}` (boş nesne) de **truthy** değerlerdir, **falsy** değil. Bu, her nesnenin ve dizinin truthy olduğu anlamına gelir.
+
+## Boolean’a Dönüştürme
+
+Bazen truthy (doğru olarak kabul edilen) bir değeri `true` veya falsy (yanlış olarak kabul edilen) bir değeri `false` yapmak yararlı olabilir.
+
+Bu işlemi yapmanın en açık yolu, `Boolean()` yapıcı fonksiyonunu kullanmaktır:
+
+```
+Boolean(4); // true
+Boolean(0); // false
+Boolean([]); // true
+Boolean(''); // false
+```
+
+Boolean’a dönüştürmenin daha yaygın bir başka yöntemi daha vardır:
+
+```
+!!4; // true
+!!0; // false
+!![]; // true
+!!''; // false
+```
+
+`!!` aslında JavaScript’te özel bir operatör değildir; sadece `!` (NOT) operatörünü iki kez tekrarlıyoruz.
+
+`!` operatörü ile bir boolean değeri ters çevirebiliriz:
+
+```
+!true; // false
+!false; // true
+```
+
+Eğer `!` operatörünü boolean olmayan bir değerle kullanırsak, truthy bir değeri `false` veya falsy bir değeri `true` yapar:
+
+```
+!4; // false, çünkü 4 truthy bir değer
+!0; // true, çünkü 0 falsy bir değer
+```
+
+Birden fazla `!` operatörünü üst üste kullanarak değeri tekrar tekrar çevirebiliriz:
+
+```
+!4; // false
+!!4; // true
+!!!4; // false
+!!!!4; // true
+```
+
+Burada olanları adım adım inceleyelim: Her `!` operatörü sırayla değerlendirilir. Sanki her set parantez içindeymiş gibi düşünelim:
+
+```
+!(!(!4))
+    ^^ !4 `false` olur
+
+!(!false)
+  ^^^^^^ !false `true` olur
+
+!true
+^^^^^ !true `false` olur
+```
+
+Bu yöntem, bir değeri hızlıca `true` veya `false` yapmak için kullanışlıdır ve genellikle pratikte oldukça yaygın olarak tercih edilir.
