@@ -1,0 +1,158 @@
+# Children Prop (Çocuk Prop)
+
+Diyelim ki, özel bir **buton** bileşeni oluşturmak istiyoruz. Bu buton, normal bir HTML butonu gibi davranmalı, ancak kırmızı bir arka plan rengi ve beyaz bir yazı rengine sahip olmalı.
+
+Bunu şu şekilde yazabiliriz:
+
+```
+function RedButton({ contents }) {
+  return (
+    <button
+      style={{
+        color: 'white',
+        backgroundColor: 'red',
+      }}
+    >
+      {contents}
+    </button>
+  );
+}
+```
+
+Bu bileşeni şu şekilde kullanabiliriz:
+
+```
+root.render(
+  <RedButton contents="Bana tıklama!" />
+);
+```
+
+Evet, bu yöntem işe yarıyor. Ancak, biraz tuhaf değil mi? Normal bir HTML butonu kullandığımızda içeriği genelde açılış ve kapanış etiketleri arasına yerleştiriyoruz:
+
+```
+<button>
+  Bana tıklama!
+</button>
+```
+
+Burada ise, içeriği bir **prop** olarak (`contents`) gönderiyoruz. Bu yöntem çalışsa da, HTML kullanım alışkanlıklarımızdan farklı olduğu için doğal gelmeyebilir. Neyse ki, bu durumu çözmek için **children prop** devreye giriyor ve çok daha kullanıcı dostu bir yapı sunuyor. 😊
+
+## Children Prop: React'ın Şeker Gibi Sözdizimi
+
+React, özel bileşenlerimizi yazarken hayatımızı kolaylaştırmak için bir güzellik sunar. İçeriği bir prop olarak göndermek yerine, HTML'deki gibi doğrudan açılış ve kapanış etiketleri arasına yazabiliriz.
+
+Örneğin:
+
+```
+root.render(
+  <RedButton>
+    Bana tıklama!
+  </RedButton>
+);
+```
+
+Bu yöntem, **children** adı verilen özel bir prop sayesinde çalışır. React, açılış ve kapanış etiketleri arasına yazılan her şeyi otomatik olarak children prop'u altında bize ulaştırır.
+
+İşte bunu kullanan bir bileşen:
+
+```
+function RedButton({ children }) {
+  return (
+    <button
+      style={{
+        color: 'white',
+        backgroundColor: 'red',
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+**React'ın Bize Sunduğu Kolaylık**
+
+React, açılış-kapanış etiketleri arasındaki içeriği alır ve **children** prop'u ile bize verir. Yani, **children**, React'ın "ayrılmış" (özel) bir prop'udur. Bunu daha iyi anlamak için bir React elemanını inceleyelim:
+
+```
+import React from 'react';
+
+const element = (
+  <div>
+    Merhaba Dünya
+  </div>
+);
+
+console.log(element);
+```
+
+Konsol çıktısı şu şekilde olacaktır:
+
+```
+{
+  "type": "div",
+  "key": null,
+  "ref": null,
+  "props": {
+    "children": "Merhaba Dünya"
+  },
+  "_owner": null,
+  "_store": {}
+}
+```
+
+## Children Prop: Aslında O Kadar Özel Değil!
+
+React’te **children prop**'u, birçok yeni başlayan tarafından "özel" ya da "farklı" bir şeymiş gibi algılanabilir. Ancak gerçekte, diğer prop'larla tamamen aynı mantıkla çalışır. Sadece bize daha kullanışlı ve sezgisel bir sözdizimi sunar.
+
+**Geleneksel Yöntemle Children Göndermek**
+
+Eğer istersek, children prop'unu geleneksel yöntemle de gönderebiliriz. Bu biraz garip görünebilir, ama sonuç aynıdır:
+
+```
+// Şu element:
+<div children="Merhaba dünya!" />
+
+// …şununla tamamen aynıdır:
+<div>
+  Merhaba dünya!
+</div>
+```
+
+React burada özel bir sözdizimi sunarak, JSX’in HTML’e daha yakın ve kullanışlı hissettirmesini sağlar. Ama temelde children, diğer prop'lardan farklı değildir. Ne sihirli ne de eşsizdir.
+
+> ## Peki İkisini Aynı Anda Kullanırsak?
+>
+> Hem children prop'unu bir özellik olarak, hem de açılış-kapanış etiketleri arasında içerik verirsek ne olur? İnceleyelim:
+>
+> ```
+> import React from 'react';
+> import { createRoot } from 'react-dom/client';
+>
+> const element = (
+>   <div children="Attribute olarak"></div>
+> );
+>
+> const root = createRoot(
+>  document.querySelector('#root')
+> );
+> root.render(element);
+> ```
+>
+> Bu durumda React, **açılış-kapanış etiketleri arasında geçen** içeriği tercih eder. Örnek:
+>
+> ```
+> const element = (
+>
+> {' '}
+> <div children='Attribute olarak'>Etiketler arasında!</div>
+> );
+>
+> // React'in önceliği:
+>
+> <div>Etiketler arasında!</div>
+> ```
+>
+> **Neden Böyle?**
+>
+> Bu yaklaşım oldukça mantıklıdır çünkü açılış ve kapanış etiketleri arasına içerik koymak, bir elementin çocuklarını belirtmenin daha geleneksel ve doğal bir yoludur.

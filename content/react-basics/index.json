@@ -53,6 +53,12 @@
       "slug": "props",
       "title": "Özellikler",
       "description": "React bileşenlerinde props kullanarak dinamik içerik oluşturmayı ve varsayılan değerlerin nasıl tanımlanacağını öğrenin. Bu bölümde, bileşenlerin esnekliğini artırmak için destructuring ve nullish coalescing operatörlerinin nasıl kullanılacağını keşfedeceksiniz."
+    },
+    {
+      "id": "10",
+      "slug": "children-props",
+      "title": "Çocuk Özellikler",
+      "description": "React'te children prop kavramını, kullanım amaçlarını ve HTML benzeri sözdiziminin avantajlarını öğrenin. Bileşenlerin içeriğini daha doğal ve okunabilir bir şekilde nasıl aktarabileceğinizi keşfedin."
     }
   ]
 }
