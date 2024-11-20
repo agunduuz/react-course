@@ -64,7 +64,7 @@
       "id": "11",
       "slug": "application-structure",
       "title": "Uygulama Yapısı",
-      "description": ""
+      "description": "React uygulamalarının temel yapısını, index.js ve App bileşeninin görevlerini ve modüler yapının nasıl kurulacağını öğrenin. Dosya organizasyonu ve bileşen mimarisinin temellerini keşfedin."
     }
   ]
 }
