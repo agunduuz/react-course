@@ -23,6 +23,12 @@
       "slug": "truthy-and-falsy",
       "title": "Truthy ve Falsy",
       "description": "JavaScript'te truthy ve falsy değerlerin ne olduğunu öğrenin. Bu değerler, koşul ifadelerinde nasıl kullanılır ve hangi durumlarda geçerli kabul edilir?"
+    },
+    {
+      "id": "05",
+      "slug": "javascript-modules",
+      "title": "JavaScript Modülleri",
+      "description": "Hazırlanıyor..."
     }
   ]
 }

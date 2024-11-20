@@ -1,0 +1,283 @@
+# Uygulama Yapısı
+
+React ile bir uygulama oluştururken, uygulamanız büyük ya da küçük olsun fark etmez, genellikle belli bir yapı izlenir. İşte bu yapıya bir örnek. Kod parçalarını inceleyelim ve nasıl çalıştığını adım adım açıklayalım:
+
+**1. `index.js` Dosyası**
+
+Bu dosya, uygulamanın başlangıç noktasıdır. React bileşenlerini tarayıcıdaki bir HTML elementine yerleştirmek için kullanılır.
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './components/App'; // Ana uygulama bileşenini içe aktarıyoruz
+
+const root = createRoot(
+  document.querySelector('#root') // HTML dosyasındaki #root elementini bul
+);
+
+root.render(<App />); // App bileşenini #root içine render ediyoruz
+```
+
+- `createRoot`: React 18 ile gelen bu yöntem, uygulamanızı tarayıcıya yerleştirmek için kullanılır.
+- `<App />`: Tüm uygulamayı temsil eden ana bileşendir. Bu, projedeki diğer tüm bileşenleri kapsar.
+
+**2. `App.js` Dosyası**
+
+Bu dosya, uygulamanızın ana bileşeni olarak çalışır. Diğer bileşenleri bir araya getirir.
+
+```
+import Header from './Header'; // Header bileşenini içe aktarıyoruz
+
+function App() {
+  return (
+    <>
+      <Header /> {/* Uygulamanın üst kısmı */}
+      <main>
+        <p>Tipik bir uygulama yapısı</p> {/* Ana içerik */}
+      </main>
+    </>
+  );
+}
+
+export default App;
+```
+
+- `<Header />`: Uygulamanın başlık kısmını temsil eden ayrı bir bileşendir.
+- `<main>`: Uygulamanın ana içeriğini barındırır. HTML'deki `<main>` etiketi semantik olarak ana içeriği ifade eder.
+
+**3. `Header.js` Dosyası**
+
+Bu dosya, uygulamanın üst kısmını (header) oluşturur.
+
+```
+function Header() {
+  return (
+    <header>
+      <h1>Example App</h1> {/* Başlık */}
+    </header>
+  );
+}
+
+export default Header;
+```
+
+- `<header>`: HTML'de sayfanın üst kısmını belirtmek için kullanılan semantik bir etiket.
+- `<h1>`: Uygulamanın ana başlığını içerir.
+
+<Image
+  src='/images/react-basics-images/application-structure-1.png'
+  width={800}
+  height={450}
+  alt='Example App'
+/>
+
+## Index.js Dosyasının Görevi
+
+React projelerinde `index.js` dosyası, kodunuzun çalıştırılan ilk kısmıdır. Bu dosya, uygulamanızı tarayıcıya yerleştirmekten (render etmekten) sorumludur. Yazdığınız React elementlerini, canlı bir şekilde DOM’a dönüştürür.
+
+**Temel Görevi**
+
+- React uygulamanızı tarayıcıdaki kök elemente bağlar.
+- React'ın sağladığı `createRoot` ve `render` yöntemlerini çağırır.
+
+```
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+
+const root = createRoot(document.querySelector('#root'));
+root.render(<App />);
+```
+
+**Tek Kök Nokta**
+
+- Genellikle sadece 1 yer bu yöntemleri çağırır.
+- React ile birden fazla kök uygulama oluşturmak mümkün olsa da, bu nadiren yapılır. Genelde başka bir teknolojiden React'a geçiş sırasında kullanılır.
+
+**Kurulum Dosyası Gibi Çalışır**
+
+`index.js` yalnızca uygulamanızı başlatmak için gerekli kurulum görevlerini yerine getirir. Örneğin:
+
+- **Global CSS dosyalarını** buradan yükleyebilirsiniz:
+
+```
+import './styles/global.css';
+```
+
+- **Hata günlükleme araçlarını** burada ayarlayabilirsiniz:
+
+```
+import * as Sentry from '@sentry/react';
+Sentry.init({ dsn: 'your-dsn' });
+```
+
+Bu dosya, **uygulamanın aktif bir parçası değildir**. Burada başlık (header), düğme (button) veya diğer bileşenleri doğrudan render etmek **alışılmadık** bir durumdur. Çünkü bunlar uygulamanın içeriğinde yer alır, kurulum dosyasında değil.
+
+**Tek Bir Bileşen Render Edilir**
+
+- Bu dosya genellikle yalnızca **tek bir bileşeni** (örneğin `<App />`) render eder.
+- Ancak bazen sağlayıcı bileşenler de kullanılabilir. Örneğin:
+
+```
+import { ThemeProvider } from './context/ThemeContext';
+
+root.render(
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>
+);
+```
+
+## App Bileşeni: Ana Merkez
+
+React projelerinde sıklıkla `App` adında bir bileşen bulunur. Bu isim, “Application”ın (Uygulama) kısaltmasıdır ve genellikle proje içerisinde **ana merkez** görevi görür.
+
+**Nedir Bu App Bileşeni?**
+
+- App, uygulamanızdaki **tüm bileşenlerin atasını** temsil eder.
+- Herhangi bir React bileşeni seçerseniz, onun köküne kadar olan bağlantısını App bileşenine kadar izleyebilirsiniz.
+
+**Ne İşe Yarar?**
+
+- App bileşeni genellikle uygulamanın temel **düzeni** ile ilgilenir:
+  - Başlıklar (headers)
+  - Alt bilgiler (footers)
+  - Ana yapısal bileşenler
+- Daha küçük uygulamalarda bu bileşende ek kullanıcı arayüzü (UI) parçaları da bulunabilir. Ancak, uygulama büyüdükçe bu bileşen daha çok **düzen ve yapı** ile ilgilenmeye başlar.
+
+**Router Kullanımı**
+
+- Eğer bir yönlendirme (routing) çözümü, örneğin **React Router** kullanıyorsanız, uygulamanızın **en üst seviye rotalarını** genellikle bu dosyaya eklersiniz.
+
+```
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
+}
+```
+
+**Sıkı Kurallar Yok**
+
+- App bileşeninin nasıl yapılandırılacağı konusunda **kesin kurallar yoktur**.
+- Her proje farklıdır ve App bileşeni, geliştiricilere uygulamanın genel yapısını göstermek için bir rehber niteliği taşır.
+
+## Modüller: Uygulamanızı Parçalara Bölün
+
+React projelerinde genellikle **ES modül sistemi** kullanılır. Bu sistem sayesinde, uygulamanızı birden fazla dosyaya bölerek daha düzenli ve yönetilebilir hale getirebilirsiniz.
+
+**Modüller Nedir ve Neden Kullanılır?**
+
+- Büyük bir uygulamayı **küçük, bağımsız parçalara ayırmak** için kullanılır.
+- Her dosya, bir modül olarak düşünülebilir.
+- Bu sistem, kodunuzun:
+  - Daha **okunaklı**,
+  - Daha **bakımı kolay**,
+  - Ve **yeniden kullanılabilir** olmasını sağlar.
+
+**import/export Yapısı**
+
+React projelerinde bileşenler genellikle `import` ve `export` anahtar kelimeleri ile kullanılır. Bu, bir dosyadaki kodu başka bir dosyaya aktarmak ve yeniden kullanmak için harika bir yoldur. İşte bir örnek:
+
+**Bir Bileşeni Dışa Aktarma**
+
+```
+// Header.js
+function Header() {
+  return <h1>Merhaba, React!</h1>;
+}
+
+export default Header; // Header bileşeni dışa aktarılıyor
+```
+
+**Bir Bileşeni İçe Aktarma**
+
+```
+// App.js
+import Header from './Header'; // Header bileşeni içe aktarılıyor
+
+function App() {
+  return (
+    <div>
+      <Header />
+    </div>
+  );
+}
+
+export default App;
+```
+
+**Modüller Hakkında Daha Fazla Bilgi**
+
+Eğer bu `import/export` sözdizimine aşina değilseniz, [JavaScript’in “Modüller”](/js-basics/javascript-modules) konusunu öğrenebilirsiniz. Bu, JavaScript’in temel yapı taşlarından biridir ve React projelerinde çok sık kullanılır.
+
+## İleriye Dönük: Uygulama Yapısını Kullanmak
+
+**Bir Örnek: FancyButton**
+
+Örneğin, aşağıdaki gibi bir uygulama yapısı görebilirsiniz:
+
+**App.js Dosyası**
+
+```
+import FancyButton from './FancyButton';
+
+function App() {
+  return (
+    <FancyButton>
+      Tıkla!
+    </FancyButton>
+  );
+}
+
+export default App;
+```
+
+**FancyButton.js Dosyası**
+
+```
+function FancyButton({ children }) {
+  return (
+    <button
+      style={{
+        padding: '16px 32px',
+        border: '2px solid hsl(340deg 100% 50%)',
+        borderRadius: '4px',
+        background: 'hsl(340deg 100% 50% / 0.1)',
+        fontSize: '1rem'
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+export default FancyButton;
+```
+
+<Image
+  src='/images/react-basics-images/application-structure-2.png'
+  width={800}
+  height={450}
+  alt='Fancy Button'
+/>
+
+Bu yapı sayesinde, bileşenlerimiz hem **modüler** hem de **yeniden kullanılabilir** hale gelir.
+
+**index.js Nerede?**
+
+Yukarıdaki örneklerde `index.js` dosyasını görmüyor olabilirsiniz. Ama merak etmeyin! Burada genelde:
+
+- `createRoot` Ve
+- `render` işlemleri ile `App` bileşenini DOM’a yerleştiriyoruz.
+
+Eğer bu dosya gösterilmemişse, `App` bileşeninin otomatik olarak render edildiğini varsayabilirsiniz.

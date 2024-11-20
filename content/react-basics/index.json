@@ -59,6 +59,12 @@
       "slug": "children-props",
       "title": "Çocuk Özellikler",
       "description": "React'te children prop kavramını, kullanım amaçlarını ve HTML benzeri sözdiziminin avantajlarını öğrenin. Bileşenlerin içeriğini daha doğal ve okunabilir bir şekilde nasıl aktarabileceğinizi keşfedin."
+    },
+    {
+      "id": "11",
+      "slug": "application-structure",
+      "title": "Uygulama Yapısı",
+      "description": ""
     }
   ]
 }
