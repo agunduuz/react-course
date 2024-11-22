@@ -1,1 +1,555 @@
-## Hazırlanıyor...
+# JavaScript Modülleri
+
+Eskiden JavaScript'in yerleşik bir modül sistemi yoktu.
+
+**Eski Yöntem: Script Etiketleri**
+
+İlk zamanlarda, JavaScript kodlarımızı `.js` dosyalarına yazıyorduk ve bu dosyaları HTML dosyalarına `<script>` etiketleriyle yüklüyorduk. Bu yöntem bir şekilde çalışıyordu, ama büyük bir problem vardı:
+
+- Tüm dosyalar **aynı ortamı** (global scope) paylaşıyordu.
+- Bir dosyada tanımlanan bir değişken, başka bir dosyada erişilebilir oluyordu. Bu da kodlarımızın **karmaşık ve kontrol edilmesi zor** hale gelmesine neden oluyordu.
+
+**Üçüncü Taraf Çözümleri**
+
+2009-2010 yıllarında, bu problemi çözmek için **üçüncü taraf** araçlar geliştirildi. En popüler olanlardan bazıları şunlardı:
+
+- RequireJS
+- CommonJS
+
+Özellikle **CommonJS**, arka uçta Node.js projelerinde sıklıkla kullanıldı ve `module.exports` gibi yapıları içeriyordu. Belki bunu Node.js kodlarında görmüş olabilirsiniz.
+
+**JavaScript'in Yerleşik Modül Sistemi**
+
+2010'ların ortalarına gelindiğinde, JavaScript sonunda kendi **yerleşik modül sistemine** kavuştu! 🎉 Bu, JavaScript diline eklenen bir yenilikti ve gerçekten oldukça **şık ve güçlü** bir çözüm sundu.
+
+## Temel Mantık: JavaScript Modül Sistemi
+
+JavaScript modül sistemiyle çalışırken, **her dosya bir "modül"** haline gelir. Bir modül, birden fazla **export** (dışa aktarma) içerebilen bir JavaScript dosyasıdır. Bu modüller arasında veri paylaşmak için **import** (içe aktarma) ifadesini kullanırız.
+
+**Modüller Arasında Veri Paylaşımı**
+
+Bir modüldeki veriyi başka bir modülde kullanmak istiyorsak:
+
+- **Dışa aktarmamız (export)** gerekiyor.
+- Diğer modülde bu veriyi **içe aktarmamız (import)** gerekiyor.
+
+Eğer bir veri **export edilmezse**, diğer modüller tarafından erişilemez. Başka bir deyişle, modüller arasındaki veri paylaşımı yalnızca **import/export** mekanizmasıyla mümkün olur.
+
+**Üçüncü Taraf Modüller**
+
+Kendi yazdığımız kodun yanı sıra, React gibi **üçüncü taraf kütüphaneleri** de import edebiliriz.
+
+```
+import React from 'react';
+```
+
+**Neden Bu Sistem Kullanılıyor?**
+
+Bu sistem, başta biraz karmaşık gibi görünse de, büyük bir avantaj sağlar:
+
+- Her **şey varsayılan olarak izole edilmiştir**. Yani, bir dosyadaki kod başka dosyalardan etkilenmez.
+- Modüller arasındaki bağlantıyı **stratejik olarak** kurabiliriz. Bu da büyük ve karmaşık projelerde kodu anlamayı ve yönetmeyi kolaylaştırır.
+
+**Imports/exports**, modüller arasındaki birer **köprü** gibidir. Doğru şekilde kullanıldığında, yazılım projelerimizi daha düzenli ve anlaşılır hale getirir.
+
+## Named Exports (Adlandırılmış Dışa Aktarımlar)
+
+Her dosya birden fazla **named export** (adlandırılmış dışa aktarım) tanımlayabilir. Bu, dosyada belirli verileri veya fonksiyonları dışa aktarmak için kullanılır.
+
+Örnek: `data.js`
+
+```
+export const significantNum = 5;
+
+export function doubleNum(num) {
+  return num * 2;
+}
+```
+
+- `significantNum` adında bir sabit dışa aktarılıyor. `doubleNum` adlı bir fonksiyon da dışa aktarılıyor. Bu fonksiyon, aldığı sayıyı ikiyle çarpar.
+
+Örnek: `index.js`
+
+```
+import { significantNum, doubleNum } from './data';
+
+console.log(significantNum); // 5
+console.log(doubleNum(5));  // 10
+```
+
+- `import` **anahtar kelimesi** ile `data.js` dosyasındaki verileri içe aktarıyoruz. `{}` süslü parantezler içinde, içe aktarmak istediğimiz verilerin adını yazıyoruz. Örneğin: `significantNum`, `doubleNum`.
+
+**Önemli Detaylar**
+
+1. **Adlandırılmış dışa aktarımlar istediğiniz kadar olabilir.** Ama sadece gerekenleri içe aktarabilirsiniz. Örneğin:
+
+```
+import { significantNum } from './data'; // Sadece significantNum'u alır.
+```
+
+2. Yol Belirtimi (Path)
+   - `'./data'`: Modülün bulunduğu konumu belirtir.
+   - `. (nokta)`: Aynı dizini temsil eder.
+   - `.. (iki nokta)`: Bir üst dizine çıkar.
+   - `.js` **uzantısını yazmaya gerek yoktur**, çünkü bu varsayılan olarak kabul edilir.
+
+**Çalışma Mantığı**
+
+- `data.js` dosyasındaki veriler, `export` ile dışa aktarılır.
+- `index.js` bu verileri, `import` kullanarak içeri alır.-
+- Modül sistemi bu bağlantıları kurarken **Linux tarzı dosya yolu** kullanır.
+
+**Tam Kod Örneği**
+
+Örnek: `data.js`
+
+```
+export const significantNum = 5;
+
+export function doubleNum(num) {
+  return num * 2;
+}
+```
+
+Örnek: `index.js`
+
+```
+import { significantNum, doubleNum } from './data';
+
+console.log(`Significant number: ${significantNum}`); // 5
+console.log(`Double of it: ${doubleNum(significantNum)}`); // 10
+```
+
+Bu sistem, projedeki kodları daha modüler ve yönetilebilir hale getirir.
+
+## Export İfadeleri (Export Statements)
+
+JavaScript'te bir değişkeni veya fonksiyonu dışa aktarmak için birkaç yöntem vardır. Bu, kodunuzu başka dosyalarda kullanmak istediğinizde oldukça faydalıdır.
+
+**Değişkeni Tanımlarken Dışa Aktarma**
+
+En yaygın yöntem, değişkeni tanımlarken doğrudan `export` ifadesiyle birlikte kullanmaktır:
+
+```
+export const significantNum = 5;
+```
+
+- Bu yöntem, değişkeni tanımlayıp aynı anda dışa aktarır. Genellikle kullanılan standart yöntem budur.
+
+**Daha Önce Tanımlanmış Bir Değişkeni Dışa Aktarma**
+
+Eğer değişkeni önceden tanımladıysanız, sonradan da dışa aktarabilirsiniz:
+
+```
+const significantNum = 5;
+
+export { significantNum };
+```
+
+- Burada süslü parantezler `{}` kullanılır. Bu yöntem pek yaygın değildir ve genelde `export` ifadesini tanımlamayla birlikte kullanmayı tercih ederiz.
+
+**Fonksiyonları Dışa Aktarma**
+
+Fonksiyonları da aynı şekilde tanımlarken dışa aktarabiliriz:
+
+```
+export function someFunction() {
+  // Fonksiyonun içeriği
+}
+```
+
+- Bu yöntemle, `someFunction` adında bir **named export** (adlandırılmış dışa aktarım) oluşturmuş oluyoruz.
+
+**Neden İlk Yöntem Daha Yaygın?**
+
+- **Okunabilirlik**: Kodun baştan itibaren dışa aktarıldığı bellidir.
+- **Sadeliği**: Tek satırda hem tanımlama hem dışa aktarma yapılır.
+
+**Kod Örneği**
+
+Örnek: `data.js`
+
+```
+// Değişken ve fonksiyonlar tanımlanırken dışa aktarılıyor
+export const significantNum = 5;
+
+export function someFunction() {
+  return "Hello, world!";
+}
+
+// Daha önce tanımlanan bir değişken sonradan dışa aktarılıyor
+const anotherNum = 10;
+export { anotherNum };
+```
+
+Örnek: `index.js`
+
+```
+// İhtiyacımız olan değişkenleri ve fonksiyonları içe aktarıyoruz
+import { significantNum, someFunction, anotherNum } from './data';
+
+console.log(significantNum); // 5
+console.log(someFunction()); // "Hello, world!"
+console.log(anotherNum);     // 10
+```
+
+## İçe Aktarmaları Yeniden Adlandırma (Renaming Imports)
+
+JavaScript'te bazı durumlarda, farklı modüllerden gelen aynı isimdeki dışa aktarımlar (exports) isim çakışmalarına neden olabilir.
+
+**Sorun: Aynı İsimle Tanımlama**
+
+Eğer iki farklı dosyadan aynı isimle bir fonksiyon ya da değişken içe aktarmaya çalışırsak, hata alırız:
+
+```
+import { Wrapper } from './Header';
+import { Wrapper } from './Footer';
+// 🚫 'Wrapper' tanımlayıcısı zaten bildirilmiştir.
+```
+
+- Yukarıdaki kod, `Wrapper` ismi zaten tanımlandığı için hata verir. Bunun nedeni, **named exports** (adlandırılmış dışa aktarımlar) için küresel bir isim benzersizliği gerekmemesidir.
+
+**Modüller Aynı İsmi Kullanabilir**
+
+Aynı ismi kullanan iki modül örneği:
+
+Örnek: `Header.js`
+
+```
+export function Wrapper() {
+  return <header>Hello</header>;
+}
+```
+
+Örnek: `Footer.js`
+
+```
+export function Wrapper() {
+  return <footer>World</footer>;
+}
+```
+
+Her iki dosya da `Wrapper` adında bir fonksiyon dışa aktarıyor. Bu, tamamen geçerli bir durumdur ve bu yüzden hata almak istemiyorsak çözüm üretmemiz gerekir.
+
+**Çözüm: `as` ile Yeniden Adlandırma**
+
+`as` **anahtar kelimesi** sayesinde, içe aktarımlarımıza modül içinde yeni bir isim verebiliriz:
+
+```
+import { Wrapper as HeaderWrapper } from './Header';
+import { Wrapper as FooterWrapper } from './Footer';
+// ✅ Artık sorun yok
+```
+
+- `HeaderWrapper`, `Header.js` dosyasındaki `Wrapper` fonksiyonunu temsil eder.
+- `FooterWrapper`, `Footer.js` dosyasındaki `Wrapper` fonksiyonunu temsil eder.
+
+**Kod Örneği**
+
+Örnek: `Header.js`
+
+```
+export function Wrapper() {
+  return <header>Bu bir header</header>;
+}
+```
+
+Örnek: `Footer.js`
+
+```
+export function Wrapper() {
+  return <footer>Bu bir footer</footer>;
+}
+```
+
+Örnek: `App.js`
+
+```
+import { Wrapper as HeaderWrapper } from './Header';
+import { Wrapper as FooterWrapper } from './Footer';
+
+function App() {
+  return (
+    <>
+      <HeaderWrapper />
+      <FooterWrapper />
+    </>
+  );
+}
+
+export default App;
+```
+
+- `<HeaderWrapper />` çağrısı `Header.js` dosyasındaki `Wrapper` fonksiyonunu çalıştırır.
+- `<FooterWrapper />` çağrısı ise `Footer.js` dosyasındakini çalıştırır.
+
+**Neden Kullanılır?**
+
+- **İsim Çakışmalarını Önler**: Aynı ismi kullanan farklı modüllerle çalışırken hata almazsınız.
+- **Daha Anlamlı İsimlendirme**: İçeriğin neye ait olduğunu anlamak için farklı dosyalardan gelen değişkenlere daha açıklayıcı isimler verebilirsiniz. Örneğin, `HeaderWrapper` ve `FooterWrapper` isimlendirmeleri, fonksiyonların nereden geldiğini hemen gösterir.
+
+## Default Exports (Varsayılan Dışa Aktarımlar)
+
+JavaScript modüllerinde, **default export** (varsayılan dışa aktarma) adı verilen özel bir dışa aktarma türü vardır. Bu, bir modülden yalnızca bir tane varsayılan veri dışa aktarmanıza olanak tanır.
+
+**Default Export Örneği**
+
+Bir dosyada default export kullanımı şöyle görünebilir:
+
+Örnek: `data.js`
+
+```
+const magicNumber = 100;
+
+export default magicNumber;
+```
+
+Bu örnekte, `magicNumber` adlı değişken default olarak dışa aktarılmıştır.
+
+**İçe Aktarma (Import) İşlemi:**
+
+```
+import magicNumber from './data';
+
+console.log(magicNumber); // 100
+```
+
+Default dışa aktarımlar için süslü parantezler kullanılmaz.
+
+**Default Export Kuralları**
+
+- **Tek Bir Varsayılan Dışa Aktarım Olabilir:**
+  Bir dosyada yalnızca bir adet default export bulunabilir:
+
+```
+const hi = 5;
+const bye = 10;
+
+export default hi; // Bu geçerli
+export default bye; // 🚫 SyntaxError: Çok fazla default export!
+```
+
+- **Doğrudan Değişken Tanımıyla Kullanılamaz:**
+  Default export tanımlarken, değişkeni **önceden tanımlayıp** dışa aktarmalısınız:
+
+```
+// ✅ Doğru
+const hi = 5;
+export default hi;
+
+// 🚫 Yanlış
+export default const hi = 10;
+```
+
+- **Ad Özgürlüğü:**
+  Default dışa aktarımlar içe aktarılırken **istediğiniz ismi** kullanabilirsiniz:
+
+```
+// ✅ Doğru: İsim aynı
+import magicNumber from './data';
+
+// ✅ Doğru: İsim farklı
+import helloWorld from './data';
+```
+
+Bunun nedeni, default export’un bir modülde **zaten tek olmasıdır**. Bu nedenle isim çakışması veya belirsizlik olmaz.
+
+- **Süslü Parantez Kullanılmaz:**
+  Default dışa aktarımları içe aktarırken süslü parantez **kullanılmaz**:
+
+```
+// ✅ Doğru
+import magicNumber from './data';
+
+// 🚫 Yanlış
+import { magicNumber } from './data';
+```
+
+**Default ve Named Export Farkı**
+
+- Bir modülde birden fazla **named export** olabilir:
+
+```
+export const name = "Anıl";
+export function sayHi() {
+  console.log("Merhaba!");
+}
+```
+
+- Ama yalnızca bir **default export** olabilir:
+
+```
+export default function mainFunction() {
+  console.log("Bu bir varsayılan fonksiyon!");
+}
+```
+
+**Kod Örneği**
+
+Örnek: `data.js`
+
+```
+const magicNumber = 42;
+
+export default magicNumber;
+```
+
+Örnek: `index.js`
+
+```
+import magicNumber from './data';
+
+console.log(`Sihirli sayı: ${magicNumber}`);
+```
+
+Sonuç:
+
+```
+Sihirli sayı: 42
+```
+
+**Farklı İsimle İçe Aktarma:**
+
+```
+import numara from './data';
+
+console.log(`Bu sayı: ${numara}`);
+```
+
+Sonuç yine aynı olur çünkü isim tamamen size bağlıdır:
+
+```
+Bu sayı: 42
+```
+
+**Neden Default Export Kullanılır?**
+
+- **Basitlik**: Modülün ana işlevini ya da verisini dışa aktarmak için kullanılır.
+- **Tek Bir Anahtar Veri**: Modülün bir özelliği öne çıkarılacaksa ideal bir yöntemdir.
+- **Esneklik**: İçe aktaran dosyada istediğiniz ismi kullanabilirsiniz.
+
+## Hangi Durumda Hangisini Kullanmalı?
+
+Named (isimli) ve default (varsayılan) export’ları öğrendik, ama şimdi şu soruyu soruyor olabilirsiniz: **Hangi durumda hangisini kullanmalıyım?**
+
+Bu, aslında net bir doğru veya yanlış cevabı olmayan bir konudur. Burada önemli olan, **size ve projenize uygun bir yöntem seçmektir.**
+
+**Örnek Senaryo: Tema Değerleri**
+
+Diyelim ki, bir dosyada uygulamanızın renk, boşluk ve yazı tipi değerlerini tutuyorsunuz. Bunu iki farklı şekilde yapabiliriz:
+
+- **Default Export ile**
+
+Örnek: `theme.js`
+
+```
+const THEME = {
+  colors: {
+    red: 'hsl(333deg 100% 45%)',
+    blue: 'hsl(220deg 80% 40%)',
+  },
+  spaces: [
+    '0.25rem',
+    '0.5rem',
+    '1rem',
+    '1.5rem',
+    '2rem',
+    '4rem',
+    '8rem',
+  ],
+  fonts: {
+    default: '"Helvetica Neue", sans-serif',
+    mono: '"Fira Code", monospace',
+  },
+};
+
+export default THEME;
+```
+
+Örnek: `index.js`
+
+```
+import THEME from './theme';
+
+console.log(THEME.colors.red); // 'hsl(333deg 100% 45%)'
+```
+
+Bu yöntemle, tüm tema değerlerini tek bir obje olarak dışa aktarıyoruz ve içe aktarıldığında THEME adıyla erişiyoruz.
+
+- **Named Exports ile**
+
+Örnek: `theme.js`
+
+```
+export const COLORS = {
+  red: 'hsl(333deg 100% 45%)',
+  blue: 'hsl(220deg 80% 40%)',
+};
+
+export const SPACES = [
+  '0.25rem',
+  '0.5rem',
+  '1rem',
+  '1.5rem',
+  '2rem',
+  '4rem',
+  '8rem',
+];
+
+export const FONTS = {
+  default: '"Helvetica Neue", sans-serif',
+  mono: '"Fira Code", monospace',
+};
+```
+
+Örnek: `index.js`
+
+```
+import { COLORS, SPACES } from './theme';
+
+console.log(COLORS.red); // 'hsl(333deg 100% 45%)'
+console.log(SPACES[2]);  // '1rem'
+```
+
+Bu yöntemde, her bir tema parçasını ayrı ayrı dışa aktarıyoruz. Bu, ihtiyacımız olan belirli değerleri seçip içe aktarmamıza olanak tanır.
+
+**Hangisi Daha İyi?**
+
+Her iki yöntem de geçerlidir, ancak hangisini tercih edeceğiniz projeye ve ihtiyaçlarınıza bağlıdır:
+
+- **Default Export:** Eğer bir dosyada tek bir "ana şey" varsa, bu yöntemi tercih edebilirsiniz. Örneğin, tüm temayı tek bir obje olarak dışa aktarmak.
+- **Named Exports:** Eğer dosyada birden fazla bağımsız şey varsa, bu yöntemi kullanabilirsiniz. Örneğin, renkler, yazı tipleri ve boşluklar gibi bağımsız temalar.
+
+**Bir Kural Önerisi**
+
+Şu kuralı takip edebilirsiniz:
+
+- Eğer bir dosyada **bir tane açıkça belirgin bir ana şey varsa**, onu **default export** yapmak.
+- Dosyada geri kalan yardımcı araçları veya küçük verileri **named export** olarak dışa aktarmak.
+
+**React Örneği**
+
+React bileşenlerinde sıkça kullanılan bir örnek:
+
+**components/Header.js**
+
+```
+export const HEADER_HEIGHT = '5rem';
+
+function Header() {
+  return (
+    <header style={{ height: HEADER_HEIGHT }}>
+      {/* İçerik */}
+    </header>
+  );
+}
+
+export default Header;
+```
+
+Bu dosyada, **Header** bileşeni dosyanın ana konusu olduğu için **default export** kullanıyoruz. **HEADER_HEIGHT** gibi yardımcı verileri ise **named export** olarak dışa aktarıyoruz.
+
+**Sonuç:**
+
+- Eğer bir dosyanın yalnızca tek bir ana işlevi veya konusu varsa, **default export** tercih edin.
+- Eğer dosyada birden fazla bağımsız veri veya işlev varsa, **named export** kullanmayı düşünün.
