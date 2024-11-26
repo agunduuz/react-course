@@ -1,0 +1,141 @@
+# Fragments (Parçalar)
+
+React uygulamamızda aşağıdaki gibi bir HTML çıktısı elde etmek istediğimizi varsayalım:
+
+```
+<h1>Welcome to my homepage!</h1>
+<p>Don't forget to sign the guestbook!</p>
+```
+
+Bu HTML kodunu alıp JSX formatına dönüştürüp uygulamamıza ekliyoruz. Ancak kodu çalıştırdığımızda bir hata alıyoruz:
+
+**Kod:**
+
+```
+import React from 'react';
+
+function App() {
+  return (
+
+      <h1>Welcome to my homepage!</h1>
+      <p>Don't forget to sign the guestbook!</p>
+  );
+}
+
+export default App;
+```
+
+**Hata Mesajı:**
+
+```
+Lint Warning
+Parsing error: Adjacent JSX elements must be wrapped in an enclosing tag
+Rule:
+Location: Line 7, Column 7
+```
+
+**Hata Ne Anlatıyor?**
+
+Hata mesajı, birden fazla JSX elementini tek bir **kapsayıcı etiket (enclosing tag)** içinde sarmalamamız gerektiğini söylüyor. Peki ama neden?
+
+Bunu daha iyi anlamak için bir an durup düşünelim. **JSX neden bu hatayı verir?** Sorunu anlamak için biraz deneme yapabilir ve JSX'i **React.createElement** fonksiyon çağrılarına çevirebilirsiniz. Bu, meselenin arka planını daha iyi anlamanıza yardımcı olabilir.
+
+**Sorunun Kökeni**
+
+JSX, aslında JavaScript’in React.createElement fonksiyonuna çevirdiği bir üst düzey yapı gibi çalışır. Kodumuzu bu şekilde dönüştürürsek, aşağıdaki gibi görünecektir:
+
+```
+React.createElement('h1', null, 'Welcome to my homepage!');
+React.createElement('p', null, "Don't forget to sign the guestbook!");
+```
+
+Bu kod, **iki ayrı bağımsız React elementini** oluşturuyor. Ancak React, **her bir bileşenin yalnızca bir tane kök öğesi (root element)** olması gerektiğini kabul eder. Bu kural, bileşenlerin düzgün bir şekilde birleştirilmesi ve DOM ağacında doğru bir yapı oluşturulması için önemlidir.
+
+**Çözüm: Fragments Kullanmak**
+
+Bu sorunu çözmek için iki yol vardır:
+
+**1. Bir Kapsayıcı Tag Eklemek**
+
+Elementlerinizi bir `div` gibi bir kapsayıcıyla sarabilirsiniz:
+
+```
+function App() {
+  return (
+    <div>
+      <h1>Welcome to my homepage!</h1>
+      <p>Don't forget to sign the guestbook!</p>
+    </div>
+  );
+}
+```
+
+Bu yöntem çalışır, ancak fazladan bir `div` etiketi DOM’a eklenir. Eğer bu ekstra etiketi istemiyorsanız, daha iyi bir çözüm vardır.
+
+**2. React.Fragment Kullanmak**
+
+React bize birden fazla öğeyi bir araya getirebileceğimiz bir yapı sunar: **Fragment.** Fragment, DOM’a herhangi bir ek etiket eklemez, sadece React içinde bir grup elementin birlikte değerlendirilmesini sağlar.
+
+```
+import React from 'react';
+
+function App() {
+  return (
+    <React.Fragment>
+      <h1>Welcome to my homepage!</h1>
+      <p>Don't forget to sign the guestbook!</p>
+    </React.Fragment>
+  );
+}
+
+export default App;
+```
+
+**Kısa Fragment Söz Dizimi**
+
+```
+function App() {
+  return (
+    <>
+      <h1>Welcome to my homepage!</h1>
+      <p>Don't forget to sign the guestbook!</p>
+    </>
+  );
+}
+```
+
+Yukarıdaki kodda, `<>` ve `</>` işaretleri bir **kısa fragment (shorthand fragment)** olarak kullanılır. Bu sayede DOM’a ekstra bir etiket eklenmeden birden fazla JSX öğesi gruplanabilir.
+
+## Kısa Yazım (Shorthand) ile React Fragments
+
+React Fragments kullanırken daha kısa ve pratik bir yazım tarzı tercih edebilirsiniz. Örneğin:
+
+```
+return (
+  <>
+    <h1>Welcome to my homepage!</h1>
+    <p>Don't forget to sign the guestbook!</p>
+  </>
+);
+```
+
+Bu yazımı ilk gördüğünüzde biraz sihirli ya da tuhaf gelebilir. Ama aslında oldukça sade bir anlam taşıyor: **Bu, boş bir HTML etiketi kullanmak gibidir.**
+
+**Kısa Yazım ve Normal Yazım Aynı Şeyi Yapar**
+
+Hem yukarıdaki kısa yazım (shorthand) hem de normal yazım (`React.Fragment`) aslında aynı şekilde çalışır. JSX, bu kodları şu şekilde JavaScript'e dönüştürür:
+
+```
+React.createElement(
+  React.Fragment,
+  {},
+  /* İçerik buraya gelir */
+);
+```
+
+**React Fragments Neden Var?**
+
+React ekibi, birden fazla elementi tek bir grup olarak döndürmemize izin vermek için `React.Fragment` bileşenini geliştirdi. Bu sayede:
+
+- **DOM’u kirletmekten kurtuluruz:** Ekstra `<div>` etiketleri eklemeden temiz bir HTML yapısı oluşturabiliriz.
+- **Daha okunabilir kod yazarız:** Hem kısa yazım hem de normal yazım, birden fazla elementle çalışırken JSX’i daha temiz hale getirir.

@@ -65,6 +65,12 @@
       "slug": "application-structure",
       "title": "Uygulama Yapısı",
       "description": "React uygulamalarının temel yapısını, index.js ve App bileşeninin görevlerini ve modüler yapının nasıl kurulacağını öğrenin. Dosya organizasyonu ve bileşen mimarisinin temellerini keşfedin."
+    },
+    {
+      "id": "12",
+      "slug": "fragments",
+      "title": "Parçalar",
+      "description": "React Fragment'lerinin ne olduğunu, neden kullanıldığını ve birden fazla JSX elementini nasıl gruplayabileceğinizi öğrenin. DOM'u temiz tutarken bileşenlerinizi daha etkili bir şekilde yapılandırmayı keşfedin."
     }
   ]
 }
