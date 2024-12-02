@@ -71,6 +71,12 @@
       "slug": "fragments",
       "title": "Parçalar",
       "description": "React Fragment'lerinin ne olduğunu, neden kullanıldığını ve birden fazla JSX elementini nasıl gruplayabileceğinizi öğrenin. DOM'u temiz tutarken bileşenlerinizi daha etkili bir şekilde yapılandırmayı keşfedin."
+    },
+    {
+      "id": "13",
+      "slug": "mapping-over-data",
+      "title": "Veri Üzerinde Döngü Yapmak",
+      "description": "React'te diziler üzerinde map() kullanarak dinamik listeler oluşturmayı ve yaygın hataları önlemeyi öğrenin. JSX içinde JavaScript kullanımının temel prensiplerini keşfedin."
     }
   ]
 }
