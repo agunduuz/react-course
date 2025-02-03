@@ -1,0 +1,137 @@
+# React'te Key Kullanımı
+
+React'te listeler oluştururken, her öğeye benzersiz bir `key` vermemiz gerekir. Eğer `key` eklemezsek, şu gibi bir uyarı alabiliriz:
+
+> **Warning: Each child in a list should have a unique "key" prop.**
+
+Peki, bu uyarının nedeni nedir? React neden her öğeye özel bir kimlik vermemizi istiyor? Hadi birlikte inceleyelim.
+
+---
+
+## Neden `key` kullanmalıyız?
+
+React'in liste öğelerini takip edebilmesi için her öğeyi benzersiz bir şekilde tanımlaması gerekir. Çünkü React, değişiklikleri doğrudan izlemez, sadece önceki ve sonraki durumu karşılaştırarak aradaki farkı hesaplar.
+
+Eğer her öğeye benzersiz bir `key` eklersek:
+
+- React hangi öğelerin değiştiğini, eklendiğini veya kaldırıldığını kolayca belirleyebilir.
+- Performans optimizasyonu sağlanır.
+- Beklenmedik hata ve edge-case (özel durum) hatalarının önüne geçilir.
+
+---
+
+## Key Kullanım Örnekleri
+
+### ❌ Yanlış Kullanım
+
+```jsx
+function NavigationLinks({ links }) {
+  return (
+    <ul>
+      {links.map((item) => (
+        <li>
+          <a key={item.id} href={item.href}>
+            {item.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+Bu kodun hatası şudur: `key` değeri `<a>` etiketine verilmiş, ancak React'in takip ettiği öğeler `<li>` etiketleridir. React, `<li>` öğelerinin benzersiz olup olmadığını kontrol eder. Bunu düzeltmek için `key` değerini `<li>` öğesine eklemeliyiz:
+
+### ✅ Doğru Kullanım
+
+```jsx
+function NavigationLinks({ links }) {
+  return (
+    <ul>
+      {links.map((item) => (
+        <li key={item.id}>
+          <a href={item.href}>{item.text}</a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+---
+
+## Fragment Kullanırken Key Kullanımı
+
+Bazı durumlarda `React.Fragment` kullanarak birden fazla öğeyi tek bir kapsayıcıda gruplarız. Ancak, bu durumda bile `key` eklememiz gerekebilir.
+
+### ❌ Yanlış Kullanım
+
+```jsx
+function Thing({ data }) {
+  return data.map((item) => (
+    <>
+      <p>{item.content}</p>
+      <button>Cancel</button>
+    </>
+  ));
+}
+```
+
+Bu kodda `key` kullanılmadığı için React uyarı verecektir. Bunu düzeltmek için `React.Fragment` kullanarak `key` eklemeliyiz:
+
+### ✅ Doğru Kullanım
+
+```jsx
+function Thing({ data }) {
+  return data.map((item) => (
+    <React.Fragment key={item.id}>
+      <p>{item.content}</p>
+      <button>Cancel</button>
+    </React.Fragment>
+  ));
+}
+```
+
+---
+
+## Key Değerleri Küresel Olarak Benzersiz Olmak Zorunda mı?
+
+Hayır! Birçok geliştirici, `key` değerlerinin tüm uygulama genelinde benzersiz olması gerektiğini düşünür, ancak bu doğru değildir. `key` yalnızca ilgili `map` fonksiyonunun içinde benzersiz olmalıdır.
+
+Örneğin, aşağıdaki kod tamamen geçerlidir:
+
+```jsx
+function App() {
+  return (
+    <ul>
+      {data.map((contact) => (
+        <ContactCard
+          key={contact.id}
+          name={contact.name}
+          job={contact.job}
+          email={contact.email}
+        />
+      ))}
+      {data.map((contact) => (
+        <ContactCard
+          key={contact.id}
+          name={contact.name}
+          job={contact.job}
+          email={contact.email}
+        />
+      ))}
+    </ul>
+  );
+}
+```
+
+Her `map()` çağrısı ayrı bir dizi oluşturduğu için, `key` değerleri yalnızca o dizi içinde benzersiz olmalıdır.
+
+# Sonuç
+
+- `key`, React'in DOM güncellemelerini daha verimli yapmasını sağlar.
+- `key` değerleri, `map` içinde oluşturulan öğelerde benzersiz olmalıdır.
+- `key`, doğrudan ilgili öğeye eklenmelidir (`li`, `React.Fragment`, vs.).
+- `key`, yalnızca içinde bulunduğu liste için benzersiz olmalıdır, uygulama genelinde değil.
+
+Bunları uygulayarak React projelerinizde daha temiz ve hatasız bir yapı oluşturabilirsiniz! 🚀

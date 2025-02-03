@@ -77,6 +77,12 @@
       "slug": "mapping-over-data",
       "title": "Veri Üzerinde Döngü Yapmak",
       "description": "React'te diziler üzerinde map() kullanarak dinamik listeler oluşturmayı ve yaygın hataları önlemeyi öğrenin. JSX içinde JavaScript kullanımının temel prensiplerini keşfedin."
+    },
+    {
+      "id": "14",
+      "slug": "keys",
+      "title": "React'te Key Kullanımı",
+      "description": "React'te key prop'unun önemi, doğru kullanımı ve performansa etkisini öğrenin. Liste render'lamada benzersiz key'lerin neden gerekli olduğunu ve yaygın hataları nasıl önleyeceğinizi keşfedin."
     }
   ]
 }
