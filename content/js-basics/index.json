@@ -29,6 +29,12 @@
       "slug": "javascript-modules",
       "title": "JavaScript Modülleri",
       "description": "JavaScript'te modül sisteminin tarihçesi, import/export yapıları ve bunların doğru kullanım şekilleri hakkında detaylı bilgi edinin."
+    },
+    {
+      "id": "06",
+      "slug": "array-iteration",
+      "title": "Array Iteration ",
+      "description": "JavaScript'te forEach, filter ve map gibi temel dizi yineleme yöntemlerini öğrenin. React projelerinde sıkça kullanılan bu metodların farkları ve kullanım alanları."
     }
   ]
 }

@@ -1,0 +1,183 @@
+# Dizi Yineleme (Iteration) Yöntemleri
+
+React'in en dikkat çekici yanlarından biri, JSX'in kendi içinde özel yineleme (iteration) yardımcılarına sahip olmamasıdır.
+
+Çoğu şablonlama (templating) dilinde özel sözdizimi ile veri üzerinde döngü işlemi yapabiliriz. Örneğin, Angular ve Vue gibi framework'lerde `v-for` gibi direktifler mevcuttur. Ancak, React bu konuda herhangi bir soyutlama sunmaz. Bunun yerine, JavaScript'in kendi dizi metodlarını kullanırız.
+
+Bu bölümde, React projelerinde sıkça kullanılan en yaygın dizi yineleme yöntemlerini öğreneceğiz: `forEach`, `filter` ve `map`.
+
+---
+
+## forEach
+
+`forEach` yöntemi, bir dizideki her öğe üzerinde belirli bir işlemi gerçekleştirmek için kullanılır. Ancak, diğer bazı metodlardan farklı olarak, `forEach` **bir değer döndürmez** ve sadece yan etkiler oluşturmak için kullanılır.
+
+### Örnek Kullanım
+
+```js
+const pizzaMalzemeleri = ['peynir', 'avokado', 'somon', 'çikolata'];
+
+pizzaMalzemeleri.forEach((malzeme) => {
+  console.log(malzeme);
+});
+```
+
+Bu kodun çıktısı şu şekilde olur:
+
+```
+peynir
+avokado
+somon
+çikolata
+```
+
+### Callback Fonksiyon Mantığı
+
+`forEach` metoduna verdiğimiz fonksiyon **callback fonksiyonu** olarak adlandırılır. Yani, biz bu fonksiyonu doğrudan çağırmayız; JavaScript motoru, diziyi işlerken bu fonksiyonu çağırır.
+
+**İkinci Parametre: İndeks**
+
+`forEach` metodunun callback fonksiyonuna bir **indeks** parametresi de ekleyebiliriz:
+
+```js
+pizzaMalzemeleri.forEach((malzeme, index) => {
+  console.log(index, malzeme);
+});
+```
+
+Çıktı:
+
+```
+0 peynir
+1 avokado
+2 somon
+3 çikolata
+```
+
+Bu sayede, dizi içindeki öğelerin **kaçıncı sırada** olduğunu da öğrenebiliriz.
+
+---
+
+## filter
+
+`filter` yöntemi, belirli bir koşulu sağlayan öğeleri seçerek **yeni bir dizi döndürür**. Yani, orijinal diziyi değiştirmez, sadece filtrelenmiş bir versiyonunu oluşturur.
+
+### Örnek Kullanım
+
+```js
+const ogrenciler = [
+  { isim: 'Ali', not: 89 },
+  { isim: 'Burak', not: 55 },
+  { isim: 'Cem', not: 68 },
+  { isim: 'Deniz', not: 71 },
+  { isim: 'Elif', not: 40 },
+];
+
+const gecenler = ogrenciler.filter((ogrenci) => ogrenci.not >= 60);
+
+console.log(gecenler);
+```
+
+Çıktı:
+
+```js
+[
+  { isim: 'Ali', not: 89 },
+  { isim: 'Cem', not: 68 },
+  { isim: 'Deniz', not: 71 },
+];
+```
+
+**Önemli Not:** `filter` metodu, orijinal diziyi değiştirmez; yeni bir dizi döndürür.
+
+Başka bir örnek:
+
+```js
+const sayilar = [5, 12, 15, 31, 40];
+
+const ciftSayilar = sayilar.filter((sayi) => sayi % 2 === 0);
+
+console.log(ciftSayilar); // [12, 40]
+```
+
+---
+
+## map
+
+React projelerinde en sık kullanılan metodlardan biri `map` yöntemidir. `map`, her öğeyi dönüştürerek **yeni bir dizi döndürür**.
+
+### Örnek Kullanım
+
+```js
+const kisiler = [
+  { isim: 'Ali', not: 89 },
+  { isim: 'Burak', not: 55 },
+  { isim: 'Cem', not: 68 },
+  { isim: 'Deniz', not: 71 },
+  { isim: 'Elif', not: 40 },
+];
+
+const buyukHarfIsimler = kisiler.map((kisi) =>
+  kisi.isim.toUpperCase()
+);
+
+console.log(buyukHarfIsimler);
+```
+
+Çıktı:
+
+```js
+['ALI', 'BURAK', 'CEM', 'DENİZ', 'ELİF'];
+```
+
+### `forEach` ile `map` Arasındaki Fark
+
+`forEach`, **bir şey döndürmez**, sadece işlem yapar:
+
+```js
+const sayilar = [1, 2, 3];
+
+const sonuc = sayilar.forEach((sayi) => sayi + 1);
+
+console.log(sonuc); // undefined
+```
+
+Ancak, `map` yeni bir dizi döndürür:
+
+```js
+const sonuc = sayilar.map((sayi) => sayi + 1);
+
+console.log(sonuc); // [2, 3, 4]
+```
+
+### `map` Kullanırken Dikkat Edilmesi Gerekenler
+
+- **Yeni bir dizi oluşturur.** Orijinal diziyi değiştirmez.
+- **Dizi uzunluğu değişmez.** `map`, her öğe için bir dönüşüm yapar ve her öğeye karşılık bir değer döndürmelidir.
+- **Bilinçli dönüşüm yapılmalı.** Eğer hiçbir şey döndürmezsek, dizi `undefined` değerleri içerebilir:
+
+```js
+const isimler = kisiler.map((kisi) => {
+  if (kisi.isim) {
+    return kisi.isim.toUpperCase();
+  }
+});
+
+console.log(isimler);
+```
+
+Çıktı:
+
+```js
+['ALI', undefined, undefined, 'DENİZ', undefined];
+```
+
+---
+
+## Diğer Kullanışlı Dizi Yöntemleri
+
+`forEach`, `filter` ve `map` en sık kullanılan yöntemlerdir, ancak JavaScript’te benzer çalışan başka metodlar da vardır:
+
+- **find:** Belirtilen koşulu sağlayan ilk öğeyi bulur.
+- **every:** Tüm öğelerin belirli bir koşulu sağlayıp sağlamadığını kontrol eder.
+- **reduce:** Bir dizideki tüm öğeleri tek bir değere indirger.
