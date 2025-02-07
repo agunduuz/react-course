@@ -1,0 +1,84 @@
+# Şablon Dizeleri ve String Interpolation
+
+JavaScript'in eski sürümlerinde, değişkenleri dinamik olarak bir metin içine eklemek için `+` operatörü kullanılırdı:
+
+```js
+const kullaniciAdi = 'Anıl';
+const mesaj = 'Merhaba ' + kullaniciAdi + '!';
+```
+
+Bu yöntem işe yarasa da, hem okunaklı değildir hem de küçük hatalara sebep olabilir (örneğin, "Merhaba" ile değişken arasında boşluk eklemeyi unutmak gibi).
+
+## Modern Yöntem: Backtick (`` ` ``) Kullanımı
+
+JavaScript'in modern sürümlerinde, **backtick** (`` ` ``) karakteri kullanılarak daha okunaklı ve esnek bir yöntem sunulmuştur:
+
+```js
+const mesaj = `Merhaba ${kullaniciAdi}!`;
+```
+
+Bu yönteme **string interpolation** (şablon dizeleri ile değişken ekleme) denir. Kullanımı için **backtick (`` ` ``) karakterleri arasına yazılmalı** ve değişkenler `${}` içinde belirtilmelidir.
+
+### Neden Backtick Kullanılıyor?
+
+Birçok kişi, neden `"` veya `'` yerine `\`` (backtick) kullanıldığını merak eder. Bunun sebebi **geri uyumluluktur**.
+
+JavaScript'in eski sürümlerinde, `"` ve `'` zaten metin yazmak için kullanılıyordu. Eğer string interpolation bu karakterlerle çalışsaydı, eski kodlar bozulabilirdi. Ancak backtick daha önce kullanılmadığından, modern JavaScript'te **şablon dizeleri için özel olarak ayrılmıştır**.
+
+---
+
+## Dinamik İfade Kullanımı
+
+Sadece değişkenleri değil, **matematiksel işlemleri veya fonksiyon çağrılarını** da şablon dizeleri içinde kullanabilirsiniz:
+
+```js
+const yas = 25;
+console.log(`Gelecek yıl ${yas + 1} yaşında olacaksın.`);
+```
+
+Çıktı:
+
+```
+Gelecek yıl 26 yaşında olacaksın.
+```
+
+---
+
+## Çok Satırlı Metinler
+
+Backtick kullanmanın bir diğer avantajı, **çok satırlı metinler yazmayı kolaylaştırmasıdır**. Eski yöntemde `\n` kullanmamız gerekirdi:
+
+```js
+const eskiYontem = 'Satır 1\nSatır 2\nSatır 3';
+```
+
+Ama şablon dizeleri ile satırları olduğu gibi yazabiliriz:
+
+```js
+const yeniYontem = `
+Satır 1
+Satır 2
+Satır 3
+`;
+console.log(yeniYontem);
+```
+
+Çıktı:
+
+```
+Satır 1
+Satır 2
+Satır 3
+```
+
+---
+
+## Özet
+
+✅ **String interpolation**, şablon dizeleri ile değişkenleri metin içine kolayca eklememizi sağlar.
+
+✅ **Backtick (`` ` ``) kullanımı**, hem okunaklı kod yazmamıza hem de çok satırlı metinleri daha rahat yazmamıza yardımcı olur.
+
+✅ **`${}` içinde her türlü JavaScript ifadesi kullanılabilir**, yani değişkenler, matematiksel işlemler ve fonksiyon çağrıları da eklenebilir.
+
+Bu yöntem, JavaScript kodunu daha anlaşılır ve yönetilebilir hale getirir. 🚀
