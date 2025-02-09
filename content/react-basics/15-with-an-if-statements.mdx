@@ -1,0 +1,159 @@
+# JSX'te If Kullanımı
+
+## JSX'te If Kullanımı ve Alternatif Çözümler
+
+JSX içerisinde süslü parantez `{}` kullanarak JavaScript ifadelerini yazabiliriz. Ancak, **JavaScript ifadeleri (expressions) ile JavaScript deyimlerini (statements) karıştırmamak gerekir**. JSX içinde sadece ifadeleri kullanabiliriz, fakat `if` bir ifade değil, bir deyimdir. Bu yüzden doğrudan JSX içinde `if` kullanamayız.
+
+Yanlış bir kullanım örneği:
+
+```jsx
+function Friend({ name, isOnline }) {
+  return (
+    <li className="friend">
+      {if (isOnline) {
+        <div className="green-dot" />
+      }}
+      {name}
+    </li>
+  );
+}
+```
+
+Bu kod çalışmaz çünkü `if` deyimi JSX içinde doğrudan kullanılamaz. Peki, neden? JavaScript'e çevirdiğimizde şu hale gelir:
+
+```js
+function Friend({ name, isOnline }) {
+  return React.createElement(
+    'li',
+    { className: 'friend' },
+    if (isOnline) {
+      React.createElement('div', { className: 'green-dot' });
+    },
+    name
+  );
+}
+```
+
+Yukarıdaki kod `React.createElement` çağrısının ortasında bir `if` bloğu içeriyor. Ancak, **JavaScript’te bir fonksiyon çağrısı içinde if bloğu kullanamayız**. Basit bir örnekle bunu açıklayalım:
+
+```js
+console.log(
+  if (isLoggedIn) {
+    "Giriş yapıldı!"
+  } else {
+    "Giriş yapılmadı."
+  }
+);
+```
+
+Bu kod çalışmaz çünkü `if` bir deyimdir ve doğrudan bir fonksiyon çağrısında kullanılamaz. Peki, JSX içerisinde `if` kullanmak istersek ne yapabiliriz?
+
+### Çözüm: JSX Dışında If Kullanımı
+
+JSX içinde doğrudan `if` kullanamasak da, onu JSX'in dışında bir değişkene atayarak kullanabiliriz.
+
+**Örnek:**
+
+`App.js`
+
+```jsx
+import Friend from './Friend';
+
+function App() {
+  return (
+    <ul className='friend-list'>
+      <Friend name='Andrew' isOnline={false} />
+      <Friend name='Beatrice' isOnline={true} />
+      <Friend name='Chen' isOnline={true} />
+    </ul>
+  );
+}
+
+export default App;
+```
+
+`Friend.js`
+
+```jsx
+function Friend({ name, isOnline }) {
+  let prefix;
+
+  if (isOnline) {
+    prefix = <div className='green-dot' />;
+  }
+
+  return (
+    <li className='friend'>
+      {prefix}
+      {name}
+    </li>
+  );
+}
+
+export default Friend;
+```
+
+### JSX İçinde Alternatif Yöntemler
+
+JSX içinde `if` kullanamasak da, alternatif yöntemlerle aynı mantığı uygulayabiliriz.
+
+#### 1. **Ternary (Üçlü) Operatörü Kullanımı**
+
+Ternary operatörü (`? :`), JSX içinde koşullu içerik göstermek için oldukça kullanışlıdır.
+
+```jsx
+function Friend({ name, isOnline }) {
+  return (
+    <li className='friend'>
+      {isOnline ? <div className='green-dot' /> : null}
+      {name}
+    </li>
+  );
+}
+```
+
+#### 2. **Mantıksal `&&` Operatörü Kullanımı**
+
+Eğer yalnızca **koşul doğru olduğunda bir öğe göstermek istiyorsak**, `&&` operatörünü kullanabiliriz.
+
+```jsx
+function Friend({ name, isOnline }) {
+  return (
+    <li className='friend'>
+      {isOnline && <div className='green-dot' />}
+      {name}
+    </li>
+  );
+}
+```
+
+### `undefined` Değerlerin React Davranışı
+
+Bazı durumlarda, değişkenlere değer atamazsak ne olur? Örneğin:
+
+```jsx
+function Greeting() {
+  let someClass;
+
+  return <div className={someClass}>Hello World</div>;
+}
+```
+
+Bu kodun ürettiği HTML şu şekildedir:
+
+```html
+<div>Hello World</div>
+```
+
+Burada, `someClass` değişkenine herhangi bir değer atanmamıştır, dolayısıyla **React bu değişkeni `undefined` olarak kabul eder ve DOM'a hiç eklemez**. Yani, `className=""` gibi boş bir değer vermez, tamamen yok sayar.
+
+Bu davranış, `undefined`, `null` ve `false` gibi **bazı falsy değerler** için geçerlidir.
+
+### Özet
+
+- JSX içinde sadece **ifadeler (expressions)** kullanılabilir, ancak `if` bir deyim (statement) olduğu için doğrudan JSX içinde kullanılamaz.
+- `if` kullanmak istiyorsak JSX dışına taşıyabilir ve bir değişkene atayabiliriz.
+- JSX içinde koşullu içerik göstermek için **ternary operatörü (`? :`)** veya **mantıksal `&&` operatörü** kullanılabilir.
+- React, `undefined`, `null` ve `false` gibi falsy değerleri **DOM'a dahil etmez**, yani ilgili HTML özniteliğini hiç oluşturmaz.
+
+Bu yöntemlerle JSX içinde koşullu içerikler oluşturabilir ve daha temiz, okunabilir kod yazabilirsiniz!

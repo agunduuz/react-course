@@ -83,6 +83,12 @@
       "slug": "keys",
       "title": "React'te Key Kullanımı",
       "description": "React'te key prop'unun önemi, doğru kullanımı ve performansa etkisini öğrenin. Liste render'lamada benzersiz key'lerin neden gerekli olduğunu ve yaygın hataları nasıl önleyeceğinizi keşfedin."
+    },
+    {
+      "id": "15",
+      "slug": "with-an-if-statements",
+      "title": "JSX'te If Kullanımı",
+      "description": "JSX içinde koşullu ifadelerin nasıl kullanılacağını, if deyimlerinin kısıtlamalarını ve ternary operatörü, && operatörü gibi alternatif çözümleri öğrenin. JSX'te koşullu render'lama tekniklerini keşfedin."
     }
   ]
 }
