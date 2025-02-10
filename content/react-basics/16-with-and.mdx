@@ -1,0 +1,142 @@
+# JSX'te && Operatörü ile Koşullu Render
+
+JSX içinde koşullu ifadeleri kullanmanın en yaygın yollarından biri `if` deyimidir. Ancak, `if` kullanımı bazen kodun okunabilirliğini düşürebilir. Çünkü `if` kodun akışını başka bir yere taşır ve bileşenin nasıl yapılandığını anlamayı zorlaştırabilir.
+
+Bunun yerine, `&&` (ve) operatörünü kullanarak koşullu render işlemini doğrudan JSX içinde gerçekleştirebiliriz. İşte bir örnek:
+
+```tsx
+function Friend({ name, isOnline }) {
+  return (
+    <li className='friend'>
+      {isOnline && <div className='green-dot' />}
+      {name}
+    </li>
+  );
+}
+
+function App() {
+  return (
+    <ul className='friend-list'>
+      <Friend name='Andrew' isOnline={false} />
+      <Friend name='Beatrice' isOnline={true} />
+      <Friend name='Chen' isOnline={true} />
+    </ul>
+  );
+}
+
+export default App;
+```
+
+## && Operatörü Nasıl Çalışır?
+
+`&&` operatörü JavaScript'te bir kontrol akışı operatörüdür. `if/else` gibi çalışır ancak bir **ifade** olduğu için doğrudan JSX içinde kullanılabilir.
+
+Örneğin yukarıdaki kodun `if` kullanılarak yazılmış hali şu şekildedir:
+
+```tsx
+function Friend({ name, isOnline }) {
+  let prefix;
+  if (isOnline) {
+    prefix = <div className='green-dot' />;
+  }
+
+  return (
+    <li className='friend'>
+      {prefix}
+      {name}
+    </li>
+  );
+}
+```
+
+Burada `isOnline` değeri `true` ise `<div className="green-dot" />` öğesi render edilir. `false` olduğunda ise hiçbir şey gösterilmez.
+
+Ancak `&&` kullanarak bu işlemi daha sade bir şekilde yazabiliyoruz.
+
+## Önemli Bir Tuzak: 0 Sayısı
+
+JavaScript'te **0** dışındaki tüm sayılar “truthy” olarak değerlendirilir. Ancak **0** bir “falsy” değerdir.
+
+Aşağıdaki kodu inceleyelim:
+
+```tsx
+function App() {
+  const shoppingList = ['avokado', 'muz', 'tarçın'];
+  const numOfItems = shoppingList.length;
+
+  return (
+    <div>{numOfItems && <ShoppingList items={shoppingList} />}</div>
+  );
+}
+```
+
+Eğer `shoppingList` boş olursa, `numOfItems` değeri `0` olur. `&&` operatörü `false` dönmediği için JSX içinde **0** render edilir ve ekranda “0” görünür!
+
+React çoğu falsy değeri (`false`, `null`, `undefined`, `''`) render etmez ancak **0** sayısını ekranda gösterir.
+
+Örneğin aşağıdaki kodda 0 ekrana basılır:
+
+```tsx
+function App() {
+  return (
+    <ul>
+      <li>False: {false}</li>
+      <li>Undefined: {undefined}</li>
+      <li>Null: {null}</li>
+      <li>Boş string: {''}</li>
+      <li>Sıfır: {0}</li>
+      <li>NaN: {NaN}</li>
+    </ul>
+  );
+}
+```
+
+Bu durum bazı senaryolarda sorun yaratabilir. Ancak bazı yerlerde sıfırı göstermek isteyebiliriz:
+
+```tsx
+function Banner({ ticketsRemaining }) {
+  return <h2>Kalan bilet sayısı: {ticketsRemaining}</h2>;
+}
+```
+
+Bu durumda bilet sayısı 0 olsa bile ekranda “Kalan bilet sayısı: 0” şeklinde gösterilmelidir.
+
+## Çözüm: && Kullanırken Boolean Değerler Kullanın
+
+Bu sorunu önlemek için `&&` operatörünü her zaman **boolean** (`true` veya `false`) değer döndürecek şekilde kullanmalıyız. Örneğin:
+
+```tsx
+function App() {
+  const shoppingList = ['avokado', 'muz', 'tarçın'];
+  const numOfItems = shoppingList.length;
+
+  return (
+    <div>
+      {numOfItems > 0 && <ShoppingList items={shoppingList} />}
+    </div>
+  );
+}
+```
+
+Burada `numOfItems > 0` ifadesi her zaman `true` veya `false` dönecektir. Böylece 0 olduğunda gereksiz bir render işlemi olmaz.
+
+Alternatif olarak, **!! (double bang)** operatörünü kullanarak herhangi bir değeri boolean’a çevirebiliriz:
+
+```tsx
+function App() {
+  const shoppingList = ['avokado', 'muz', 'tarçın'];
+  const numOfItems = shoppingList.length;
+
+  return (
+    <div>{!!numOfItems && <ShoppingList items={shoppingList} />}</div>
+  );
+}
+```
+
+Bu şekilde `numOfItems` değeri 0 olduğunda `false`, 1 veya daha büyük olduğunda `true` döndürülür ve sadece gerektiğinde bileşen render edilir.
+
+## Sonuç
+
+`&&` operatörü, JSX içinde koşullu render yapmanın pratik bir yoludur. Ancak, **0** değerine dikkat etmek gerekir.
+
+Güvenli bir kullanım için `> 0` veya `!!` gibi yöntemlerle boolean kontrolü sağlanmalıdır.

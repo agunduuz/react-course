@@ -89,6 +89,12 @@
       "slug": "with-an-if-statements",
       "title": "JSX'te If Kullanımı",
       "description": "JSX içinde koşullu ifadelerin nasıl kullanılacağını, if deyimlerinin kısıtlamalarını ve ternary operatörü, && operatörü gibi alternatif çözümleri öğrenin. JSX'te koşullu render'lama tekniklerini keşfedin."
+    },
+    {
+      "id": "16",
+      "slug": "with-and",
+      "title": "JSX'te && Operatörü ile Koşullu Render",
+      "description": "JSX'te koşullu render işlemi için && operatörünü nasıl kullanacağınızı öğrenin."
     }
   ]
 }
