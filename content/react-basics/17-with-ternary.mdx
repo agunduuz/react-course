@@ -1,0 +1,89 @@
+# Ternary Operatörü ile Koşullu Render
+
+React'te bir bileşeni yalnızca belirli bir koşul sağlandığında göstermek için `&&` operatörünü kullanabiliriz. Ancak, eğer koşul sağlanmadığında farklı bir şey göstermek istersek ne yapmalıyız?
+
+Örneğin, bir admin paneli oluşturduğumuzu düşünelim. Eğer kullanıcı giriş yapmışsa, ona yönetim panosunu (`AdminDashboard`) göstermeliyiz. Ancak giriş yapmamışsa, ona "Lütfen giriş yapın" şeklinde bir mesaj göstermeliyiz.
+
+Bunu `&&` operatörü ile şöyle yapabiliriz:
+
+```jsx
+function App({ user }) {
+  const isLoggedIn = !!user;
+
+  return (
+    <>
+      {isLoggedIn && <AdminDashboard />}
+      {!isLoggedIn && <p>Lütfen giriş yapın</p>}
+    </>
+  );
+}
+```
+
+Bu yöntem çalışır, ancak daha temiz bir yazım için **ternary operatörü** kullanabiliriz:
+
+```jsx
+function App({ user }) {
+  const isLoggedIn = !!user;
+
+  return (
+    <>{isLoggedIn ? <AdminDashboard /> : <p>Lütfen giriş yapın</p>}</>
+  );
+}
+```
+
+## Ternary Operatörü Nedir?
+
+Ternary operatörü, JavaScript'te **koşullu ifadeleri** yazmak için kullanılan kısa bir sözdizimidir. Üç parçadan oluşur:
+
+```jsx
+koşul ? doğruysa_bu : yanlışsa_bu;
+```
+
+Eğer `koşul` **true** (doğru) ise `doğruysa_bu` çalıştırılır. Eğer **false** (yanlış) ise `yanlışsa_bu` çalıştırılır.
+
+Bu operatör, bir **if/else** ifadesinin daha kısa ve okunaklı bir alternatifi olarak JSX içinde oldukça kullanışlıdır.
+
+## Kısa Devre (Short Circuit) Mantığı
+
+Peki, aşağıdaki kod çalıştırıldığında ne olur?
+
+```jsx
+console.log('koşul')
+  ? console.log('ilk seçenek')
+  : console.log('ikinci seçenek');
+```
+
+### Çıktı:
+
+```plaintext
+koşul
+ikinci seçenek
+```
+
+**Neden?**
+
+- İlk olarak, `console.log('koşul')` ifadesi çalıştırılır ve `undefined` döndürür.
+- `undefined`, JavaScript'te **false** kabul edilir.
+- Bu yüzden `ikinci seçenek` çalıştırılır.
+- `ilk seçenek` hiçbir zaman çalışmaz çünkü **koşul false olduğu için ilk blok es geçilir.**
+
+Bu mantık `&&` operatörü için de geçerlidir:
+
+```jsx
+false && console.log('Bu asla çalışmaz!');
+// Konsolda hiçbir şey gözükmez
+```
+
+Eğer sol taraftaki değer `false` ise, JavaScript sağ tarafı hiç çalıştırmaz. Buna **kısa devre (short circuit)** denir.
+
+Bu özellik sayesinde, şu şekilde güvenli koşullu işlemler yapabiliriz:
+
+```jsx
+const networkRequest = isLoggedIn && fetch('/user/login-details');
+```
+
+Burada, `isLoggedIn` **true** ise `fetch()` çağrısı yapılır. Eğer `false` ise, hiçbir işlem gerçekleşmez. Böylece gereksiz ağ isteklerinden kaçınmış oluruz.
+
+---
+
+Ternary operatörü ve kısa devre mantığını kullanarak, React bileşenlerimizi daha temiz ve verimli bir şekilde yönetebiliriz!
