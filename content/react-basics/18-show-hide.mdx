@@ -1,0 +1,75 @@
+---
+title: 'Elementleri Gösterme ve Gizleme'
+description: "React'te elemanları gizleme ve gösterme yöntemlerini öğrenin."
+---
+
+## Elementleri Gösterme ve Gizleme
+
+Önceki örneklerde, belirli koşullara göre sayfaya HTML elemanlarını **ekleyip çıkarmayı** öğrendik. Ancak, bu sorunu çözmenin farklı bir yolu daha var.
+
+Bazı geliştiriciler için daha tanıdık olan bu yöntemde, elemanları tamamen kaldırmak yerine **CSS ile görünürlüklerini değiştirebiliriz.**
+
+### CSS Kullanarak Eleman Gizleme
+
+React'te bunu nasıl yapabileceğimizi görelim:
+
+```jsx
+function Friend({ name, isOnline }) {
+  const style = isOnline ? undefined : { display: 'none' };
+
+  return (
+    <li>
+      <div className='green-dot' style={style} />
+      {name}
+    </li>
+  );
+}
+```
+
+Burada **isOnline** değeri:
+
+- **true** (çevrimiçi) olduğunda, `style` değeri `undefined` olur ve yeşil nokta görünür kalır.
+- **false** (çevrimdışı) olduğunda, `style` `{ display: 'none' }` olarak ayarlanır ve yeşil nokta kaybolur.
+
+### CSS Kullanımı ve Alternatifler
+
+Bu örnekte `display: none` değerini **inline style** olarak verdik çünkü en hızlı çözümü göstermek istedik. Ancak farklı yöntemler de kullanılabilir:
+
+- **CSS sınıfları** ile (`className` kullanarak)
+- **CSS-in-JS** çözümleri ile (styled-components, Emotion gibi kütüphaneler)
+
+Önemli olan, hangi yöntemin uygulamanız için en uygun olduğunu belirlemektir.
+
+## İki Yaklaşımı Karşılaştırma
+
+Peki, elemanları **şartlı olarak render etmek** ile **CSS kullanarak gizlemek** arasında hangi yöntemi seçmeliyiz?
+
+### Kullanılabilirlik Açısından
+
+Her iki yöntem de son kullanıcı için aynı sonucu verir. **`display: none`** uygulanan bir eleman:
+
+- Görsel olarak ekranda olmaz,
+- Klavye navigasyonunda ve ekran okuyucularda erişilemez.
+
+### Performans Açısından
+
+Burada bazı önemli farklar vardır:
+
+1. **DOM Hafıza Kullanımı**
+
+   - Bir eleman DOM'da olduğu sürece hafıza tüketir.
+   - Büyük uygulamalarda gereksiz DOM elemanlarını **şartlı render** ile kaldırmak, belleği daha verimli kullanmanıza yardımcı olabilir.
+
+2. **Hız ve Geçişler**
+   - Yeni bir DOM elemanı eklemek, bir CSS özelliğini değiştirmekten daha yavaştır.
+   - Örneğin, **açılır kapanır menüler (accordion)** gibi hızlı değişen içeriklerde **CSS ile gizleme/gösterme** daha performanslı olabilir.
+
+### Hangi Yöntemi Seçmeliyim?
+
+Genel olarak **şartlı render kullanmak** daha iyi bir varsayılan seçenektir. Ancak şunları yaparak en iyi kararı verebilirsiniz:
+
+✅ **Düşük donanımlı cihazlarda test edin.** Eğer içerik geç açılıyorsa, CSS ile gizleme/gösterme yöntemini deneyin.
+
+🚀 **Gereksiz optimizasyon yapmaktan kaçının!** Çoğu durumda, farklar çok küçük olduğu için ekstra çaba harcamaya değmez.
+
+Sonuç olarak, her iki yöntemi de bilin ve ihtiyaca göre en uygun olanını seçin!
