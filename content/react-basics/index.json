@@ -104,9 +104,9 @@
     },
     {
       "id": "18",
-      "slug": "with-ternary",
-      "title": "Ternary Operatörü ile Koşullu Render",
-      "description": "JSX içinde if/else mantığını nasıl kullanacağınızı öğrenin."
+      "slug": "show-hide",
+      "title": "Elementleri Gösterme ve Gizleme",
+      "description": "React'te elemanları gizleme ve gösterme yöntemlerini öğrenin."
     }
   ]
 }
