@@ -107,6 +107,12 @@
       "slug": "show-hide",
       "title": "Elementleri Gösterme ve Gizleme",
       "description": "React'te elemanları gizleme ve gösterme yöntemlerini öğrenin."
+    },
+    {
+      "id": "19",
+      "slug": "range-utility",
+      "title": "React'te Dinamik Eleman Oluşturma: Range Yardımcı Fonksiyonu",
+      "description": "React'te belirli sayıda eleman render etmenin yollarını keşfediyoruz."
     }
   ]
 }
