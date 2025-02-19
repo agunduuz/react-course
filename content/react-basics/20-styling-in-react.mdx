@@ -1,0 +1,37 @@
+# React'te Stil Kullanımı
+
+React, stil konusunda herhangi bir kısıtlama getirmez. Bu nedenle, React ile CSS'i birlikte kullanmak için birçok farklı yöntem vardır.
+
+Teknik olarak, klasik yöntemi kullanmaya devam edebilirsin. Yani, ayrı bir CSS dosyası oluşturup onu `index.html` dosyasına `<link>` etiketiyle ekleyebilirsin. Ancak, React ile çalışırken daha verimli ve esnek yöntemler mevcut.
+
+İlk olarak, bileşenleri (component) öğrendiğimizde gördüğümüz temel fikri hatırlayalım:
+
+Bileşenler; HTML benzeri JSX yapısını, JavaScript mantığını ve CSS stillerini bir arada barındırır. Yani, bir **Button** bileşeni, kendi stilini de yönetmelidir.
+
+<Image
+  src='/images/react-basics-images/components.jpg'
+  width={800}
+  height={450}
+  alt='Bileşen Örnekleme'
+/>
+
+Bu yapıyı takip ettiğimizde CSS ile çalışmak **çok daha düzenli ve kolay** hale gelir. Peki, nasıl?
+
+### Geleneksel CSS Kullanımı ve Zorlukları
+
+Geleneksel CSS yazımında, aynı öğeyi hedefleyen birçok farklı seçici (selector) kullanırız. Bu da zamanla **stil savaşlarına** yol açar. Her yeni stil, bir öncekini geçersiz kılmak için daha spesifik hale getirilmek zorunda kalır.
+
+Bu durum, büyük projelerde ciddi bir problem haline gelir. Çözüm olarak **BEM (Block Element Modifier)** gibi yöntemler geliştirilmiştir. BEM, iyi takip edildiğinde CSS'i daha yönetilebilir hale getirir. Ancak, büyük ekiplerde herkesin bu yöntemi %100 uygulaması neredeyse imkansızdır. Disiplini korumak çok zordur.
+
+### React ile Daha Kolay CSS Yönetimi
+
+React topluluğu, bu sorunu fark ettiğinde yeni çözümler üretmeye başladı. Yıllar içinde birçok farklı araç geliştirildi. Bunlardan bazıları şunlardır:
+
+- **styled-components**
+- **emotion**
+- **vanilla-extract**
+- **stitches**
+
+Bu araçlar, CSS'in **kapsam (scoping) problemini** otomatik olarak çözer. Yani, her bileşen için **benzersiz** CSS seçicileri oluşturur. Böylece, stil çakışmalarını önler ve projeyi daha düzenli hale getirir.
+
+React ile modern CSS yönetimi, stil savaşlarını ortadan kaldırarak kod yazmayı daha keyifli hale getirir. Kendi projelerinde hangi yöntemi kullanacağına karar verirken, ekip yapısını ve projenin büyüklüğünü göz önünde bulundurman faydalı olacaktır.

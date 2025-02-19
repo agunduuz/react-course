@@ -113,6 +113,12 @@
       "slug": "range-utility",
       "title": "React'te Dinamik Eleman Oluşturma: Range Yardımcı Fonksiyonu",
       "description": "React'te belirli sayıda eleman render etmenin yollarını keşfediyoruz."
+    },
+    {
+      "id": "20",
+      "slug": "styling-in-react",
+      "title": "React'te Stil Kullanımı",
+      "description": ""
     }
   ]
 }
