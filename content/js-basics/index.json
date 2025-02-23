@@ -41,6 +41,12 @@
       "slug": "string-interpolation",
       "title": "Şablon Dizeleri ve String Interpolation",
       "description": "JavaScript'te şablon dizeleri (template strings) ile değişkenleri doğrudan metin içine nasıl ekleyebileceğimizi öğrenelim."
+    },
+    {
+      "id": "08",
+      "slug": "logical-operators",
+      "title": "Mantıksal Operatörler",
+      "description": "JavaScript'teki && ve || operatörlerinin mantıksal karşılaştırmalarda ve kontrol akışında nasıl kullanıldığını öğrenin."
     }
   ]
 }

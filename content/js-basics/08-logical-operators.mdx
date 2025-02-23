@@ -1,0 +1,157 @@
+# Mantıksal Operatörler (Logical Operators)
+
+JavaScript'te bir süredir çalışıyorsan, muhtemelen AND (&&) ve OR (||) operatörlerine aşinasındır:
+
+```
+const isLoggedIn = true;
+const userRole = 'administrator';
+
+if (isLoggedIn && userRole === 'administrator') {
+  // Bu kod yalnızca HER İKİ koşul da doğruysa çalışır
+}
+```
+
+Ancak çoğu JavaScript geliştiricisinin farkında olmadığı bir şey var: Bu operatörler yalnızca **mantıksal karşılaştırmalar için değil, aynı zamanda kontrol akışı (control flow) için de kullanılabilir.**
+
+## && Operatörünün Çalışma Mantığı
+
+Aşağıdaki kodun sonucunun ne olacağını tahmin et:
+
+```
+const myAge = 35;
+const result = myAge < 50 && myAge;
+```
+
+İlk bakışta true olmasını bekleyebilirsin:
+
+- `myAge < 50` ifadesi true döndürür.
+- `myAge` değişkeni **35** değerine sahiptir ve bu **truthy** bir değerdir.
+
+Ancak && operatörü her zaman bir boolean değer döndürmez. Bunun yerine **operatörün sağ veya sol tarafındaki bir ifadeyi döndürür.**
+
+Bu operatörü bir **kapı (gate)** gibi düşünebilirsin. **Sol taraftaki ifade doğruluk değeri (truthy) taşıyorsa, sağ taraftaki ifadeye geçiş sağlanır.**
+
+Bu durum, birden fazla && kullanıldığında daha net anlaşılır:
+
+```
+const numOfChildren = 4;
+const parkingHasBeenValidated = true;
+const signatureOnWaiver = '';
+
+const admissionTicket =
+  numOfChildren &&
+  parkingHasBeenValidated &&
+  signatureOnWaiver &&
+  generateTicket();
+```
+
+- `numOfChildren` → **4 (truthy)** ✅ → Geçtik
+- `parkingHasBeenValidated` → **true (truthy)** ✅ → Geçtik
+- `signatureOnWaiver` → `''` (falsy) ❌ → Durduk
+
+Burada **ilk falsy değer olan signatureOnWaiver döndürülür ve generateTicket() fonksiyonu asla çalıştırılmaz.**
+
+Peki `signatureOnWaiver` falsy olmasaydı?
+
+```
+const signatureOnWaiver = 'Becky Chambers';
+```
+
+Bu durumda **tüm geçişler açılır** ve `generateTicket()` fonksiyonu çalıştırılır. **admissionTicket değişkeni, fonksiyonun döndürdüğü değeri alır.**
+
+Aynı işlemi **if/else** ile yazarsak:
+
+```
+let admissionTicket;
+
+if (!numOfChildren) {
+  admissionTicket = numOfChildren;
+} else if (!parkingHasBeenValidated) {
+  admissionTicket = parkingHasBeenValidated;
+} else if (!signatureOnWaiver) {
+  admissionTicket = signatureOnWaiver;
+} else {
+  admissionTicket = generateTicket();
+}
+```
+
+Gördüğün gibi **mantıksal operatörler**, uzun if/else bloklarını daha kısa ve okunaklı hale getirebilir.
+
+## Kısa Devre (Short-Circuiting) Mantığı
+
+Mantıksal operatörler, **gereksiz işlemleri atlamak için kısa devre yapabilir (short-circuiting).**
+
+```
+false && console.log('Bu asla çalışmayacak');
+```
+
+Burada `false` olduğu için **console.log() çalıştırılmaz.** Aynı şey if bloğunda da geçerli olurdu:
+
+```
+if (false) {
+  console.log('Bu asla çalışmayacak');
+}
+```
+
+# || Operatörünün Çalışma Mantığı
+
+**|| (OR) operatörü, && operatörüyle benzer çalışır ama tersi şekilde ilerler.**
+
+- **&&**, ilk **falsy** değerde durur.
+- **||**, ilk **truthy** değerde durur.
+
+Örnek:
+
+```
+const userImageSrc = null;
+const teamImageSrc = null;
+const defaultImageSrc = '/images/cat.jpg';
+
+const src = userImageSrc || teamImageSrc || defaultImageSrc;
+```
+
+Burada:
+
+- `userImageSrc` → **null (falsy)** ❌ → Devam ediyoruz.
+- `teamImageSrc` → **null (falsy)** ❌ → Devam ediyoruz.
+- `defaultImageSrc` → **'/images/cat.jpg' (truthy)** ✅ → Bunu döndürüyoruz!
+
+Bu yüzden `src` değişkeni **'/images/cat.jpg'** değerini alır.
+
+Eğer **ilk değer truthy olsaydı**, diğerlerine hiç bakılmazdı:
+
+```
+const userImageSrc = '/images/my-avatar.png';
+const teamImageSrc = null;
+const defaultImageSrc = '/images/cat.jpg';
+
+const src = userImageSrc || teamImageSrc || defaultImageSrc;
+```
+
+Burada:
+
+- `userImageSrc` → **'/images/my-avatar.png' (truthy)** ✅ → İlk truthy değeri bulduk, burada duruyoruz!
+
+Yani `src` değişkeni **'/images/my-avatar.png'** olur ve diğer değerlere hiç bakılmaz.
+
+Bunu **if/else** ile yazarsak:
+
+```
+let src;
+
+if (userImageSrc) {
+  src = userImageSrc;
+} else if (teamImageSrc) {
+  src = teamImageSrc;
+} else {
+  src = defaultImageSrc;
+}
+```
+
+**Özet**
+
+- **&& operatörü**: İlk **falsy** değeri bulana kadar ilerler ve onu döndürür. Tüm değerler truthy ise sonuncuyu döndürür.
+- **|| operatörü**: İlk **truthy** değeri bulduğunda durur ve onu döndürür.
+- **Kısa devre (short-circuiting)**: Gereksiz işlemleri atlamak için operatörler durdurulabilir.
+
+Mantıksal operatörleri bu şekilde kullanarak **kodunu daha okunaklı ve sade hale getirebilirsin!** 🎯
