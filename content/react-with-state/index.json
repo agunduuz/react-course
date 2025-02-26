@@ -1,0 +1,10 @@
+{
+  "chapters": [
+    {
+      "id": "01",
+      "slug": "event-handlers",
+      "title": "React'te Event Handler'lar",
+      "description": "React'te event'leri dinlemek ve yönetmek için temel bilgiler."
+    }
+  ]
+}

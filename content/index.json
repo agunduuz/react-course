@@ -14,6 +14,11 @@
       "title": "Kullanım Araçları",
       "description": "Modern web geliştirme için gerekli temel araçları keşfedin: Terminal, IDE, Node.js, NPM, kod formatlayıcılar ve bundler'lar. Verimli geliştirme ortamınızı oluşturun.",
       "link": "/tools"
+    },
+    {
+      "title": "React'te State Yönetimi",
+      "description": "Event handler'lar, useState hook'u, formlar, props vs state karşılaştırması, kompleks state yönetimi, state lifting ve component instance'ları gibi React'in state yönetimi konularını derinlemesine öğrenin. Temel kavramlardan ileri düzey tekniklere kadar state yönetiminin tüm yönlerini keşfedin.",
+      "link": "/react-with-state"
     }
   ]
 }

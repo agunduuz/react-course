@@ -1,0 +1,152 @@
+# Event Handler'lar
+
+React'te state yönetimine geçmeden önce, **event'ler** (olaylar) hakkında konuşmamız gerekiyor.
+
+Bir kullanıcı bir web sayfasıyla etkileşime girdiğinde, tarayıcı sahne arkasında birçok olayı tetikler. Tıpkı bir dedektif gibi, her hareketi takip eder. Sayfada kaydırma yapmaktan bir butona tıklamaya kadar her şey bir event olarak algılanır.
+
+Örneğin, aşağıdaki kod parçası bir butona tıklama olayını dinleyerek bir işlevi çalıştırır:
+
+```
+const button = document.querySelector('.btn');
+
+function birSeyYap() {
+  console.log("Butona tıklandı!");
+}
+
+button.addEventListener('click', birSeyYap);
+```
+
+Bu kod, `.btn` sınıfına sahip buton tıklandığında `birSeyYap` fonksiyonunu çağırır.
+
+## HTML'de Event Handler Kullanımı
+
+Alternatif olarak, event handler doğrudan HTML içinde de tanımlanabilir:
+
+```
+<button onclick="birSeyYap()">Tıkla!</button>
+```
+
+Ancak, React'te olayları yönetmenin daha farklı ve güçlü bir yolu vardır.
+
+## React'te Event Handler Kullanımı
+
+React'te event'ler doğrudan JSX içinde tanımlanabilir:
+
+```
+function App() {
+  function birSeyYap() {
+    console.log("Butona tıklandı!");
+  }
+
+  return (
+    <button onClick={birSeyYap}>
+      Tıkla!
+    </button>
+  );
+}
+```
+
+Bu yöntem, JavaScript'teki `addEventListener` yöntemine benzer, ancak React'in event sistemini kullanarak daha verimli çalışır.
+
+## React'te Neden `onClick` Gibi Prop'ları Kullanmalıyız?
+
+React'te `onClick`, `onChange`, `onSubmit` gibi prop'ları kullanmak birçok avantaj sağlar:
+
+- Otomatik Temizlik:
+
+  - `addEventListener` kullanıldığında, event listener'ı kaldırmak için `removeEventListener` çağrılması gerekir. Aksi halde, **memory leak (bellek sızıntısı)** oluşabilir.
+  - React, event handler'ları otomatik olarak kaldırarak bu sorunu önler.
+
+- Daha İyi Performans:
+
+  - React, event'leri optimize ederek **daha az bellek** kullanımı sağlar.
+  - Örneğin, aynı anda birden fazla event listener eklemek yerine, bunları **gruplandırıp** yönetir.
+
+- DOM'a Müdahale Etmemek:
+  - React'in mantığı, **doğrudan DOM ile çalışmamak** üzerine kuruludur.
+  - `document.querySelector` kullanarak DOM elemanlarını seçmek yerine, JSX içinde `onClick`, `onChange` gibi prop'ları kullanmak daha doğrudur.
+
+## React'in Abstraction Mantığını Bozmamak
+
+React'te en büyük hatalardan biri, alışkanlıkla **jQuery mantığıyla DOM'a müdahale etmeye çalışmaktır.**
+
+Örneğin, aşağıdaki gibi bir kullanım hatalıdır:
+
+```
+const button = document.querySelector(".btn");
+button.addEventListener("click", () => console.log("Tıklandı!"));
+```
+
+Bunun yerine, React'in sunduğu yöntemi kullanmalıyız:
+
+```
+<button onClick={() => console.log("Tıklandı!")}>Tıkla!</button>
+```
+
+Bu yöntem, React'in DOM'u yönetmesine izin verir ve kodumuzu daha temiz ve sürdürülebilir hale getirir.
+
+## HTML ile React Arasındaki Farklar
+
+React'teki event handler'lar, HTML'dekilere çok benzer, ancak bazı önemli farklar vardır:
+
+1. Camel Case Kullanımı
+
+HTML'de event isimleri küçük harflerle yazılır:
+
+```
+<button onclick='birSeyYap()'>Tıkla</button>
+```
+
+React'te ise **camelCase** kullanılmalıdır:
+
+```
+<button onClick={birSeyYap}>Tıkla</button>
+```
+
+Yanlış yazarsanız, React size hata mesajı göstererek uyarır:
+
+```
+Warning: Invalid event handler property onclick. Did you mean onClick?
+```
+
+2. Fonksiyon Referansı Geçmek
+
+React'te bir event handler fonksiyonunu doğrudan çağırmamalıyız:
+
+✅ **Doğru Kullanım:**
+
+```
+<button onClick={birSeyYap} />
+```
+
+🚫 **Yanlış Kullanım:**
+
+```
+<button onClick={birSeyYap()} />
+```
+
+Eğer fonksiyonu `()` ile çağırırsak, React bileşeni render edildiğinde fonksiyon **hemen çalışır**, ancak bizim amacımız fonksiyonun sadece butona tıklanınca çalışmasıdır.
+
+Aynı mantık, `React.createElement` ile de geçerlidir:
+
+✅ **Doğru:**
+
+```
+React.createElement("button", { onClick: birSeyYap });
+```
+
+🚫 **Yanlış:**
+
+```
+React.createElement("button", { onClick: birSeyYap() });
+```
+
+**Özet**
+
+- React'te event'ler doğrudan JSX içinde `onClick`, `onChange` gibi prop'lar ile tanımlanır.
+- **React, event'leri optimize eder**, bellek sızıntılarını önler ve performansı artırır.
+- **DOM ile doğrudan etkileşime girmemek gerekir.** React'e DOM yönetimini bırakmalıyız.
+- Event handler'lar camelCase formatında yazılmalıdır (`onClick`, `onChange`æ gibi).
+- Fonksiyon referansı verilmelidir, doğrudan çağrılmamalıdır.
+
+Bunları öğrenmek, React'te etkili bir şekilde event yönetimi yapmanı sağlar. 🚀
