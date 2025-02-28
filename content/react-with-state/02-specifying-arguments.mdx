@@ -1,0 +1,81 @@
+# React'te Fonksiyonlara Argüman Geçmek
+
+React'te bir butona tıkladığımızda belirli bir fonksiyonu çalıştırmak isteyebiliriz. Ancak, eğer bu fonksiyonun belirli bir argüman almasını istiyorsak, nasıl yapmalıyız?
+
+Bunu anlamak için bir **tema değiştirme** fonksiyonu yazalım:
+
+```js
+// Tema değiştirme fonksiyonu
+function setTheme(theme) {
+  console.log(`Tema değiştirildi: ${theme}`);
+}
+
+// Açık moda geçiş:
+setTheme('light');
+
+// Karanlık moda geçiş:
+setTheme('dark');
+```
+
+Bu fonksiyon, verilen tema adına göre uygun işlemi yapacak şekilde tasarlanmıştır. Şimdi bu fonksiyonu bir butona bağlayalım:
+
+```jsx
+<button onClick={setTheme}>Tema Değiştir</button>
+```
+
+## Sorun: Argüman Geçiremiyoruz
+
+Yukarıdaki kullanımda `setTheme` fonksiyonunu doğrudan `onClick` olayına verdik. Ancak bu şekilde, butona tıklandığında React fonksiyonu çağırıyor fakat **herhangi bir argüman iletmiyor**. Bizim `setTheme('dark')` gibi bir çağrı yapmamız gerekiyor.
+
+Yanlış bir çözüm şu olabilir:
+
+```jsx
+<button onClick={setTheme('dark')}>Tema Değiştir</button>
+```
+
+Ancak **bu hatalıdır**, çünkü `setTheme('dark')` ifadesi, bileşen her render edildiğinde **hemen çalışır**. Bizim amacımız, butona tıklandığında çalışmasını sağlamaktır.
+
+## Çözüm: Wrapper Fonksiyon Kullanmak
+
+Bu sorunu çözmek için bir **anonim fonksiyon (wrapper function)** kullanabiliriz:
+
+```jsx
+<button onClick={() => setTheme('dark')}>Tema Değiştir</button>
+```
+
+Burada ne yaptık?
+
+- **Anonim bir fonksiyon** oluşturduk: `() => { ... }`
+- Bu fonksiyon çağrıldığında `setTheme('dark')` çalışacak.
+- React, butona tıklandığında bu fonksiyonu çalıştıracak.
+
+Bu yöntem, React projelerinde **en yaygın ve önerilen** yaklaşımdır.
+
+## Performans Konusu
+
+Bazı kaynaklar, bu şekilde anonim fonksiyon kullanmanın performans açısından kötü olduğunu iddia eder. Ancak bu doğru değildir:
+
+- **Fonksiyon oluşturma maliyeti çok düşüktür.** Modern cihazlar, bir insan göz kırpana kadar **milyonlarca fonksiyon oluşturabilir**.
+- **React'in optimizasyonları vardır.** React, arka planda birçok optimizasyon yaparak bu tür kullanımları verimli hale getirir.
+- **Gerçek dünya projelerinde ölçülebilir bir fark yaratmaz.**
+
+## Alternatif Yöntem: `.bind()` Kullanımı
+
+Başka bir yöntem olarak, `.bind()` kullanabiliriz:
+
+```jsx
+<button onClick={setTheme.bind(null, 'dark')}>Tema Değiştir</button>
+```
+
+Bu yöntem de çalışır, ancak **React topluluğunda yaygın değildir** ve ekstra bir karmaşıklık ekler. Bu yüzden genellikle önerilmez.
+
+## Sonuç
+
+Eğer bir fonksiyona **argüman** geçirmek istiyorsanız:
+✅ **Anonim fonksiyon (wrapper function) kullanın:**
+
+```jsx
+<button onClick={() => setTheme('dark')}>Tema Değiştir</button>
+```
+
+Bu yöntem temiz, anlaşılır ve en yaygın kullanılan yaklaşımdır. 🎯

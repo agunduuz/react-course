@@ -5,6 +5,12 @@
       "slug": "event-handlers",
       "title": "React'te Event Handler'lar",
       "description": "React'te event'leri dinlemek ve yönetmek için temel bilgiler."
+    },
+    {
+      "id": "02",
+      "slug": "specifying-arguments",
+      "title": "React'te Fonksiyonlara Argüman Geçmek",
+      "description": "React'te bir fonksiyona nasıl argüman geçileceğini öğrenin."
     }
   ]
 }
