@@ -16,7 +16,7 @@
       "id": "03",
       "slug": "the-usestate-hook",
       "title": "React'te useState Hook'u Anlamak",
-      "description": ""
+      "description": "React'te useState hook'unun temel kullanımı, state yönetimi, başlangıç değeri belirleme yöntemleri ve performans optimizasyonu hakkında kapsamlı bir rehber."
     }
   ]
 }
