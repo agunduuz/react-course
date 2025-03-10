@@ -3,6 +3,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
 import type { CustomButtonProps } from '@/components/CustomButton';
+import Counter from '@/components/Counter';
 import CustomImage, {
   type CustomImageProps,
 } from '@/components/Images';
@@ -16,6 +17,7 @@ const CustomButton = dynamic<CustomButtonProps>(
 type MDXComponents = {
   CustomButton: ComponentType<CustomButtonProps>;
   Image: ComponentType<CustomImageProps>;
+  Counter: ComponentType;
 };
 
 interface CourseLayoutProps {
@@ -32,6 +34,7 @@ export function CourseLayout({
   components = {
     CustomButton,
     Image: CustomImage,
+    Counter,
   },
 }: CourseLayoutProps) {
   return (

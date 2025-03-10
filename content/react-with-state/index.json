@@ -11,6 +11,12 @@
       "slug": "specifying-arguments",
       "title": "React'te Fonksiyonlara Argüman Geçmek",
       "description": "React'te bir fonksiyona nasıl argüman geçileceğini öğrenin."
+    },
+    {
+      "id": "03",
+      "slug": "the-usestate-hook",
+      "title": "React'te useState Hook'u Anlamak",
+      "description": ""
     }
   ]
 }

@@ -1,0 +1,196 @@
+import Counter from '../../components/Counter';
+
+# useState Hook'u Nedir?
+
+React'te **useState** hook'u, bileşen içinde değişken değerleri yönetmek için kullanılır. En temel örneklerden biri bir sayaç (counter) uygulamasıdır. Kullanıcı butona tıkladığında sayının arttığını görmek isteriz:
+
+<Counter />
+
+İşte bu sayaç bileşeninin kodu:
+
+```jsx
+import React from 'react';
+
+function Counter() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Değer: {count}
+    </button>
+  );
+}
+
+export default Counter;
+```
+
+Bu kodda birkaç önemli nokta var. Gelin, bunları adım adım inceleyelim.
+
+---
+
+## **useState Kullanımı**
+
+Bir state (durum) değişkeni oluşturmak için **useState** fonksiyonunu kullanırız. **useState** şu iki değeri döndürür:
+
+1. **Mevcut state değeri** – Örneğimizde `count` olarak adlandırdık.
+2. **State'i güncellemek için bir fonksiyon** – Bunu da `setCount` olarak adlandırdık.
+
+Örneğin:
+
+```jsx
+const [count, setCount] = React.useState(0);
+```
+
+Burada `count` başlangıçta `0` olarak ayarlandı. `setCount` fonksiyonu ile bu değeri güncelleyebiliriz.
+
+---
+
+## **Array Destructuring ile State Kullanımı**
+
+Eğer bu yapı size yabancı geliyorsa, aynı kodu daha geleneksel bir şekilde şöyle yazabiliriz:
+
+```jsx
+const countArray = React.useState(0);
+const count = countArray[0];
+const setCount = countArray[1];
+```
+
+Ancak, genellikle **destructuring** kullanarak yazmak çok daha pratiktir.
+
+---
+
+## **State Değişkenlerini Adlandırma Kuralları**
+
+State değişkenini ve güncelleme fonksiyonunu nasıl adlandıracağınız tamamen size bağlıdır. Örneğin:
+
+```jsx
+const [hello, world] = React.useState(0);
+```
+
+Ancak yaygın olarak şu format tercih edilir:
+
+```jsx
+const [user, setUser] = React.useState();
+const [errorMessage, setErrorMessage] = React.useState();
+const [flowerBouquet, setFlowerBouquet] = React.useState();
+```
+
+Burada birinci değişken state'in adını, ikinci değişken ise onu güncellemek için kullanılan fonksiyonu temsil eder.
+
+---
+
+## **useState'i İmport Etme Yöntemleri**
+
+Bazı kaynaklarda şu iki farklı yazımı görebilirsiniz:
+
+```jsx
+import React, { useState } from 'react';
+
+function App() {
+  const [num, setNum] = useState(0);
+  return <div>{num}</div>;
+}
+```
+
+veya
+
+```jsx
+import React from 'react';
+
+function App() {
+  const [num, setNum] = React.useState(0);
+  return <div>{num}</div>;
+}
+```
+
+Her iki yöntem de tamamen aynıdır. İlk yöntemde `useState` doğrudan içe aktarılmıştır. İkinci yöntemde ise `React.useState` şeklinde çağrılmıştır. Hangisini kullanacağınız tamamen tercihinize bağlıdır.
+
+---
+
+## **Başlangıç Değeri (Initial Value) Belirleme**
+
+State değişkenine başlangıç değeri atayabiliriz:
+
+```jsx
+const [count, setCount] = React.useState(1);
+console.log(count); // 1
+```
+
+Ya da bir fonksiyon kullanarak başlangıç değerini hesaplayabiliriz:
+
+```jsx
+const [count, setCount] = React.useState(() => {
+  return 1 + 1;
+});
+
+console.log(count); // 2
+```
+
+Bu yöntem, özellikle **pahalı hesaplamalar** gerektiğinde kullanışlı olabilir. Örneğin, Local Storage'dan veri okumak için:
+
+```jsx
+const [count, setCount] = React.useState(() => {
+  return window.localStorage.getItem('saved-count');
+});
+```
+
+Bu sayede, Local Storage'dan veri okuma işlemi yalnızca **ilk render'da** gerçekleşir, her render'da tekrarlanmaz.
+
+---
+
+## **Fonksiyon ile Başlangıç Değeri Kullanmanın Önemi**
+
+İki farklı başlangıç değeri belirleme yöntemi arasındaki farkı anlamak için aşağıdaki kodları karşılaştıralım:
+
+**1. Direkt olarak değeri belirleme:**
+
+```jsx
+const [count, setCount] = React.useState(
+  window.localStorage.getItem('saved-count')
+);
+```
+
+Bu kodda `window.localStorage.getItem` her render'da çalışır.
+
+**2. Fonksiyon kullanarak başlangıç değeri belirleme:**
+
+```jsx
+const [count, setCount] = React.useState(() => {
+  return window.localStorage.getItem('saved-count');
+});
+```
+
+Bu kodda ise React, fonksiyonu **sadece ilk render'da çalıştırır**. Sonraki render'larda bu hesaplama tekrar edilmez, dolayısıyla gereksiz performans kaybı önlenmiş olur.
+
+Bu farkı anlamak için şu örneği düşünebiliriz:
+
+```jsx
+function run() {
+  console.log('Merhaba');
+}
+```
+
+Bu fonksiyon her çağrıldığında konsola `"Merhaba"` yazdırır.
+
+Ancak aşağıdaki gibi bir yapı kullanırsak:
+
+```jsx
+function run() {
+  const sayHi = () => {
+    console.log('Merhaba');
+  };
+}
+```
+
+Burada `sayHi` fonksiyonu her çağrıda **oluşturulur ama çağrılmaz**. React'teki ikinci yöntemde de benzer bir mantık vardır. Başlangıç değerini hesaplayan fonksiyon sadece **ilk render'da çalışır**, sonraki render'larda tekrar çalıştırılmaz.
+
+---
+
+## **Sonuç**
+
+- **useState** hook'u, React bileşenlerinde değişkenleri yönetmek için kullanılır.
+- **İlk değer** doğrudan atanabilir veya bir fonksiyon aracılığıyla hesaplanabilir.
+- **Fonksiyon kullanımı**, gereksiz hesaplamaları önlemek için avantaj sağlar.
+- **State değişkenleri için anlamlı ve açıklayıcı isimlendirme** tercih edilmelidir.
+
+React ile dinamik arayüzler oluştururken **useState** temel araçlarımızdan biri olacaktır. 🎯
