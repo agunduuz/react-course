@@ -6,7 +6,7 @@ export type CustomImageProps = Omit<ImageProps, 'alt'> & {
 
 export default function CustomImage(props: CustomImageProps) {
   return (
-    <div className='md:w-full h-full flex align-middle justify-center mdx-content'>
+    <div className='md:w-full h-full flex align-middle justify-center mdx-content mt-4 mb-4'>
       <Image
         {...props}
         alt={props.alt || ''}

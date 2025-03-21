@@ -17,6 +17,12 @@
       "slug": "the-usestate-hook",
       "title": "React'te useState Hook'u Anlamak",
       "description": "React'te useState hook'unun temel kullanımı, state yönetimi, başlangıç değeri belirleme yöntemleri ve performans optimizasyonu hakkında kapsamlı bir rehber."
+    },
+    {
+      "id": "04",
+      "slug": "core-react",
+      "title": "React'in Temel Döngüsü: useState ve Yeniden Render Süreci",
+      "description": "React'in state yönetimi, bileşen yaşam döngüsü ve render mekanizmasının detaylı incelemesi. useState hook'u ile state değişimlerinin nasıl gerçekleştiği ve DOM güncellemelerinin nasıl optimize edildiği anlatılıyor."
     }
   ]
 }

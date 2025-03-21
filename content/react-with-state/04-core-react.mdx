@@ -1,0 +1,96 @@
+# React'in Temel Döngüsü: useState ve Yeniden Render Süreci
+
+## React'te State Değişimi ve Arayüz Güncellenmesi
+
+React, **state değişikliklerine tepki veren** (react) bir kütüphane olarak adlandırılır. Yani, bileşenlerimizin **state** (durum) değiştiğinde nasıl güncellendiğini anlamak, React'in mantığını kavramamız için çok önemlidir.
+
+Basit bir sayaç uygulaması üzerinden bu mekanizmayı inceleyelim:
+
+```jsx
+function Counter() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Değer: {count}
+    </button>
+  );
+}
+```
+
+Burada **count** adında bir state değişkenimiz var ve **setCount** fonksiyonu ile bu değişkeni güncelleyebiliyoruz. Kullanıcı butona her tıkladığında, **setCount(count + 1)** çağrılıyor ve **count** bir artıyor. Ancak, React bu değişikliği nasıl algılıyor ve arayüzü nasıl güncelliyor?
+
+## İlk Render Nasıl Gerçekleşir?
+
+İlk render sırasında, React bileşenin JSX kodunu işlemeden önce, aslında bu JSX'in **nasıl bir yapıya dönüştüğünü** belirler. JSX'in altında aslında bir **React.createElement** fonksiyonu çalışır:
+
+```jsx
+function Counter() {
+  const [count, setCount] = React.useState(0);
+
+  return React.createElement(
+    'button',
+    { onClick: () => setCount(count + 1) },
+    'Değer: ',
+    count
+  );
+}
+```
+
+Bu fonksiyon, aslında bir **React elementi** oluşturur. React elementi basit bir **JavaScript nesnesidir** ve DOM'un nasıl görünmesi gerektiğini tanımlar. Örneğin, yukarıdaki kodun oluşturduğu React nesnesi şuna benzer:
+
+```json
+{
+  "type": "button",
+  "props": {
+    "onClick": () => setCount(count + 1),
+    "children": "Değer: 0"
+  }
+}
+```
+
+React bu bilgiyi alır ve **gerçek bir DOM elementi** oluşturarak sayfaya ekler:
+
+```html
+<button>Değer: 0</button>
+```
+
+Ayrıca **onClick** olayını da butona bağlar.
+
+## State Değiştiğinde Ne Olur?
+
+Butona tıklandığında **setCount(count + 1)** çalışır. React bu değişimi fark eder ve bileşeni tekrar render eder. Yeni **count** değeriyle birlikte yeni bir React elementi oluşturur:
+
+```html
+<button>Değer: 1</button>
+```
+
+Burada React, yeni ve eski halleri karşılaştırarak sadece **değişen** kısmı günceller. Yani, önceki durumda **"Değer: 0"** olan butonun içeriğini **"Değer: 1"** olarak değiştirir. Ancak, butonun kendisini tamamen yeniden oluşturmaz. Bu işlem, **reconciliation (uyumlaştırma)** olarak adlandırılır.
+
+## React'in Temel Döngüsü
+
+React'te bileşenler şu döngüye göre çalışır:
+
+<Image
+  src='/images/react-with-state-images/core-react.jpg'
+  width={800}
+  height={450}
+  alt='Bileşen Örnekleme'
+/>
+
+1. **Mount (İlk Oluşum)** → Bileşen ilk kez render edilir ve sayfaya eklenir.
+2. **Trigger (Tetikleme)** → Bir olay state değişikliğine neden olur.
+3. **Render (Yeniden Oluşturma)** → Yeni React elementi oluşturulur.
+4. **Reconcile (Karşılaştırma)** → Yeni ve eski elementler karşılaştırılır, farklar belirlenir.
+5. **Commit (Güncelleme)** → Sadece gerekli değişiklikler DOM'a uygulanır.
+
+Bu döngü, her state değişikliğinde tekrar tekrar çalışır ve bu sayede arayüz **hızlı ve verimli** bir şekilde güncellenmiş olur.
+
+## Sonuç
+
+- React, state değişikliklerini algılar ve bileşeni tekrar render eder.
+- Yeni render sonrası eski ve yeni haller karşılaştırılır (reconciliation).
+- Sadece gerekli değişiklikler DOM'a uygulanır.
+- React'in bu verimli güncelleme mekanizması, sayfanın daha hızlı çalışmasını sağlar.
+
+Bu temel mekanizmayı anlamak, React'te performans optimizasyonlarını ve gelişmiş bileşen yapılarını öğrenmek için çok önemlidir! 🚀
