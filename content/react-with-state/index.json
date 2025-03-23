@@ -28,7 +28,7 @@
       "id": "05",
       "slug": "rendering-vs-painting",
       "title": "React'te Render ve Re-Paint: Nasıl Çalışır?",
-      "description": ""
+      "description": "React'te render ve re-paint süreçlerinin farkları, Virtual DOM'un rolü ve performans optimizasyonunun nasıl sağlandığını öğrenin."
     }
   ]
 }
