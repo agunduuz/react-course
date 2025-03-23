@@ -23,6 +23,12 @@
       "slug": "core-react",
       "title": "React'in Temel Döngüsü: useState ve Yeniden Render Süreci",
       "description": "React'in state yönetimi, bileşen yaşam döngüsü ve render mekanizmasının detaylı incelemesi. useState hook'u ile state değişimlerinin nasıl gerçekleştiği ve DOM güncellemelerinin nasıl optimize edildiği anlatılıyor."
+    },
+    {
+      "id": "05",
+      "slug": "rendering-vs-painting",
+      "title": "React'te Render ve Re-Paint: Nasıl Çalışır?",
+      "description": ""
     }
   ]
 }
