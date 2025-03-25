@@ -29,6 +29,12 @@
       "slug": "rendering-vs-painting",
       "title": "React'te Render ve Re-Paint: Nasıl Çalışır?",
       "description": "React'te render ve re-paint süreçlerinin farkları, Virtual DOM'un rolü ve performans optimizasyonunun nasıl sağlandığını öğrenin."
+    },
+    {
+      "id": "06",
+      "slug": "asynchronous-updates",
+      "title": "React'te Asenkron Durum Güncellemeleri",
+      "description": "React'te state güncellemelerinin asenkron doğası, state batch'leme mekanizması ve useState hook'u ile asenkron işlemlerin nasıl yönetileceği hakkında detaylı bir inceleme."
     }
   ]
 }

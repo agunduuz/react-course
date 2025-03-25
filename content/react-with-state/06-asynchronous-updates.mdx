@@ -1,0 +1,123 @@
+# React'te Asenkron Durum Güncellemeleri
+
+React'te state (durum) güncellemeleri asenkron olarak çalışır. Bu durum, yeni başlayanlar için kafa karıştırıcı olabilir. Hadi, bunu adım adım öğrenelim!
+
+### Örnek: İlk Tıklamada Beklenmeyen Sonuç
+
+Aşağıdaki React kodunu inceleyelim. Butona ilk kez tıklandığında, konsolda hangi değerin yazdırılmasını beklersiniz?
+
+```jsx
+function App() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <>
+      <p>You've clicked {count} times.</p>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+          console.log(count);
+        }}
+      >
+        Click me!
+      </button>
+    </>
+  );
+}
+```
+
+Seçenekler: `0`, `1`, `undefined`, `None of the above`
+
+Cevap: **0** 🎯
+
+Bu size garip mi geldi? İlk tıklamada `count` değerini **1** olarak görmek istemez miydik? Ama React bize `0` döndürüyor. İşte nedeni! 👇
+
+### State Güncellemeleri Neden Hemen Gerçekleşmez?
+
+React'te `setCount` gibi state güncelleyici fonksiyonlar **hemen çalışmaz**. Bunun yerine, React’e **"bu state değişecek"** mesajı veririz. React ise mevcut işlemler (örneğin, tıklama işlemi) tamamlanana kadar değişikliği uygulamaz.
+
+Bu yüzden, `console.log(count)` ifadesi **güncellenmemiş eski değeri** gösterir.
+
+### Güncellenmiş Değeri Kullanmanın Doğru Yolu
+
+Eğer güncellenmiş değere hemen erişmek istiyorsak, onu bir değişkene atayarak kullanabiliriz:
+
+```jsx
+function App() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <>
+      <p>You've clicked {count} times.</p>
+      <button
+        onClick={() => {
+          const nextCount = count + 1;
+          setCount(nextCount);
+          console.log(nextCount);
+        }}
+      >
+        Click me!
+      </button>
+    </>
+  );
+}
+```
+
+Burada `count + 1` ifadesini bir değişkene (`nextCount`) kaydediyoruz ve hem `setCount` fonksiyonunda hem de `console.log` içinde aynı değeri kullanıyoruz. Böylece, ekrana yazdırılan değer beklendiği gibi olur.
+
+### React Neden State Güncellemelerini Asenkron Yapıyor?
+
+Bu asenkron çalışma şekli, React’in performansını artıran önemli bir özelliktir. Bunu daha iyi anlamak için birden fazla state'in güncellendiği bir örnek düşünelim:
+
+```jsx
+function App() {
+  const [user, setUser] = React.useState({ name: 'Alyssa' });
+  const [status, setStatus] = React.useState('ready');
+  const [confirmationMessage, setConfirmationMessage] =
+    React.useState();
+
+  if (!user) {
+    return <p>{confirmationMessage}</p>;
+  }
+
+  return (
+    <button
+      onClick={() => {
+        setUser(null);
+        setStatus('initial');
+        setConfirmationMessage('You have been logged out.');
+      }}
+    >
+      Log Out
+    </button>
+  );
+}
+```
+
+### **Bütün Güncellemeler Aynı Anda Yapılıyor**
+
+Bu kod çalıştığında React'in ne yaptığını adım adım inceleyelim:
+
+1. `setUser(null);` çağrılır. React, bunu güncellenecek state'ler listesine ekler.
+2. `setStatus('initial');` çağrılır. React, listeye bir güncelleme daha ekler.
+3. `setConfirmationMessage("You have been logged out.");` çağrılır ve listeye eklenir.
+4. **Bütün state değişiklikleri bir arada işlenir ve tek bir re-render gerçekleşir.**
+
+Eğer React **güncellemeleri hemen yapsaydı**, her `setState` çağrısından sonra bileşen tekrar render edilirdi. Bu da:
+
+- **Performans kaybına** neden olurdu (3 kat daha fazla iş yapılırdı!).
+- **Tuhaf ve hatalı arayüz davranışları oluşturabilirdi.** Örneğin, ilk güncelleme çalıştıktan sonra `user` değeri `null` olurdu ama `confirmationMessage` henüz güncellenmediği için **boş bir `<p>{undefined}</p>` etiketi oluşurdu!**
+
+İşte bu yüzden React **state güncellemelerini toplu (batch) olarak işler ve bir defada render eder**. Bu, **hızlı ve tutarlı bir UI sağlar!**
+
+### Özet
+
+✅ React’te state güncellemeleri **asenkron** olarak gerçekleşir.
+
+✅ `setState` fonksiyonları hemen çalışmaz; bir sonraki render için güncellemeyi planlar.
+
+✅ Eğer güncellenmiş değere hemen erişmek istiyorsanız, onu bir değişkene kaydedin (`nextCount = count + 1`).
+
+✅ React, **batching (toplu işleme)** sayesinde performansı artırır ve gereksiz render işlemlerini engeller.
+
+Böylece hem hızlı hem de stabil bir kullanıcı deneyimi sağlanır! 🚀
