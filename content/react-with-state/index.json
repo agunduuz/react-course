@@ -35,6 +35,12 @@
       "slug": "asynchronous-updates",
       "title": "React'te Asenkron Durum Güncellemeleri",
       "description": "React'te state güncellemelerinin asenkron doğası, state batch'leme mekanizması ve useState hook'u ile asenkron işlemlerin nasıl yönetileceği hakkında detaylı bir inceleme."
+    },
+    {
+      "id": "07",
+      "slug": "data-binding",
+      "title": "React'te Veri Bağlama (Data Binding)",
+      "description": "Form elemanları ile state arasındaki senkronizasyon, kontrollü ve kontrolsüz bileşenler, value ve onChange kullanımı ve React'in Synthetic Events sistemi hakkında kapsamlı bir rehber."
     }
   ]
 }

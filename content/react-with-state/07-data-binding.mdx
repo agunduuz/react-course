@@ -1,0 +1,141 @@
+# Veri Bağlama Nedir?
+
+Web uygulamaları geliştirirken, bir form giriş alanının belirli bir durum (state) değişkeni ile senkronize olmasını isteriz. Örneğin, bir "kullanıcı adı" alanı, `username` adında bir durum değişkenine bağlı olmalıdır.
+
+Bu duruma **veri bağlama (data binding)** denir. Çoğu ön uç (front-end) framework'ü, bir durum değişkenini belirli bir form bileşenine bağlamanın yollarını sunar.
+
+**Örnek Kullanım**
+
+```
+import React from 'react';
+
+function SearchForm() {
+  const [searchTerm, setSearchTerm] = React.useState('cats');
+
+  return (
+    <>
+      <form>
+        <label htmlFor="search-input">Arama:</label>
+        <input
+          type="text"
+          id="search-input"
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+      </form>
+      <p>Arama terimi: {searchTerm}</p>
+    </>
+  );
+}
+
+export default SearchForm;
+```
+
+Bu kodda `value` ve `onChange` prop'ları kullanılarak giriş alanı ile state arasında çift yönlü bir bağlantı sağlanmıştır.
+
+## `value` ve `onChange` Kullanımı
+
+Eğer `value` veya `onChange` prop'unu kaldırırsak ne olur?
+
+- `value` prop'u React'te HTML'den farklı çalışır:
+  - HTML'de `value`, varsayılan değeri belirler ve sonradan değiştirilebilir.
+  - React'te `value`, giriş alanını belirtilen değere kilitler ve yalnızca kontrol mekanizması ile değiştirilebilir.
+- `onChange` olmadan input alanı değiştirilemez çünkü React, bileşeni her render ettiğinde `value`'yu belirlenen değere döndürür.
+
+Örneğin, bir butona tıkladığımızda `searchTerm` state'ini rastgele bir sayıya güncelleyebiliriz:
+
+```
+<button onClick={() => setSearchTerm(Math.random().toString())}>
+  Rastgele Değer Ata
+</button>
+```
+
+Bu butona tıklandığında input alanı da yeni değeri gösterecektir. Ancak, sadece `onChange` kullanırsak, giriş alanı state'i günceller ama dışarıdan yapılan değişiklikler giriş alanına yansımaz.
+
+## Kontrollü ve Kontrolsüz Bileşenler (Controlled vs. Uncontrolled Inputs)
+
+React'te bir input bileşeni kontrollü (controlled) veya kontrolsüz (uncontrolled) olabilir:
+
+- Eğer `value` state tarafından yönetiliyorsa, giriş alanı kontrollüdür.
+- Eğer `value` prop'u belirtilmezse, giriş alanı React tarafından yönetilmez ve kontrolsüz olur.
+
+> **Önemli Kural:** Bir input ya kontrollü ya da kontrolsüz olmalıdır. React, bir bileşeni bir durumdan diğerine geçirdiğinizde uyarı verebilir.
+
+**Yanlış Kullanım:**
+
+```
+const [username, setUsername] = React.useState();
+```
+
+Bu durumda başlangıçta `username` değeri `undefined` olur. React bunu kontrolsüz bir bileşen olarak algılar. Ancak kullanıcı giriş yaptığında, değer string'e dönüşür ve React bunu kontrollü bileşene çevirir, bu da bir uyarıya neden olur.
+
+**Doğru Kullanım:**
+
+```
+const [username, setUsername] = React.useState('');
+```
+
+Bu şekilde input her zaman bir string değer içerir ve baştan itibaren kontrollü olarak kalır.
+
+## React'in "Synthetic Events" Sistemi
+
+React, tarayıcılar arası tutarlılığı sağlamak ve geliştirici deneyimini iyileştirmek için **"sanal olaylar (synthetic events)"** kullanır.
+
+Eğer standart JavaScript olayına erişmek isterseniz, şu şekilde kullanabilirsiniz:
+
+```
+<input
+  onChange={(event) => {
+    const realEvent = event.nativeEvent;
+    console.log(realEvent); // DOM InputEvent nesnesi
+  }}
+/>
+```
+
+Bu yöntemle, React’in oluşturduğu olay nesnesi yerine tarayıcının standart olay nesnesine ulaşabilirsiniz.
+
+## React 19 ve Actions API
+
+React 19 ile birlikte **Actions API** adlı yeni bir form yönetim yöntemi tanıtıldı. Bu yöntemde, form girişleri doğrudan state içinde tutulmaz, bunun yerine form gönderildiğinde React tarafından işlenir.
+
+**Örnek:**
+
+```
+function ContactForm() {
+  const [error, submitAction, isPending] = React.useActionState(
+    async (previousState, formData) => {
+      const name = formData.get("name");
+      const msg = formData.get("message");
+
+      const error = await sendMessageToServer(name, msg);
+
+      if (error) {
+        return error;
+      }
+
+      redirect("/path");
+      return null;
+    },
+    null,
+  );
+
+  return (
+    <form action={submitAction}>
+      <input type="text" name="name" />
+      <textarea name="message" />
+      <button type="submit" disabled={isPending}>Gönder</button>
+      {error && <p>{error}</p>}
+    </form>
+  );
+}
+```
+
+Bu yöntem, özellikle uzun formlar için pratik olabilir çünkü her giriş alanı için ayrı state tanımlamaya gerek kalmaz. Ancak, kullanıcı girdisini anlık olarak göstermek istediğimiz durumlarda klasik state yönetimine devam etmemiz gerekir.
+
+## Sonuç
+
+- **Veri bağlama**, state ve form giriş alanları arasında senkronizasyon sağlar.
+- **Kontrollü bileşenler**, giriş değerlerini React state ile yönetir.
+- **Kontrolsüz bileşenler**, React tarafından yönetilmeyen input'lardır.
+- **React'in "Synthetic Events" sistemi**, tarayıcılar arası tutarlılık sağlar.
+- **React 19'da gelen Actions API**, uzun formlar için state yönetimini kolaylaştırır ancak tüm senaryolar için yeterli olmayabilir.
