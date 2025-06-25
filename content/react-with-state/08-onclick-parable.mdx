@@ -1,0 +1,198 @@
+# onClick Masalı: React'te Form Kullanımının Önemi
+
+React geliştiricilerinin sıkça yaptığı bir hatayı anlatan bir ders. Bu, modern web geliştirmede doğru yaklaşımı öğrenmek için önemli bir hikaye.
+
+## Sorun: Yanlış Yaklaşım
+
+Diyelim ki bir arama formu yapıyoruz. Kullanıcı bir kelime yazacak ve "Ara" butonuna tıklayarak arama yapacak.
+
+İşte başlangıç kodumuz:
+
+```jsx
+import SearchForm from './SearchForm';
+
+function App() {
+  // Bu fonksiyon şimdilik sadece bir uyarı gösteriyor
+  function runSearch(searchTerm) {
+    window.alert(`Aranan: ${searchTerm}`);
+  }
+
+  return <SearchForm runSearch={runSearch} />;
+}
+
+export default App;
+```
+
+```jsx
+import React from 'react';
+
+function SearchForm({ runSearch }) {
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  return (
+    <div className='search-form'>
+      <input
+        type='text'
+        value={searchTerm}
+        onChange={(event) => {
+          setSearchTerm(event.target.value);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            runSearch(searchTerm);
+          }
+        }}
+      />
+      <button>Ara!</button>
+    </div>
+  );
+}
+
+export default SearchForm;
+```
+
+Bu örnekte, `runSearch` fonksiyonu kullanıcı "Ara!" butonuna tıkladığında çalışması gereken fonksiyon.
+
+## Soru: Bu fonksiyonu nasıl kullanmalıyız?
+
+Birçok geliştirici içgüdüsel olarak bu sorunu çözmek için butona bir `onClick` işleyicisi ekler:
+
+```jsx
+<button onClick={() => runSearch(searchTerm)}>Ara!</button>
+```
+
+## Bu Yaklaşımın Sorunları
+
+Bu yaklaşımın birkaç problemi var. Örneğin, kullanıcı metin kutusuna yazdıktan sonra "Enter" tuşuna basarak arama yapmaya çalışırsa ne olur?
+
+Hmm... Bunu da `onKeyDown` olay dinleyicisi ile çözebiliriz mi?
+
+```jsx
+<input
+  type='text'
+  value={searchTerm}
+  onChange={(event) => {
+    setSearchTerm(event.target.value);
+  }}
+  onKeyDown={(event) => {
+    if (event.key === 'Enter') {
+      runSearch(searchTerm);
+    }
+  }}
+/>
+```
+
+## Yanlış Yoldayız!
+
+Burada kötü bir yola giriyoruz. Tarayıcının zaten nasıl yapacağını bildiği şeyleri yeniden yapmaya çalışıyoruz!
+
+## Çözüm: Form Kullanın
+
+Bu sorunu ve daha birçok benzer sorunu çözmek için form kontrollerimizi bir `<form>` etiketi içine sarmalamalıyız.
+
+Sonra, tıklamaları ve tuşları dinlemek yerine, **form submit olayını** dinleyebiliriz.
+
+Kodun ne kadar basitleştiğine bakın:
+
+```jsx
+import SearchForm from './SearchForm';
+
+function App() {
+  // Bu fonksiyon şimdilik sadece bir uyarı gösteriyor
+  function runSearch(searchTerm) {
+    window.alert(`Aranan: ${searchTerm}`);
+  }
+
+  return <SearchForm runSearch={runSearch} />;
+}
+
+export default App;
+```
+
+```jsx
+import React from 'react';
+
+function SearchForm({ runSearch }) {
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  return (
+    <form
+      className='search-form'
+      onSubmit={(event) => {
+        event.preventDefault();
+        runSearch(searchTerm);
+      }}
+    >
+      <input
+        type='text'
+        value={searchTerm}
+        onChange={(event) => {
+          setSearchTerm(event.target.value);
+        }}
+      />
+      <button>Ara!</button>
+    </form>
+  );
+}
+
+export default SearchForm;
+```
+
+## Form Submit Olayının Avantajları
+
+Form submit olayı, kullanıcı butona tıkladığında veya input/buton odaklanmışken "Enter" tuşuna bastığında otomatik olarak çağrılır. Bu olay tetiklendiğinde aramamızı çalıştırır.
+
+Standart web platformu özelliklerini yeniden oluşturmaya çalışmak yerine, **platformu kullanmalı** ve bu tür sorunları bizim için çözmesine izin vermeliyiz!
+
+## Ek Avantajlar: Form Doğrulama
+
+Form submit olayını kullanarak, **istemci tarafı doğrulama** özelliklerinden de yararlanabiliriz:
+
+```jsx
+<input type='password' required={true} minLength={8} />
+```
+
+## Varsayılan Form Davranışı
+
+Tamam, `onSubmit` kullanırken küçük bir tuhaflık var. Varsayılan gönderim davranışını engellememiz gerekiyor:
+
+```jsx
+<form
+  className="search-form"
+  onSubmit={event => {
+    event.preventDefault();
+    runSearch(searchTerm);
+  }}
+>
+```
+
+## Neden `event.preventDefault()` Gerekli?
+
+Bunun neden gerekli olduğunu anlamak için, istemci tarafı isteklerin olmadığı bir döneme, `fetch`, `XMLHttpRequest` ve JSON'dan önceki bir döneme yolculuk yapmamız gerekiyor.
+
+Bir sunucuya istek yapmak istediğinizde, örneğin arama sonuçlarını getirirken, sadece veriyi isteyemezdiniz. Yeni bir HTML dosyası istemeniz gerekiyordu. Esasen, kullanıcı yeni bir URL'ye yönlendirilir ve sunucu daha sonra istekle gönderilen veriyi kullanarak bir şablonu HTML belgesine dönüştürürdü.
+
+Formlar hala varsayılan olarak bu şekilde çalışır. Bir form gönderdiğinizde, tarayıcı kullanıcıyı `action` özniteliğiyle belirtilen URL'ye göndermeye çalışır:
+
+```html
+<!--
+  Bu formu göndermek, kullanıcıyı /search sayfasına yönlendirecek
+  ve form alanlarından toplanan verileri gönderecek.
+-->
+<form method="POST" action="/search"></form>
+```
+
+`action` özniteliğini atlarsak, tarayıcı **mevcut** URL'yi kullanır, bu da etkili olarak sayfayı yeniden yükler.
+
+Modern bir React uygulaması bağlamında, bu genellikle istediğimiz şey değildir. Tüm sayfayı yeniden yüklemek istemeyiz, biraz veri getirmek ve birkaç bileşeni o veriyle yeniden render etmek isteriz. Bu, daha hızlı, daha akıcı bir kullanıcı deneyimi sağlar.
+
+İşte bu yüzden `event.preventDefault()` eklememiz gerekiyor. Tarayıcının tam sayfa yenilemesi yapmasını engeller.
+
+## Özet
+
+- **Yanlış**: `onClick` ve `onKeyDown` ile manuel olay yönetimi
+- **Doğru**: `<form>` ve `onSubmit` ile platform özelliklerini kullanma
+- **Avantajlar**: Daha az kod, daha iyi erişilebilirlik, otomatik form doğrulama
+- **Unutmayın**: `event.preventDefault()` ile sayfa yenilemesini engelleyin
+
+Bu yaklaşım, modern web geliştirmede "platformu kullan" prensibinin mükemmel bir örneğidir!
