@@ -44,7 +44,7 @@
     },
     {
       "id": "08",
-      "slug": "onClick-parable",
+      "slug": "onclick-parable",
       "title": "React'te onClick Parable",
       "description": "React'te onClick event'i ile fonksiyonların nasıl çağrılacağını öğrenin."
     }
