@@ -1,0 +1,182 @@
+# Diğer Form Kontrolleri
+
+Şimdiye kadar hep metin girişleri (`<input type="text">`) kullandık. Ama web platformu bize çok daha fazlasını sunuyor. Gerçek projelerde sıkça karşılaşacağımız form kontrolleri şunlar:
+
+- Textarea (çok satırlı metin alanı)
+- Radio butonları
+- Checkbox'lar
+- Select (açılır liste)
+- Range (kaydırıcı)
+- Renk seçici
+
+Eğer daha önce React dışında bu form kontrolleriyle çalıştıysanız, muhtemelen her birinin birbirinden ne kadar farklı davrandığına şaşırmış ya da sinir olmuşsunuzdur.
+
+Örneğin, `<textarea>` mevcut değerini `value` prop'u ile değil, **children** olarak tanımlar:
+
+```html
+<textarea>
+  Bu, mevcut değerdir
+</textarea>
+```
+
+Bir başka örnek olarak, `<select>` etiketi seçili değeri belirtmek için `<option>` çocuklarından birine `selected` prop'u ekler:
+
+```html
+<select>
+  <option value="a">Seçenek 1</option>
+  <option value="b" selected>Seçenek 2</option>
+  <option value="c">Seçenek 3</option>
+</select>
+```
+
+Her form kontrolünün kendi "kuralı" var. Bu kaotik görünüyor, değil mi?
+
+## React'in Güzel Haberi
+
+İşte asıl sürpriz burada: **React, bu form kontrollerinin büyük çoğunluğunu yeniden düzenlemiş ve hepsini çok daha tutarlı hale getirmiştir.** React'te form kontrolleriyle çalışmak, düz HTML'e kıyasla çok daha az kaotik.
+
+Temelde tüm form kontrolleri aynı kalıbı izler:
+
+1. Mevcut değer, çoğu input için **`value`** prop'u ile (checkbox ve radio butonlar için **`checked`** prop'u ile) sabitlenir.
+2. Değişikliklere **`onChange`** olay dinleyicisi ile tepki veririz.
+
+Bu derste yaygın örnekleri birlikte inceleyeceğiz.
+
+> **Terminoloji Notu:** "Data Binding" dersinde "kontrollü input" kavramını öğrendik. Buradaki "input" kelimesi yalnızca `<input>` HTML elementini değil, `<textarea>`, `<select>` gibi tüm form kontrollerini kapsıyor. Yani "input" dediğimizde genel olarak kullanıcıdan veri alan her form elementi kastedilir. Yalnızca `<input>` etiketini kastederken "text input" diyeceğiz.
+
+---
+
+## Select Etiketi
+
+`<select>` etiketi, kullanıcının önceden tanımlanmış seçenekler arasından **tek bir seçenek** seçmesine olanak tanır.
+
+React'te `<select>` ile çalışmak, metin inputlarıyla çalışmaktan neredeyse hiç farklı değildir. Yine `value` ve `onChange` kullanıyoruz:
+
+```jsx
+import React from "react";
+
+function App() {
+  const [selectedOption, setSelectedOption] = React.useState("red");
+
+  return (
+    <form>
+      <fieldset>
+        <legend>En sevdiğiniz renk nedir?</legend>
+        <select
+          value={selectedOption}
+          onChange={(event) => {
+            setSelectedOption(event.target.value);
+          }}
+        >
+          <option value="red">Kırmızı</option>
+          <option value="green">Yeşil</option>
+          <option value="blue">Mavi</option>
+        </select>
+      </fieldset>
+      <p>
+        Seçilen değer:
+        <br />
+        {selectedOption}
+      </p>
+    </form>
+  );
+}
+
+export default App;
+```
+
+`value` prop'unu ayarlayarak bu bileşeni **kontrollü** hale getiriyoruz; yani seçili seçenek React state'imize bağlı oluyor. `onChange` olay dinleyicisini ekleyerek de kullanıcının farklı bir seçenek seçtiğinde bu state'in güncellenmesine izin veriyoruz.
+
+Dürüst olmak gerekirse, bu yaklaşım bana varsayılan HTML davranışına kıyasla büyük bir gelişme gibi görünüyor. `<option>` çocuklarından birine `selected` niteliği eklemeye gerek yok; bunun yerine zaten bildiğimiz ve sevdiğimiz aynı kalıbı kullanıyoruz.
+
+---
+
+## Radio Butonları
+
+Radio butonları biraz daha karmaşık.
+
+Görünürde `<select>` etiketiyle aynı amaca hizmet ederler: kullanıcının bir grup seçenek arasından **tek bir değer** seçmesini sağlarlar.
+
+Ama işin zor kısmı şu: bu state, birden fazla bağımsız HTML elementi arasında **bölünmüş** durumda. Tek bir `<select>` etiketi vardır, ama birden fazla `<input type="radio">` butonu bulunur!
+
+React'te kontrollü bir radio buton grubunun nasıl göründüğüne bakalım:
+
+```jsx
+import React from "react";
+
+function App() {
+  const [value, setValue] = React.useState("hayır");
+
+  return (
+    <form>
+      <fieldset>
+        <legend>Kabul ediyor musunuz?</legend>
+        <input
+          type="radio"
+          name="kullanici-sozlesmesi"
+          id="kabul-evet"
+          value="evet"
+          checked={value === "evet"}
+          onChange={(event) => {
+            setValue(event.target.value);
+          }}
+        />{" "}
+        <label htmlFor="kabul-evet">Evet</label>
+        <br />
+        <input
+          type="radio"
+          name="kullanici-sozlesmesi"
+          id="kabul-hayır"
+          value="hayır"
+          checked={value === "hayır"}
+          onChange={(event) => {
+            setValue(event.target.value);
+          }}
+        />{" "}
+        <label htmlFor="kabul-hayır">Hayır</label>
+      </fieldset>
+    </form>
+  );
+}
+
+export default App;
+```
+
+Oldukça fazla prop var! Her birini tek tek inceleyelim:
+
+- **`name`** — Tarayıcının, her butonun aynı grubun parçası olduğunu bilmesi gerekir; böylece bir seçeneği işaretlediğimizde diğerleri otomatik olarak işaretsiz kalır. Bu, `name` prop'u aracılığıyla sağlanır. Bir gruptaki her radio buton aynı `name` değerini paylaşmalıdır.
+
+- **`value`** — Her radio butonun kendi değeri vardır. Bu prop, seçenek işaretlendiğinde React state'imize kopyalanır. Her radio butonun ne anlama geldiğini tanımlar.
+
+- **`id`** — Diğer form kontrollerinde olduğu gibi, `<label>` etiketinin doğru input ile ilişkilendirilebilmesi için gereklidir. Bu sayede etikete tıklamak, ilgili input'u odaklar.
+
+- **`checked`** — Bu prop, belirli bir radio butonu React state'imize bağlayan şeydir ve onu kontrollü bir değer haline getirir. Boolean bir değer alır: işaretliyse `true`, değilse `false`. Aynı anda yalnızca bir radio buton `true` olarak ayarlanmalıdır.
+
+Görünüşte farklı olsa da, aynı temel kalıbı izliyor. Bir seçenek işaretlendiğinde bunu algılamak için `onChange` olay dinleyicisini kullanıyoruz. Bu gerçekleştiğinde React state'ini güncelliyoruz.
+
+Diğer inputlarda React state'i `value` prop'una bağlarız. Ancak burada, birden fazla radio butonumuz olduğu için bağlayabileceğimiz tek bir `value` prop'umuz yok. Bu yüzden bunun yerine `checked` prop'una bağlıyoruz ve gruptaki her butonun işaretli/işaretsiz durumunu React state ile kontrol ediyoruz.
+
+---
+
+## Radio Buton mu, Select mi?
+
+Her ikisi de aynı amaca hizmet eder: kullanıcının olası seçenekler listesinden tek bir değer seçmesine izin vermek. Peki herhangi bir durumda hangisini kullanmalıyız?
+
+Bu konuda kesin kurallar olmasa da, genel olarak şu yönergelere göre karar verebilirsiniz:
+
+- **Çok sayıda seçenek varsa** (örneğin dünyadaki tüm ülkeler), olasılıkları "saklayıp" ekranı seçeneklerle doldurmamak için `<select>` kullanmak mantıklıdır.
+
+- **Kullanıcının karar vermeden önce tüm seçenekleri okumasını istiyorsanız** (örneğin uygun gizlilik kontrollerini seçmek), radio butonlarını kullanın. İnsanlar radio butonları daha ciddiye alma eğilimindedir.
+
+- **Varsayılan seçenek çoğu kullanıcı için öneriliyorsa**, `<select>` input kullanıcının form üzerinden daha hızlı ilerlemesine yardımcı olabilir.
+
+---
+
+## Özet
+
+React, farklı form kontrollerini tutarlı bir kalıba oturtmuştur:
+
+- **`value` + `onChange`** → Text input, textarea, select
+- **`checked` + `onChange`** → Checkbox, radio buton
+
+Bu sayede her form kontrolü için ayrı ayrı farklı kurallar ezberlemek zorunda kalmıyoruz. Kalıbı bir kez öğrendikten sonra tüm form kontrollerine uygulayabiliyoruz.

@@ -47,6 +47,12 @@
       "slug": "onclick-parable",
       "title": "React'te onClick Parable",
       "description": "React'te onClick event'i ile fonksiyonların nasıl çağrılacağını öğrenin."
+    },
+    {
+      "id": "09",
+      "slug": "other-form-controls",
+      "title": "Diğer Form Kontrolleri",
+      "description": "React'te select, radio buton, checkbox gibi form kontrollerinin tutarlı value/onChange kalıbıyla nasıl kullanıldığını öğrenin."
     }
   ]
 }
