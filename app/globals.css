@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-  font-family: 'Jost', sans-serif;
+  font-family: "Jost", sans-serif;
 }
 
 .mdx-content h1 {
@@ -98,6 +98,51 @@ html {
 .mdx-content h6 {
   color: #ccc;
   font-size: 18px;
+}
+
+.mdx-content table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 15px;
+  display: table;
+}
+
+.mdx-content .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 20px 0;
+}
+
+.mdx-content thead {
+  background-color: #222;
+}
+
+.mdx-content th {
+  color: #f1f1f1;
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid #444;
+}
+
+.mdx-content td {
+  color: #ccc;
+  padding: 10px 16px;
+  border-bottom: 1px solid #333;
+}
+
+.mdx-content tbody tr:hover {
+  background-color: #1e1e1e;
+}
+
+.mdx-content td code,
+.mdx-content th code {
+  padding: 3px 6px;
+  background-color: #333;
+  border-radius: 4px;
+  font-size: 13px;
 }
 
 @media screen and (max-width: 780px) {

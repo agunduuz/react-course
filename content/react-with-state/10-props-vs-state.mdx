@@ -1,0 +1,164 @@
+# Props mu, State mi?
+
+React öğrenirken "props" ve "state" kavramlarının birbiriyle karışması çok normal. Aralarındaki fark tam olarak nedir? Props'u ne zaman, state'i ne zaman kullanırız?
+
+Bu derste bu yaygın kafa karışıklığını birlikte gidereceğiz.
+
+---
+
+## Props
+
+"Props", "properties" (özellikler) kelimesinin kısaltmasıdır. Mikro düzeyde, HTML elementlerine eklediğimiz `class` veya `href` gibi niteliklerine benzerler:
+
+```html
+<a class="nav-link" href="/category/stuff"></a>
+```
+
+Örneğin aşağıdaki `Button` bileşeni bir `variant` prop'u alıyor. Bu prop, bileşenin içinde HTML'deki `class` niteliğine benzer biçimde stil kontrolü için kullanılıyor:
+
+```jsx
+// App.js
+import Button from "./Button";
+
+function App() {
+  return (
+    <div className="box">
+      <p>Devam etmek istediğinizden emin misiniz?</p>
+      <div className="actions">
+        <Button variant="secondary">İptal</Button>
+        <Button variant="primary">Onayla</Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+```jsx
+// Button.js
+import React from "react";
+import styles from "./Button.module.css";
+
+function Button({ variant, children }) {
+  return (
+    <button className={`${styles.wrapper} ${styles[variant]}`}>
+      {children}
+    </button>
+  );
+}
+
+export default Button;
+```
+
+---
+
+## State
+
+Yukarıdaki örnekte uygulamamız tamamen statik. Bu kodu her çalıştırdığımızda aynı sonucu alırız.
+
+Peki ya zamanla değişen şeyler istesek? İşte tam burada **state** devreye giriyor.
+
+Örneğimizi biraz değiştirelim:
+
+```jsx
+// App.js
+import React from "react";
+import Button from "./Button";
+
+function App() {
+  const [hasAgreed, setHasAgreed] = React.useState(false);
+
+  return (
+    <div className="box">
+      <p>Devam etmek istediğinizden emin misiniz?</p>
+      <label htmlFor="confirm-checkbox">
+        <span className="required">*</span>
+        <input
+          id="confirm-checkbox"
+          type="checkbox"
+          value={hasAgreed}
+          onChange={() => setHasAgreed(!hasAgreed)}
+        />
+        <span>
+          <a href="/terms">Kullanım koşullarını</a> kabul ediyorum.
+        </span>
+      </label>
+      <div className="actions">
+        <Button variant="secondary" isEnabled={true}>
+          İptal
+        </Button>
+        <Button variant="primary" isEnabled={hasAgreed}>
+          Onayla
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+```jsx
+// Button.js
+import React from "react";
+import styles from "./Button.module.css";
+
+function Button({ variant, isEnabled, children }) {
+  return (
+    <button
+      className={`${styles.wrapper} ${styles[variant]}`}
+      disabled={!isEnabled}
+    >
+      {children}
+    </button>
+  );
+}
+
+export default Button;
+```
+
+Yeni bir state'imiz var: `hasAgreed`. Bu veriyi "Onayla" butonunu yönetmek için kullanmamız gerekiyor. Bu bize props hakkında önemli bir gerçeği gösteriyor: **props'lar, verinin uygulamamız içinde akmasını sağlayan tünellerdir.**
+
+---
+
+> **Prop İsimlendirme Notu:** `isEnabled` yerine `disabled` adında bir prop da kullanabilirdim:
+>
+> ```jsx
+> function Button({ variant, disabled, children }) {
+>   return (
+>     <button
+>       className={`${styles.wrapper} ${styles[variant]}`}
+>       disabled={disabled}
+>     >
+>       {children}
+>     </button>
+>   );
+> }
+> ```
+>
+> Gerçek bir projede muhtemelen bu şekilde yapardım. Ancak bu örnekte, kendi özel prop'umuz ile HTML niteliğinin ikisinin de `disabled` olarak adlandırılmasından kaynaklanan belirsizliği önlemek için `isEnabled` ismini tercih ettim.
+
+---
+
+> **⚠️ Butonları Devre Dışı Bırakmayın**
+>
+> Bu örnekte `disabled` niteliği ile bir butonu devre dışı bıraktım. Ancak bunu **gerçek projelerde yapmaktan kaçınmalısınız.** Devre dışı bırakılan butonlar kullanıcıya neden tıklayamadığını açıklamaz, bu da sinir bozucu bir deneyime yol açar.
+>
+> Bunun yerine buton her zaman tıklanabilir olmalı; form hazır değilken tıklandığında kullanıcıya ne yapması gerektiğini açıklayan bir geri bildirim verilmelidir. Native HTML doğrulaması zaten bu şekilde çalışır ve daha karmaşık durumlar için de aynı yaklaşımı uygulayabiliriz.
+
+---
+
+## Özet: Props ile State Arasındaki Fark
+
+|                     | Props                                | State                                    |
+| ------------------- | ------------------------------------ | ---------------------------------------- |
+| **Tanım**           | Dışarıdan bileşene geçirilen veriler | Bileşenin kendi içinde yönettiği veriler |
+| **Kim yönetir?**    | Üst (parent) bileşen                 | Bileşenin kendisi                        |
+| **Değişebilir mi?** | Bileşen içinde değiştirilemez        | `setState` ile değiştirilebilir          |
+| **Amacı**           | Veriyi aşağıya aktarmak              | Zamanla değişen durumu takip etmek       |
+
+Kısa bir formülle özetlemek gerekirse:
+
+- **State** → "Bu bileşen zamanla ne hatırlamalı?"
+- **Props** → "Bu veriyi alt bileşene nasıl ileteyim?"

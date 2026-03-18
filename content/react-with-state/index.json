@@ -53,6 +53,12 @@
       "slug": "other-form-controls",
       "title": "Diğer Form Kontrolleri",
       "description": "React'te select, radio buton, checkbox gibi form kontrollerinin tutarlı value/onChange kalıbıyla nasıl kullanıldığını öğrenin."
+    },
+    {
+      "id": "10",
+      "slug": "props-vs-state",
+      "title": "Props mu, State mi?",
+      "description": "React'te props ve state arasındaki farkı, ne zaman hangisini kullanmanız gerektiğini ve verinin bileşenler arasında nasıl aktığını öğrenin."
     }
   ]
 }
