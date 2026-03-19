@@ -1,0 +1,87 @@
+# Karmaşık State Yapıları
+
+Şimdiye kadar React state'inde sayılar ve string'ler sakladık. Ancak gerçek projelerde state çoğunlukla daha karmaşık bir şekil alır: bir **nesne (object)** ya da **dizi (array)**.
+
+Örneğin bir gradient üreteci düşünelim. Kullanıcı 2 ila 5 renk seçiyor ve bu renklerden bir gradient oluşturuluyor.
+
+Bu renkler için state'i nasıl tutarız?
+
+```jsx
+const [colors, setColors] = React.useState(["#FFD500", "#FF0040"]);
+```
+
+`colors` adında bir state değişkeni oluşturduk. İçinde string'lerden oluşan bir dizi tutuyor.
+
+React, state'in hangi tipte olduğunu umursamaz. Sayı da olur, string de, dizi de, nesne de. Hatta istesek fonksiyon bile saklayabiliriz! (Yapabiliriz, ama genellikle yapmamalıyız. İleride `useCallback` konusunu gördüğümüzde fonksiyonlarla nasıl çalışıldığını öğreneceğiz.)
+
+---
+
+## Ama Bir Kural Var: Immutability
+
+State'i dizi veya nesne olarak saklarken çok önemli bir kuralı aklımızda tutmamız gerekiyor:
+
+**React state değişiklikleri immutable (değiştirilemez) olmak zorundadır.**
+
+`setColors` çağırdığımızda, ona **tamamen yeni bir dizi** vermemiz gerekir. State'te tutulan dizi ya da nesneleri doğrudan **mutate etmemeliyiz** (yani var olan diziyi/nesneyi değiştirmemeliyiz).
+
+Bu şu anlama geliyor:
+
+```jsx
+// ❌ YANLIŞ — mevcut diziyi doğrudan mutate ediyoruz
+colors.push("#00B4D8");
+setColors(colors);
+
+// ✅ DOĞRU — yeni bir dizi oluşturup veriyoruz
+setColors([...colors, "#00B4D8"]);
+```
+
+---
+
+> **Assignment ve Mutation Arasındaki Fark**
+>
+> Bu konuya devam etmeden önce "atama (assignment)" ile "mutasyon (mutation)" arasındaki farkı iyi anlamak önemlidir.
+>
+> - **Assignment (atama):** Bir değişkene yeni bir değer bağlamaktır. Orijinal veriyi değiştirmez.
+> - **Mutation (mutasyon):** Mevcut bir dizi veya nesnenin içeriğini doğrudan değiştirmektir.
+>
+> ```js
+> // Assignment — orijinal dizi değişmez
+> let renkler = ["kırmızı", "mavi"];
+> let yeniRenkler = renkler; // aynı diziyi gösteriyor
+>
+> // Mutation — orijinal diziyi değiştiriyor
+> renkler.push("yeşil"); // ❌ bu yüzden React'te yapmıyoruz
+>
+> // Immutable yaklaşım — yeni dizi oluştur
+> let guncellenmisRenkler = [...renkler, "yeşil"]; // ✅
+> ```
+>
+> React'in state değişikliklerini algılayabilmesi için referansın değişmesi gerekir. Aynı diziyi mutate edersek React farkı göremez ve bileşeni yeniden render etmez.
+
+---
+
+## Neden Immutability?
+
+React, bir state güncellemesi gerçekleşip gerçekleşmediğini anlamak için basit bir karşılaştırma yapar: "Önceki değerle yeni değer aynı mı?"
+
+Eğer mevcut diziyi mutate edip aynı referansı geri verirsek, React "hiçbir şey değişmedi" diye düşünür ve bileşeni yeniden render etmez.
+
+```jsx
+// React bu iki değeri karşılaştırır:
+// önceki: ['#FFD500', '#FF0040']  (aynı referans)
+// yeni:   ['#FFD500', '#FF0040']  (aynı referans)
+// → "Değişiklik yok, render etme!"
+```
+
+Yeni bir dizi oluşturduğumuzda ise referans farklılaşır ve React güncellemeyi fark eder.
+
+---
+
+## Özet
+
+- React state'inde dizi ve nesne gibi karmaşık yapılar saklayabiliriz.
+- State güncellenirken mevcut dizi ya da nesne **mutate edilmemeli**, bunun yerine **yeni bir kopya oluşturulmalıdır**.
+- Bunu sağlamanın en yaygın yolu spread operatörü (`...`) kullanmaktır.
+- İmmutability, React'in değişiklikleri algılayıp bileşeni doğru zamanda yeniden render etmesini sağlar.
+
+İlerleyen derslerde bu konuyu somut örneklerle daha derinlemesine ele alacağız. 🚀
