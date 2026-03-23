@@ -1,0 +1,224 @@
+# Atama mı, Mutasyon mu?
+
+JavaScript'te `const` anahtar kelimesi bir sabit (constant) tanımlamak için kullanılır. Sabitler çoğunlukla "değiştirilemeyen değişkenler" olarak düşünülür:
+
+```js
+const hi = 5;
+
+hi = 10;
+// 🛑 Uncaught TypeError: Assignment to constant variable.
+
+console.log(hi);
+// -> 5
+```
+
+Peki ya bu kodu deneseydik?
+
+```js
+const person = {
+  name: "Hassan",
+};
+
+person.name = "Sujata";
+// Çalışıyor?? 🤔
+
+console.log(person);
+// -> { name: 'Sujata' }
+```
+
+`const` kullandık ama `person` nesnesini değiştirebildik! Bu nasıl mümkün?
+
+Bu görünürdeki çelişkiyi anlamak için **atama (assignment)** ile **mutasyon (mutation)** arasındaki farkı kavramamız gerekiyor. Bu, JavaScript'in temel kavramlarından biridir ve bir kez anladığınızda pek çok şey yerine oturacak.
+
+---
+
+## Değişken İsimleri Etiket Gibidir
+
+JavaScript'te şu tamamen geçerli bir programdır:
+
+```js
+5;
+```
+
+Ya da şu:
+
+```js
+["elma", "muz", "kiraz"];
+```
+
+Her iki durumda da bellekte bir şey oluşturuyoruz — bir sayı, bir dizi. Ama bu verilere daha sonra nasıl erişeceğiz?
+
+İşte değişkenler tam olarak bunun için var. Oluşturduğumuz şeylere bir **etiket** yapıştırırlar:
+
+```js
+// Şimdi oluştur...
+const fruits = ["elma", "muz", "kiraz"];
+
+// ...Sonra eriş:
+console.log(fruits);
+// -> ['elma', 'muz', 'kiraz']
+```
+
+Programlamayı ilk öğrenirken çoğumuz şöyle düşünürüz: "Önce `fruits` adında boş bir kutu oluşturuyorum, sonra içine diziyi koyuyorum."
+
+Aslında doğru zihinsel model bu değil. Daha doğru olan şu: **dizi önce oluşturuluyor**, sonra `fruits` etiketi ona işaret ediyor.
+
+> **"Değişken" mi dediniz?**
+>
+> Bu derste `let` veya `const` ile tanımlanmış her isme "değişken (variable)" diyeceğiz:
+>
+> ```js
+> let age = 26; // Bu bir değişken
+> const color = "mavi"; // Bu da bir değişken
+> ```
+>
+> "Değişken" kelimesi değişebilir bir şeyi çağrıştırıyor — bu biraz kafa karıştırıcı, haklısınız. Ama JavaScript'te `let`, `const` ve eski `var` anahtar kelimelerini kapsayan genel terim "değişken"dir.
+
+---
+
+## Etiketi Yeniden Atamak (Re-assignment)
+
+`let` ile oluşturduğumuz bir değişkeni, farklı bir değere yönlendirebiliriz. Buna **yeniden atama (re-assignment)** diyoruz. Etiketi söküp farklı bir veriye yapıştırıyoruz:
+
+```js
+let fruits = ["elma", "muz", "kiraz"];
+
+// Etiketi yeni bir diziye yönlendir:
+fruits = ["durian", "incir", "kivi"];
+
+// Ya da tamamen farklı bir tipe:
+fruits = 27;
+
+// Ya da null'a:
+fruits = null;
+```
+
+Burada veriyi değiştirmiyoruz — **etiketi** değiştiriyoruz. Orijinal diziden koparıp yenisine bağlıyoruz.
+
+`const` ile oluşturulan değişkenler ise yeniden atanamaz:
+
+```js
+const fruits = ["elma", "muz", "kiraz"];
+
+fruits = ["durian", "incir", "kivi"];
+// 🛑 TypeError: Assignment to constant variable.
+```
+
+`let` ile `const` arasındaki temel fark budur. `const` kullandığımızda, değişken adı ile veri arasında **kopmaz bir bağ** kurulur.
+
+Ama şunu da belirtelim: **verinin kendisini değiştirmeye** hâlâ izin var! Etiket yerinde durduğu sürece.
+
+---
+
+## Mutasyon (Mutation)
+
+Bir diziye eleman ekleyip çıkarmak, nesnenin içindeki bir anahtarı değiştirmek — bunlar **mutasyon** örnekleridir. Etiketi değil, etiketin işaret ettiği **veriyi** değiştiriyoruz:
+
+```js
+// fruits etiketini bu diziye bağla:
+const fruits = ["elma"];
+
+// Diziyi mutate et — yeni eleman ekle:
+fruits.push("muz", "kiraz");
+
+console.log(fruits);
+// -> ['elma', 'muz', 'kiraz']
+```
+
+Nesne için de aynı geçerli:
+
+```js
+const event = {
+  title: "Toplantı",
+  tarih: "2024-06-01",
+};
+
+// Nesneyi mutate et:
+event.title = "İptal Edildi";
+
+console.log(event);
+// -> { title: 'İptal Edildi', tarih: '2024-06-01' }
+```
+
+---
+
+## Özet: Re-assignment vs. Mutation
+
+|                            | Re-assignment              | Mutation                               |
+| -------------------------- | -------------------------- | -------------------------------------- |
+| **Ne değişir?**            | Etiketin işaret ettiği şey | Etiketin işaret ettiği verinin içeriği |
+| **`const` ile mümkün mü?** | ❌ Hayır                   | ✅ Evet                                |
+| **`let` ile mümkün mü?**   | ✅ Evet                    | ✅ Evet                                |
+
+`const` kullandığımızda, değişkenin **yeniden atanamayacağından** emin olabiliriz. Ancak **mutasyona karşı hiçbir koruma yoktur**.
+
+> **Nesneleri ve Dizileri Dondurmak**
+>
+> Mutasyona karşı gerçekten koruma istiyorsak `Object.freeze()` metodunu kullanabiliriz:
+>
+> ```js
+> // Dizi ile:
+> const arr = Object.freeze([1, 2, 3]);
+> arr.push(4);
+> console.log(arr);
+> // -> [1, 2, 3]  — değişmedi!
+>
+> // Nesne ile:
+> const person = Object.freeze({ name: "Hassan" });
+> person.name = "Sujata";
+> console.log(person);
+> // -> { name: 'Hassan' }  — değişmedi!
+> ```
+>
+> `Object.freeze()` çok güvenilirdir; dondurulmuş bir dizi veya nesneyi değiştirmenin yolu yoktur. Ancak yalnızca "yüzeysel (shallow)" bir dondurma yapar — iç içe geçmiş nesneleri/dizileri dondurmaz.
+
+---
+
+## Primitive Veri Tipleri
+
+Şimdiye kadar hep nesne ve dizi örnekleri gördük. Peki `string`, `number` veya `boolean` gibi **primitive** veri tipleri nasıl çalışır?
+
+```js
+let age = 36;
+age = 37;
+```
+
+Burada ne yapıyoruz? `age` etiketini yeni bir değere mi atıyoruz, yoksa `36` sayısını `37` olarak mı mutate ediyoruz?
+
+**JavaScript'teki tüm primitive tipler immutable'dır (değiştirilemez).** Bir sayının değerini "düzenlemek" mümkün değildir. Sadece etiketi farklı bir değere yönlendirebiliriz.
+
+Bunu şöyle hayal edebiliriz: tüm olası sayıların büyük bir listesi var. `age` değişkenimizi şu an 36'ya yönlendirdik, ama istediğimiz zaman listedeki başka bir sayıya işaret ettirebiliriz. Sayıların kendisi değişmez.
+
+Bu durum tüm primitive tipler için geçerlidir: `string`, `boolean`, `null`, `undefined`, `number`, `BigInt`, `Symbol`.
+
+> **Bir Düşünce Deneyi**
+>
+> Primitive değerler JavaScript'te immutable'dır — düzenlenemezler. Peki ya düzenlenebilseydi? Sözdizimi nasıl olurdu?
+>
+> ```js
+> // 36 sayısının değerini düzenle:
+> 36 = 37;
+> // 36 artık mevcut değil!
+> console.log(36); // 37
+> ```
+>
+> Mutasyonun özü şudur: bir değeri temelden değiştirmek. Bir nesneyi mutate ettiğimizde, o nesnenin "özünü" değiştiriyoruz ve referans ettiğimizde bu değişikliği görüyoruz.
+>
+> Eğer primitive değerleri de mutate edebilseydik, bazı sayıları tamamen üzerine yazabilir ve bir daha hiç referans edemezdik. Bu hem kafa karıştırıcı hem de işe yaramaz olurdu — bu yüzden primitive'ler JavaScript'te immutable'dır.
+
+---
+
+## React ile Bağlantısı
+
+Bu kavramı neden öğrendik? Çünkü React state'i güncellerken **mutasyon yapmamamız** gerekiyor — her zaman yeni bir kopya oluşturmalıyız:
+
+```js
+// ❌ Mutasyon — React değişikliği göremez
+colors.push("#00B4D8");
+setColors(colors);
+
+// ✅ Yeni kopya — React değişikliği algılar
+setColors([...colors, "#00B4D8"]);
+```
+
+React, state'in değişip değişmediğini referans karşılaştırmasıyla anlar. Aynı diziyi mutate edersek referans değişmez ve React yeniden render tetiklemez.

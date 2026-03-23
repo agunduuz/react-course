@@ -47,6 +47,12 @@
       "slug": "logical-operators",
       "title": "Mantıksal Operatörler",
       "description": "JavaScript'teki && ve || operatörlerinin mantıksal karşılaştırmalarda ve kontrol akışında nasıl kullanıldığını öğrenin."
+    },
+    {
+      "id": "09",
+      "slug": "assignment-vs-mutation",
+      "title": "Atama mı, Mutasyon mu?",
+      "description": "JavaScript'te const ve let arasındaki fark, re-assignment ile mutation kavramları, primitive veri tiplerinin immutability özelliği ve React state yönetimiyle bağlantısı."
     }
   ]
 }
