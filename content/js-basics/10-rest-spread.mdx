@@ -1,0 +1,267 @@
+# Rest ve Spread
+
+Modern JavaScript'in en kullanışlı sözdizimlerinden ikisini öğrenme zamanı: **rest** ve **spread**.
+
+Felsefi olarak, rest ve spread birbirinin tersini yapar:
+
+- **Rest** → Birden fazla bağımsız değeri bir araya toplar
+- **Spread** → Toplanmış bir değer kümesini tek tek açar
+
+Her iki işlem de aynı sözdizimini kullanır: üç nokta (`...`). Teknik olarak bir operatör değildir ama kesinlikle öyle hissettiriyor!
+
+> **Tarayıcı Desteği**
+>
+> Rest parametreleri ve spread sözdizimi tüm modern tarayıcılarda desteklenir. Internet Explorer gibi eski tarayıcıları desteklemeniz gerekiyorsa, Babel gibi bir derleyici kullandığınız sürece endişelenmenize gerek yok — kodunuz otomatik olarak uyumlu sözdizimine çevrilir.
+
+---
+
+## Rest Parametreleri
+
+Değişken sayıda parametre alan bir fonksiyon yazmak istediğimizi düşünelim. Kaç sayı verilirse verilsin hepsini toplayan bir fonksiyon:
+
+```js
+addNums(1, 1); // 2
+addNums(1, 2, 3, 4); // 10
+addNums(1, 10, 100, 1000); // 1111
+```
+
+Bunu **rest parametreleri** ile yapabiliriz:
+
+```js
+function addNums(...nums) {
+  let sum = 0;
+  nums.forEach((num) => {
+    sum += num;
+  });
+  return sum;
+}
+```
+
+`nums`, gelen tüm argümanları bir dizi içinde toplayan tek bir parametredir:
+
+```js
+function logArgs(...args) {
+  console.log(args);
+}
+
+logArgs(1, 2, "merhaba!");
+// -> [1, 2, 'merhaba!']
+```
+
+Herhangi bir parametre gibi istediğimiz ismi verebiliriz. `...rest` yaygın bir tercih olsa da `...tumDegerler` de olabilir.
+
+Bazen bir veya daha fazla sabit parametreyle birlikte değişken sayıda parametre de kullanmak isteriz:
+
+```js
+function ilkiHaricHepsini(first, ...rest) {
+  return rest;
+}
+
+ilkiHaricHepsini(1, 2, 3, 4);
+// -> [2, 3, 4]
+```
+
+Ancak birkaç kural var: yalnızca **tek bir** rest parametresi kullanılabilir ve **her zaman en sona** yazılmalıdır:
+
+```js
+// ❌ Geçersiz — iki rest parametresi
+function yanlis(...ilkRest, ...rest) {}
+
+// ❌ Geçersiz — rest parametresi sonda değil
+function yanlis2(...rest, ikinci, ucuncu) {}
+```
+
+---
+
+## Spread Sözdizimi
+
+Spread sözdizimi, rest parametrelerinin tam tersidir. Bir dizi veriyi tek tek argümanlara açar.
+
+```js
+function tarihOlustur(yil, ay, gun) {
+  return new Date(yil, ay, gun);
+}
+
+const tarihBilgisi = [2024, 5, 15];
+
+tarihOlustur(...tarihBilgisi);
+// Şuna eşdeğer:
+// tarihOlustur(2024, 5, 15)
+```
+
+`...tarihBilgisi`, diziyi üç ayrı argümana açar. Bunu elle yazmak zorunda kalsaydık:
+
+```js
+tarihOlustur(tarihBilgisi[0], tarihBilgisi[1], tarihBilgisi[2]);
+```
+
+Spread sözdiziminin çok kullanışlı olduğu durumlar var.
+
+### Diziyi Kopyalamak
+
+```js
+const dizi = [1, 2, 3, 4];
+
+const kopya = [...dizi];
+
+console.log(kopya); // [1, 2, 3, 4]
+console.log(dizi === kopya); // false — farklı diziler!
+```
+
+`...dizi` sözdizimi değerleri tek tek açar. Köşeli parantez (`[]`) içine aldığımız için yeni bir dizi oluşturulur. Bu, bir önceki derste öğrendiğimiz **immutable güncelleme** için de kullandığımız yöntemdir!
+
+### İki Diziyi Birleştirmek
+
+```js
+const sayilar1 = [1, 2, 3];
+const sayilar2 = [4, 5, 6];
+
+const hepsi = [...sayilar1, ...sayilar2];
+console.log(hepsi); // [1, 2, 3, 4, 5, 6]
+```
+
+---
+
+## Nesnelerde Spread Kullanımı
+
+Spread sözdizimi başlangıçta yalnızca dizilerle çalışıyordu, ama artık nesnelerle de kullanabiliyoruz!
+
+### Nesneyi Kopyalamak
+
+```js
+const orijinal = {
+  enlem: 1.234,
+  boylam: 4.321,
+};
+
+const kopya = { ...orijinal };
+```
+
+### Mevcut Nesneyi Genişletmek
+
+```js
+const ortakOzellikler = {
+  tur: "insan",
+  konum: "dünya",
+};
+
+const kisi1 = {
+  ...ortakOzellikler,
+  isim: "Tina",
+  gozRengi: "yeşil",
+};
+
+const kisi2 = {
+  ...ortakOzellikler,
+  isim: "James",
+  gozRengi: "kahverengi",
+};
+```
+
+### İki Nesneyi Birleştirmek
+
+```js
+const nesne1 = { a: 1 };
+const nesne2 = { b: 2 };
+
+const birlestir = { ...nesne1, ...nesne2 };
+console.log(birlestir); // { a: 1, b: 2 }
+```
+
+---
+
+## Çakışmalar Nasıl Çözülür?
+
+Dizilerde çakışma sorunu yoktur — tüm elemanlar yeni diziye dahil edilir:
+
+```js
+const dizi1 = [1, 2, 3];
+const dizi2 = [3, 4, 5];
+
+const birlestir = [...dizi1, ...dizi2];
+console.log(birlestir);
+// -> [1, 2, 3, 3, 4, 5]  — 6 eleman, 3 iki kez var
+```
+
+Nesnelerde ise aynı anahtar birden fazla kez tanımlanabilir. Kural basit: **sonra gelen önce geleni ezer**.
+
+```js
+const nesne1 = {
+  renk: "kırmızı",
+  zIndex: 5,
+};
+
+const nesne2 = {
+  fontSize: "2rem",
+  zIndex: 10,
+};
+
+const birlestir = { ...nesne1, ...nesne2 };
+console.log(birlestir);
+/*
+  {
+    renk: 'kırmızı',
+    fontSize: '2rem',
+    zIndex: 10,  <- nesne2'den geldi, nesne1'i ezdi
+  }
+*/
+```
+
+### Varsayılan Değerler Tanımlamak
+
+Bu mantığı kullanarak "üzerine yazılabilen varsayılan değerler" oluşturabiliriz:
+
+```js
+const varsayilanlar = {
+  tur: "kullanici",
+  sifre: "12345",
+};
+
+const kullanici1 = {
+  ...varsayilanlar,
+  kullaniciAdi: "helloWorld",
+  // Şifre tanımlanmadı → varsayılan '12345' kullanılır
+};
+
+const kullanici2 = {
+  ...varsayilanlar,
+  kullaniciAdi: "cheeseCrackers",
+  sifre: "cok-guclu-sifre-123", // Varsayılanı ezer
+};
+```
+
+⚠️ **Dikkat:** Varsayılanları **önce** spread etmelisiniz, sonra değil! Aksi takdirde mantık tersine döner:
+
+```js
+// ❌ Yanlış sıra — varsayılanlar her şeyi ezer!
+const yanlis = {
+  kullaniciAdi: "misterSkydive",
+  sifre: "ozel-sifrem",
+  ...varsayilanlar, // Bu, üstteki sifre'yi '12345' ile ezdi!
+};
+
+console.log(yanlis.sifre); // '12345' — istemediğimiz sonuç!
+```
+
+```js
+// ✅ Doğru sıra — varsayılanlar üzerine yazılabilir
+const dogru = {
+  ...varsayilanlar,
+  kullaniciAdi: "misterSkydive",
+  sifre: "ozel-sifrem", // Varsayılanı başarıyla eziyor
+};
+
+console.log(dogru.sifre); // 'ozel-sifrem' — istediğimiz sonuç!
+```
+
+---
+
+## Özet
+
+|                        | Rest                       | Spread                                          |
+| ---------------------- | -------------------------- | ----------------------------------------------- |
+| **Ne yapar?**          | Değerleri toplar           | Değerleri açar                                  |
+| **Nerede kullanılır?** | Fonksiyon parametrelerinde | Dizi/nesne oluştururken, fonksiyon çağrılarında |
+| **Sözdizimi**          | `...params`                | `...dizi` veya `...nesne`                       |
+
+Rest ve spread sözdizimi, React geliştirmede her yerde karşımıza çıkacak. Özellikle state güncellemelerinde immutable kopya oluştururken `[...dizi]` ve `{...nesne}` kalıplarını sürekli kullanacağız.

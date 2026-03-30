@@ -53,6 +53,12 @@
       "slug": "assignment-vs-mutation",
       "title": "Atama mı, Mutasyon mu?",
       "description": "JavaScript'te const ve let arasındaki fark, re-assignment ile mutation kavramları, primitive veri tiplerinin immutability özelliği ve React state yönetimiyle bağlantısı."
+    },
+    {
+      "id": "10",
+      "slug": "rest-spread",
+      "title": "Rest ve Spread",
+      "description": "JavaScript'te rest parametreleri ve spread sözdiziminin nasıl çalıştığını, dizi ve nesnelerde nasıl kullanıldığını, çakışmaların nasıl çözüldüğünü ve React state güncellemelerindeki önemini öğrenin."
     }
   ]
 }
